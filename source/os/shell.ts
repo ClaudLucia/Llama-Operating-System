@@ -262,6 +262,34 @@ module TSOS {
                         _StdOut.putText("Help displays a list of (hopefully) valid commands.");
                         break;
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
+                    case "ver":
+                        _StdOut.putText("Ver displays the version number of the current LlamaOS");
+                        break;
+                    case "date":
+                        _StdOut.putText("Date displays the current date");
+                        break;
+                    case "whereami":
+                        _StdOut.putText("Whereami tells the user where they currently are in the world(but it does not give life advice, sorry)");
+                        break;
+                    case "llamas":
+                        _StdOut.putText("Llamas gives information about the animal and explains why it is the name of the operating system");
+                        break;
+                    case "shutdown":
+                        _StdOut.putText("shuts down the operating system but leaves the host running");
+                        break;
+                    case "cls":
+                        _StdOut.putText("Clears the text on the screen and resets the cursor");
+                        break;
+                    case "trace":
+                        _StdOut.putText("Turns the trace on or off for the operating system");
+                        break;
+                    case "rot13":
+                        _StdOut.putText("Encrypts the string by implementing a cypher that switches each letter with a letter 13 steps away from it in the alphabet");
+                        break;
+                    case "prompt":
+                        _StdOut.putText("Sets the prompt");
+                        break;
+
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
