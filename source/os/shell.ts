@@ -31,6 +31,25 @@ module TSOS {
             //
             // Load the command list.
 
+            //date
+            sc = new ShellCommand(this.shellDate,
+                                  "date",
+                                  "- displays the current date and time");
+            this.commandList[this.commandList.length] = sc;
+
+            //Where Am I
+            sc = new ShellCommand(this.shellWhereAMI,
+                                  "whereami",
+                                  "- displays the users current location");
+            this.commandList[this.commandList.length] = sc;
+
+            //Why Llamas?
+            sc = new ShellCommand(thi.shellWhyLlamas,
+                                  "llamas"
+                                  "learn more about llamas")
+            this.commandList[this.commandList.length] = sc;
+
+
             // ver
             sc = new ShellCommand(this.shellVer,
                                   "ver",
@@ -86,6 +105,10 @@ module TSOS {
             // Display the initial prompt.
             this.putPrompt();
         }
+
+        
+        //CLASSES
+
 
         public putPrompt() {
             _StdOut.putText(this.promptStr);
@@ -287,5 +310,15 @@ module TSOS {
             }
         }
 
+        //Display the current time
+        public shellDate(args){
+            const day: Date = new Date();
+            _StdOut.putText(day);
+        }
+
+        //Displays where the user(hopefully) is
+        public shellWhereAMI(args){
+            _StdOut.putText("You're in front of a screen staring into the abyss of knowledge");
+        }
     }
 }
