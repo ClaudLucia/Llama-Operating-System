@@ -41,7 +41,7 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellHelp, "help", "- This is the help command. Seek help.");
             this.commandList[this.commandList.length] = sc;
             // shutdown
-            sc = new TSOS.ShellCommand(this.shellShutdown, "shutdown", "- Shuts down the virtual OS but leaves the underlying host / hardware simulation running.");
+            sc = new TSOS.ShellCommand(this.shellShutdown, "shutdown", "- Shuts down LlamaOS but leaves the underlying host / hardware simulation running.");
             this.commandList[this.commandList.length] = sc;
             // cls
             sc = new TSOS.ShellCommand(this.shellCls, "cls", "- Clears the screen and resets the cursor position.");
@@ -219,7 +219,7 @@ var TSOS;
                         _StdOut.putText("Llamas gives information about the animal and explains why it is the name of the operating system");
                         break;
                     case "shutdown":
-                        _StdOut.putText("shuts down the operating system but leaves the host running");
+                        _StdOut.putText("shuts down LlamaOS but leaves the host running");
                         break;
                     case "cls":
                         _StdOut.putText("Clears the text on the screen and resets the cursor");
