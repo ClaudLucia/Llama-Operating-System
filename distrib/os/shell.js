@@ -31,6 +31,9 @@ var TSOS;
             //Where Am I
             sc = new TSOS.ShellCommand(this.shellWhereAMI, "whereami", "- displays the users current location");
             this.commandList[this.commandList.length] = sc;
+            //Why Llamas?
+            sc = new TSOS.ShellCommand(this.shellWhyLlamas, "llamas", "- learn more about llamas");
+            this.commandList[this.commandList.length] = sc;
             // ver
             sc = new TSOS.ShellCommand(this.shellVer, "ver", "- Displays the current version data.");
             this.commandList[this.commandList.length] = sc;
@@ -161,7 +164,7 @@ var TSOS;
         Shell.prototype.shellCurse = function () {
             _StdOut.putText("Oh, so that's how it's going to be, eh? Fine.");
             _StdOut.advanceLine();
-            _StdOut.putText("Bitch.");
+            _StdOut.putText("...Bitch.");
             _SarcasticMode = true;
         };
         Shell.prototype.shellApology = function () {
@@ -260,7 +263,20 @@ var TSOS;
         };
         //Displays where the user(hopefully) is
         Shell.prototype.shellWhereAMI = function (args) {
-            _StdOut.putText("You're in front of a screen staring into the abyss of knowledge");
+            _StdOut.putText("You're in front of a screen staring into a screen that is immiting blue light");
+            _StdOut.advanceLine();
+            _StdOut.putText("...");
+            _StdOut.advanceLine();
+            _StdOut.putText("You might wanna get some sleep");
+        };
+        Shell.prototype.shellWhyLlamas = function (args) {
+            _StdOut.putText("They are very social animals and live with other llamas as a herd.");
+            _StdOut.advanceLine();
+            _StdOut.putText("The wool produced by a llama is very soft and lanolin-free.");
+            _StdOut.advanceLine();
+            _StdOut.putText("Llamas are intelligent and can learn simple tasks after a few repetitions.");
+            _StdOut.advanceLine();
+            _StdOut.putText("Also they're awesome");
         };
         return Shell;
     }());
