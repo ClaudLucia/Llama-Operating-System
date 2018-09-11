@@ -33,6 +33,9 @@
    <!-- Uncomment the line below to enable GLaDOS testing. -->
    <script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip0.js"></script>
    
+   <!-- Script for the clock -->
+   <!-- <script type="text/javascript" src="distrib/os/clock.js"></script> -->
+
 </head>
 
 <body onload="onDocumentLoad()">
@@ -97,12 +100,34 @@
          ></textarea>
       </label>
    </div>
-   <div id="divUserTaskBar" style="margin:4px; length">
-      <label>
-        User Task Bar
 
-      </label>
+   <!-- Task bar for the user -->
+   <div id="divUserTaskBar">
+      <p>
+        Status
+      </p>
    </div>
+   <div id= "clock"></div>
+      <!-- Trying to find a way in order not to hardcode the clock here -->
+      <script type="text/javascript">
+          function startTime() {
+            var today = new Date();
+            var hrs = today.getHours();
+            var min = today.getMinutes();
+            var sec = today.getSeconds();
+            if (hrs > 12){
+                hrs = hrs-12
+            }
+            if (hrs == 0){
+                hrs = 12
+            }
+
+            document.getElementById('clock').innerHTML = hrs + ":" + min + ":" + sec;
+            var t = setTimeout(startTime, 500);
+          } 
+          startTime();
+      </script>
+   
 
 </div>
 
