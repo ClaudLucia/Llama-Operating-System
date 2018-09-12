@@ -39,6 +39,14 @@
 </head>
 
 <body onload="onDocumentLoad()">
+  
+
+  <div id="title">
+        <h1 class="page-header">
+          LlamaOS
+        </h1>
+  </div>
+
 
 <div id="divMain" style="width:100%;">
 
@@ -69,42 +77,63 @@
              tabindex="2"
              onclick="TSOS.Control.hostBtnReset_click(this);">
    </div>
-<!-- Task bar for the user -->
-   <div id="status">
-      <p>
-        Status
-      </p>
-      <div id= "clock"></div>
-      <!-- Trying to find a way in order not to hardcode the clock here -->
-      <script type="text/javascript">
-          function startTime() {
-            var today = new Date();
-            var hrs = today.getHours();
-            var min = today.getMinutes();
-            var sec = today.getSeconds();
-            var session = "AM";
 
-            if (hrs > 12){
-                hrs = hrs-12;
-                session = "PM";
 
-            }
-            if (hrs == 0){
-                hrs = 12
-            }
 
-            hrs = (hrs < 10) ? "0" + hrs : hrs;
-            min = (min < 10) ? "0" + min : min;
-            sec = (sec < 10) ? "0" + sec : sec;
 
-            document.getElementById('clock').innerHTML = hrs + ":" + min + ":" + sec;
-            var t = setTimeout(startTime, 500);
-          } 
-          startTime();
-      </script>
-   </div>
-   </div>
+</div>
    
+ <!-- Task bar for the user -->
+  <div id="taskBar" class="row">
+    
+      <table width="100%">
+        <thead>
+          <tr>
+            <th>
+              <div id="statusBar" class="col-sm-4">
+                <p>
+                  Status
+                </p>
+              </div>
+            </th>
+            <th>
+                  <!-- Trying to find a way in order not to hardcode the clock here -->
+              <div id = "dateTime" class="col-sm-8">
+                <script type="text/javascript">
+                  function startTime() {
+                    var dt = new Date();
+                    
+                    // Just the clock
+                    // var hrs = dt.getHours();
+                    // var min = dt.getMinutes();
+                    // var sec = dt.getSeconds();
+                    // var session = "AM";
+
+                    // if (hrs > 12){
+                    //     hrs = hrs-12;
+                    //     session = "PM";
+
+                    // }
+                    // if (hrs == 0){
+                    //     hrs = 12
+                    // }
+
+                    // hrs = (hrs < 10) ? "0" + hrs : hrs;
+                    // min = (min < 10) ? "0" + min : min;
+                    // sec = (sec < 10) ? "0" + sec : sec;
+
+                    document.getElementById('dateTime').innerHTML = dt;
+                    var t = setTimeout(startTime, 500);
+                  } 
+                  startTime();
+                </script>
+              </div>
+            </th>
+          </tr>
+        </thead>
+    </table>
+
+  </div>
 
 
    <div id="divConsole" style="margin:4px; width:500px; height:500px; float:left;">

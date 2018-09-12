@@ -1,3 +1,6 @@
+/*These refrence paths pull the variables for this file.
+Works like src in html
+*/
 ///<reference path="../globals.ts" />
 ///<reference path="../utils.ts" />
 ///<reference path="shellCommand.ts" />
@@ -20,6 +23,7 @@ var TSOS;
             this.commandList = [];
             this.curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
             this.apologies = "[sorry]";
+            this.statusStr = "";
         }
         Shell.prototype.init = function () {
             var sc;
@@ -68,6 +72,9 @@ var TSOS;
             this.putPrompt();
         };
         //CLASSES
+        Shell.prototype.putStatus = function () {
+            _StdOut.putText(this.statusStr);
+        };
         Shell.prototype.putPrompt = function () {
             _StdOut.putText(this.promptStr);
         };
@@ -310,6 +317,20 @@ var TSOS;
             _StdOut.putText("Llamas are intelligent and can learn simple tasks after a few repetitions.");
             _StdOut.advanceLine();
             _StdOut.putText("Also they're awesome");
+        };
+        /*
+        How do you change the "status" message in html
+        How do I make a command from shell.ts to change html
+        I must get an input frmo the user from the command prompt
+        and return that string to the html file
+        */
+        Shell.prototype.shellStatus = function (args) {
+            if (args.length > 0) {
+                _OsShell.statusStr = args[0];
+            }
+            else {
+                _StdOut.putText("Usage: status <string>  Please supply a string.");
+            }
         };
         return Shell;
     }());

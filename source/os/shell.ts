@@ -1,3 +1,6 @@
+/*These refrence paths pull the variables for this file.
+Works like src in html
+*/
 ///<reference path="../globals.ts" />
 ///<reference path="../utils.ts" />
 ///<reference path="shellCommand.ts" />
@@ -22,6 +25,7 @@ module TSOS {
         public commandList = [];
         public curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
         public apologies = "[sorry]";
+        public statusStr = "";
 
         constructor() {
         }
@@ -118,6 +122,10 @@ module TSOS {
         
         //CLASSES
 
+
+        public putStatus(){
+            _StdOut.putText(this.statusStr);
+        }
 
         public putPrompt() {
             _StdOut.putText(this.promptStr);
@@ -297,7 +305,7 @@ module TSOS {
                     case "prompt":
                         _StdOut.putText("Sets the prompt");
                         break;
-                    case "status"
+                    case "status":
                         _StdOut.putText("Sets the text of the status bar on the top");
                         break;
 
@@ -374,6 +382,19 @@ module TSOS {
             _StdOut.putText("Llamas are intelligent and can learn simple tasks after a few repetitions.");
             _StdOut.advanceLine();
             _StdOut.putText("Also they're awesome");
+        }
+/*
+How do you change the "status" message in html
+How do I make a command from shell.ts to change html
+I must get an input frmo the user from the command prompt 
+and return that string to the html file 
+*/
+        public shellStatus(args){
+            if (args.length > 0) {
+                _OsShell.statusStr = args[0];
+            } else {
+                _StdOut.putText("Usage: status <string>  Please supply a string.");
+            }
         }
     }
 }
