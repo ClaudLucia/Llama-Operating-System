@@ -31,6 +31,14 @@ module TSOS {
             //
             // Load the command list.
 
+            //Status Bar
+            sc = new ShellCommand(this.shellStatus,
+                                  "status",
+                                  "- changes the text of the status bar");
+            this.commandList[this.commandList.length] = sc;
+
+
+
             //date
             sc = new ShellCommand(this.shellDate,
                                   "date",
@@ -288,6 +296,9 @@ module TSOS {
                         break;
                     case "prompt":
                         _StdOut.putText("Sets the prompt");
+                        break;
+                    case "status"
+                        _StdOut.putText("Sets the text of the status bar on the top");
                         break;
 
                     default:

@@ -47,20 +47,23 @@ h3 {
   text-align: center;
 }
 
-#clock{
-   width: 50px;
-   height: 26px; 
-   text-align: center;
-   font-size: 12px;
-   float: right;
-   border: 2px solid blue;
+.clock{
+  width: 50px;
+  height: 26px; 
+  text-align: center;
+  font-size: 12px;
+  border: 2px solid blue;
+  margin: 4px;
+  position: absolute;
+  transform: translateX(-50%) translateY(-50%);
+  color: #000000;
+  font-family: Orbitron;
 
 }
 
-#divUserTaskBar{
-  background-color: white;
+.status{
   height: 40px; 
-  width: 1300px;
-  margin-right:4px;
-  float: left; 
+  width: 300px;
+  margin:10px;
+  float: top-left; 
 }

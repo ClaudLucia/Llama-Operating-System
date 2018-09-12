@@ -25,6 +25,9 @@ var TSOS;
             var sc;
             //
             // Load the command list.
+            //Status Bar
+            sc = new TSOS.ShellCommand(this.shellStatus, "status", "- changes the text of the status bar");
+            this.commandList[this.commandList.length] = sc;
             //date
             sc = new TSOS.ShellCommand(this.shellDate, "date", "- displays the current date and time");
             this.commandList[this.commandList.length] = sc;
@@ -232,6 +235,9 @@ var TSOS;
                         break;
                     case "prompt":
                         _StdOut.putText("Sets the prompt");
+                        break;
+                    case "status":
+                        _StdOut.putText("Sets the text of the status bar on the top");
                         break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
