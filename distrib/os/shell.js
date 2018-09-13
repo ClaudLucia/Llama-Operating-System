@@ -1,3 +1,6 @@
+/*These refrence paths pull the variables for this file.
+Works like src in html
+*/
 ///<reference path="../globals.ts" />
 ///<reference path="../utils.ts" />
 ///<reference path="shellCommand.ts" />
@@ -13,18 +16,31 @@
 // TODO: Write a base class / prototype for system services and let Shell inherit from it.
 var TSOS;
 (function (TSOS) {
-    var Shell = (function () {
+    var Shell = /** @class */ (function () {
         function Shell() {
             // Properties
             this.promptStr = ">";
             this.commandList = [];
             this.curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
             this.apologies = "[sorry]";
+            this.statusStr = "";
         }
         Shell.prototype.init = function () {
             var sc;
             //
             // Load the command list.
+            //Status Bar
+            sc = new TSOS.ShellCommand(this.shellStatus, "status", "- changes the text of the status bar");
+            this.commandList[this.commandList.length] = sc;
+            //date
+            sc = new TSOS.ShellCommand(this.shellDate, "date", "- displays the current date and time");
+            this.commandList[this.commandList.length] = sc;
+            //Where Am I
+            sc = new TSOS.ShellCommand(this.shellWhereAMI, "whereami", "- displays the users current location");
+            this.commandList[this.commandList.length] = sc;
+            //Why Llamas?
+            sc = new TSOS.ShellCommand(this.shellWhyLlamas, "llamas", "- learn more about llamas");
+            this.commandList[this.commandList.length] = sc;
             // ver
             sc = new TSOS.ShellCommand(this.shellVer, "ver", "- Displays the current version data.");
             this.commandList[this.commandList.length] = sc;
@@ -32,7 +48,7 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellHelp, "help", "- This is the help command. Seek help.");
             this.commandList[this.commandList.length] = sc;
             // shutdown
-            sc = new TSOS.ShellCommand(this.shellShutdown, "shutdown", "- Shuts down the virtual OS but leaves the underlying host / hardware simulation running.");
+            sc = new TSOS.ShellCommand(this.shellShutdown, "shutdown", "- Shuts down LlamaOS but leaves the underlying host / hardware simulation running.");
             this.commandList[this.commandList.length] = sc;
             // cls
             sc = new TSOS.ShellCommand(this.shellCls, "cls", "- Clears the screen and resets the cursor position.");
@@ -54,6 +70,10 @@ var TSOS;
             //
             // Display the initial prompt.
             this.putPrompt();
+        };
+        //CLASSES
+        Shell.prototype.putStatus = function () {
+            _StdOut.putText(this.statusStr);
         };
         Shell.prototype.putPrompt = function () {
             _StdOut.putText(this.promptStr);
@@ -89,13 +109,13 @@ var TSOS;
             }
             else {
                 // It's not found, so check for curses and apologies before declaring the command invalid.
-                if (this.curses.indexOf("[" + TSOS.Utils.rot13(cmd) + "]") >= 0) {
+                if (this.curses.indexOf("[" + TSOS.Utils.rot13(cmd) + "]") >= 0) { // Check for curses.
                     this.execute(this.shellCurse);
                 }
-                else if (this.apologies.indexOf("[" + cmd + "]") >= 0) {
+                else if (this.apologies.indexOf("[" + cmd + "]") >= 0) { // Check for apologies.
                     this.execute(this.shellApology);
                 }
-                else {
+                else { // It's just a bad command. {
                     this.execute(this.shellInvalidCommand);
                 }
             }
@@ -154,7 +174,7 @@ var TSOS;
         Shell.prototype.shellCurse = function () {
             _StdOut.putText("Oh, so that's how it's going to be, eh? Fine.");
             _StdOut.advanceLine();
-            _StdOut.putText("Bitch.");
+            _StdOut.putText("...Bitch.");
             _SarcasticMode = true;
         };
         Shell.prototype.shellApology = function () {
@@ -196,6 +216,36 @@ var TSOS;
                         _StdOut.putText("Help displays a list of (hopefully) valid commands.");
                         break;
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
+                    case "ver":
+                        _StdOut.putText("Ver displays the version number of the current LlamaOS");
+                        break;
+                    case "date":
+                        _StdOut.putText("Date displays the current date");
+                        break;
+                    case "whereami":
+                        _StdOut.putText("Whereami tells the user where they currently are in the world(but it does not give life advice, sorry)");
+                        break;
+                    case "llamas":
+                        _StdOut.putText("Llamas gives information about the animal and explains why it is the name of the operating system");
+                        break;
+                    case "shutdown":
+                        _StdOut.putText("shuts down LlamaOS but leaves the host running");
+                        break;
+                    case "cls":
+                        _StdOut.putText("Clears the text on the screen and resets the cursor");
+                        break;
+                    case "trace":
+                        _StdOut.putText("Turns the trace on or off for the operating system");
+                        break;
+                    case "rot13":
+                        _StdOut.putText("Encrypts the string by implementing a cypher that switches each letter with a letter 13 steps away from it in the alphabet");
+                        break;
+                    case "prompt":
+                        _StdOut.putText("Sets the prompt");
+                        break;
+                    case "status":
+                        _StdOut.putText("Sets the text of the status bar on the top");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -246,7 +296,43 @@ var TSOS;
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
             }
         };
+        //Display the current time
+        Shell.prototype.shellDate = function (args) {
+            var day = new Date();
+            _StdOut.putText(day);
+        };
+        //Displays where the user(hopefully) is
+        Shell.prototype.shellWhereAMI = function (args) {
+            _StdOut.putText("You're in front of a screen staring into a screen that is immiting blue light");
+            _StdOut.advanceLine();
+            _StdOut.putText("...");
+            _StdOut.advanceLine();
+            _StdOut.putText("You might wanna get some sleep");
+        };
+        Shell.prototype.shellWhyLlamas = function (args) {
+            _StdOut.putText("They are very social animals and live with other llamas as a herd.");
+            _StdOut.advanceLine();
+            _StdOut.putText("The wool produced by a llama is very soft and lanolin-free.");
+            _StdOut.advanceLine();
+            _StdOut.putText("Llamas are intelligent and can learn simple tasks after a few repetitions.");
+            _StdOut.advanceLine();
+            _StdOut.putText("Also they're awesome");
+        };
+        /*
+        How do you change the "status" message in html
+        How do I make a command from shell.ts to change html
+        I must get an input frmo the user from the command prompt
+        and return that string to the html file
+        */
+        Shell.prototype.shellStatus = function (args) {
+            if (args.length > 0) {
+                _OsShell.statusStr = args[0];
+            }
+            else {
+                _StdOut.putText("Usage: status <string>  Please supply a string.");
+            }
+        };
         return Shell;
-    })();
+    }());
     TSOS.Shell = Shell;
 })(TSOS || (TSOS = {}));

@@ -1,3 +1,6 @@
+/*These refrence paths pull the variables for this file.
+Works like src in html
+*/
 ///<reference path="../globals.ts" />
 ///<reference path="../utils.ts" />
 ///<reference path="shellCommand.ts" />
@@ -22,6 +25,7 @@ module TSOS {
         public commandList = [];
         public curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
         public apologies = "[sorry]";
+        public statusStr = "";
 
         constructor() {
         }
@@ -30,6 +34,34 @@ module TSOS {
             var sc;
             //
             // Load the command list.
+
+            //Status Bar
+            sc = new ShellCommand(this.shellStatus,
+                                  "status",
+                                  "- changes the text of the status bar");
+            this.commandList[this.commandList.length] = sc;
+
+
+
+            //date
+            sc = new ShellCommand(this.shellDate,
+                                  "date",
+                                  "- displays the current date and time");
+            this.commandList[this.commandList.length] = sc;
+
+            //Where Am I
+            sc = new ShellCommand(this.shellWhereAMI,
+                                  "whereami",
+                                  "- displays the users current location");
+            this.commandList[this.commandList.length] = sc;
+
+
+            //Why Llamas?
+            sc = new ShellCommand(this.shellWhyLlamas,
+                                  "llamas",
+                                  "- learn more about llamas");
+            this.commandList[this.commandList.length] = sc;
+
 
             // ver
             sc = new ShellCommand(this.shellVer,
@@ -46,7 +78,7 @@ module TSOS {
             // shutdown
             sc = new ShellCommand(this.shellShutdown,
                                   "shutdown",
-                                  "- Shuts down the virtual OS but leaves the underlying host / hardware simulation running.");
+                                  "- Shuts down LlamaOS but leaves the underlying host / hardware simulation running.");
             this.commandList[this.commandList.length] = sc;
 
             // cls
@@ -85,6 +117,14 @@ module TSOS {
             //
             // Display the initial prompt.
             this.putPrompt();
+        }
+
+        
+        //CLASSES
+
+
+        public putStatus(){
+            _StdOut.putText(this.statusStr);
         }
 
         public putPrompt() {
@@ -191,7 +231,7 @@ module TSOS {
         public shellCurse() {
             _StdOut.putText("Oh, so that's how it's going to be, eh? Fine.");
             _StdOut.advanceLine();
-            _StdOut.putText("Bitch.");
+            _StdOut.putText("...Bitch.");
             _SarcasticMode = true;
         }
 
@@ -238,6 +278,37 @@ module TSOS {
                         _StdOut.putText("Help displays a list of (hopefully) valid commands.");
                         break;
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
+                    case "ver":
+                        _StdOut.putText("Ver displays the version number of the current LlamaOS");
+                        break;
+                    case "date":
+                        _StdOut.putText("Date displays the current date");
+                        break;
+                    case "whereami":
+                        _StdOut.putText("Whereami tells the user where they currently are in the world(but it does not give life advice, sorry)");
+                        break;
+                    case "llamas":
+                        _StdOut.putText("Llamas gives information about the animal and explains why it is the name of the operating system");
+                        break;
+                    case "shutdown":
+                        _StdOut.putText("shuts down LlamaOS but leaves the host running");
+                        break;
+                    case "cls":
+                        _StdOut.putText("Clears the text on the screen and resets the cursor");
+                        break;
+                    case "trace":
+                        _StdOut.putText("Turns the trace on or off for the operating system");
+                        break;
+                    case "rot13":
+                        _StdOut.putText("Encrypts the string by implementing a cypher that switches each letter with a letter 13 steps away from it in the alphabet");
+                        break;
+                    case "prompt":
+                        _StdOut.putText("Sets the prompt");
+                        break;
+                    case "status":
+                        _StdOut.putText("Sets the text of the status bar on the top");
+                        break;
+
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -287,5 +358,43 @@ module TSOS {
             }
         }
 
+        //Display the current time
+        public shellDate(args){
+            const day: Date = new Date();
+            _StdOut.putText(day);
+        }
+
+        //Displays where the user(hopefully) is
+        public shellWhereAMI(args){
+            _StdOut.putText("You're in front of a screen staring into a screen that is immiting blue light");
+            _StdOut.advanceLine();
+            _StdOut.putText("...");
+            _StdOut.advanceLine();
+            _StdOut.putText("You might wanna get some sleep");
+
+        }
+
+        public shellWhyLlamas(args){
+            _StdOut.putText("They are very social animals and live with other llamas as a herd.");
+            _StdOut.advanceLine();
+            _StdOut.putText("The wool produced by a llama is very soft and lanolin-free.");
+            _StdOut.advanceLine();
+            _StdOut.putText("Llamas are intelligent and can learn simple tasks after a few repetitions.");
+            _StdOut.advanceLine();
+            _StdOut.putText("Also they're awesome");
+        }
+/*
+How do you change the "status" message in html
+How do I make a command from shell.ts to change html
+I must get an input frmo the user from the command prompt 
+and return that string to the html file 
+*/
+        public shellStatus(args){
+            if (args.length > 0) {
+                _OsShell.statusStr = args[0];
+            } else {
+                _StdOut.putText("Usage: status <string>  Please supply a string.");
+            }
+        }
     }
 }
