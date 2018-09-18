@@ -35,6 +35,14 @@ module TSOS {
             //
             // Load the command list.
 
+
+            //Load
+            sc = new ShellCommand(this.shellLoad,
+                                  "load",
+                                  "<[empty] | [int]> - Validate the user");
+            this.commandList[this.commandList.length] = sc;
+
+
             //Status Bar
             sc = new ShellCommand(this.shellStatus,
                                   "status",
@@ -395,6 +403,17 @@ and return that string to the html file
             } else {
                 _StdOut.putText("Usage: status <string>  Please supply a string.");
             }
+        }
+
+
+        public shellLoad(args){
+        var val;
+        if (args.length > 0){
+            
+        }
+
+
+
         }
     }
 }

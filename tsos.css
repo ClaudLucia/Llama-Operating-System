@@ -1,11 +1,26 @@
 /* TSOS.css */
 
 body {
-  background: #909193 url(distrib/images/linen.png) repeat;
+  background: #909193 url(distrib/images/cave.jpg)no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
   font-family: Helvetica, Verdana, Arial, sans-serif;
   font-size: 12pt;
   font-weight: normal;
   font-style: normal;
+  opacity: 1;
+  transition: 1s opacity;
+}
+
+html {
+    background-color: ;
+}
+
+body.fade-out {
+    opacity: 0;
+    transition: none;
 }
 
 h1 {
@@ -63,9 +78,4 @@ h3 {
 #status{
 
 
-}
-
-#llamaLogo{
-  height: 5%;
-  width: 5%;
 }

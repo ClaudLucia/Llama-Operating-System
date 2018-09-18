@@ -29,6 +29,9 @@ var TSOS;
             var sc;
             //
             // Load the command list.
+            //Load
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", "<[empty] | [int]> - Validate the user");
+            this.commandList[this.commandList.length] = sc;
             //Status Bar
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "- changes the text of the status bar");
             this.commandList[this.commandList.length] = sc;
@@ -330,6 +333,11 @@ var TSOS;
             }
             else {
                 _StdOut.putText("Usage: status <string>  Please supply a string.");
+            }
+        };
+        Shell.prototype.shellLoad = function (args) {
+            var val;
+            if (args.length > 0) {
             }
         };
         return Shell;
