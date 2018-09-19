@@ -18,6 +18,7 @@ module TSOS {
                     public currentXPosition = 0,
                     public currentYPosition = _DefaultFontSize,
                     public buffer = "") {
+
         }
 
         public init(): void {
@@ -65,14 +66,28 @@ module TSOS {
             //
             // UPDATE: Even though we are now working in TypeScript, char and string remain undistinguished.
             //         Consider fixing that.
+            
+            // Draw the text at the current X and Y coordinates.
+            _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text);
+            // Move the current X position.
+            var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
+            this.currentXPosition = this.currentXPosition + offset;
             if (text !== "") {
-                // Draw the text at the current X and Y coordinates.
-                _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text);
-                // Move the current X position.
-                var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
-                this.currentXPosition = this.currentXPosition + offset;
+                if (this.currentXPosition > _CanvasXWidth) {
+                    this.lineWrap();
+                }
             }
-         }
+            else if (text !== "" && text === "\n") {
+                this.advanceLine();
+            }
+        }
+
+
+        public lineWrap(): void {
+            _wrapp.push({ X: this.currentXPosition, Y: this.currentYPosition });
+            this.advanceLine();
+            this.currentXPosition = 0;
+        }
 
         /*public canvasScrolling():void{
         var canvas = _DrawingContext.getCanvas(0, 0, _Canvas.width, _Canvas.height);
@@ -90,6 +105,7 @@ module TSOS {
              * Font height margin is extra spacing between the lines.
              TODO: Handle scrolling. (iProject 1)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
              */
+            initialYPosition = this.currentYPosition;
             this.currentYPosition += _DefaultFontSize + 
                                      _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                                      _FontHeightMargin;
@@ -102,6 +118,7 @@ module TSOS {
 
             
         }
+
         
     }
  }

@@ -317,7 +317,7 @@ module TSOS {
                         _StdOut.putText("Sets the text of the status bar on the top");
                         break;
                     case "load":
-                        _StdOut.putText("Loaads a program from User Program Input");
+                        _StdOut.putText("Loads a program from User Program Input");
                         break;
 
                     default:
