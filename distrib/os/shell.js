@@ -30,7 +30,7 @@ var TSOS;
             //
             // Load the command list.
             //Load
-            sc = new TSOS.ShellCommand(this.shellLoad, "load", "<[empty] | [int]> - Validate the user");
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", "<[empty] | [int]> - Load a program from user input");
             this.commandList[this.commandList.length] = sc;
             //Status Bar
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "- changes the text of the status bar");
@@ -248,6 +248,9 @@ var TSOS;
                         break;
                     case "status":
                         _StdOut.putText("Sets the text of the status bar on the top");
+                        break;
+                    case "load":
+                        _StdOut.putText("Loaads a program from User Program Input");
                         break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");

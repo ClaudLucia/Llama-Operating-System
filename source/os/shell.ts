@@ -39,7 +39,7 @@ module TSOS {
             //Load
             sc = new ShellCommand(this.shellLoad,
                                   "load",
-                                  "<[empty] | [int]> - Validate the user");
+                                  "<[empty] | [int]> - Load a program from user input");
             this.commandList[this.commandList.length] = sc;
 
 
@@ -315,6 +315,9 @@ module TSOS {
                         break;
                     case "status":
                         _StdOut.putText("Sets the text of the status bar on the top");
+                        break;
+                    case "load":
+                        _StdOut.putText("Loaads a program from User Program Input");
                         break;
 
                     default:

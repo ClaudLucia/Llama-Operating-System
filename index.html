@@ -35,11 +35,12 @@
    <!-- Other Routines -->
    <script type="text/javascript" src="distrib/utils.js"></script>
    <!-- Uncomment the line below to enable GLaDOS testing. -->
-   <!-- <script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip0.js"></script> -->
-   
+   <!-- <script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip0.js"></script>
+    -->
    <!-- Script for the clock -->
    <!-- <script type="text/javascript" src="distrib/os/clock.js"></script> -->
-   <script type="text/javascript" src="fade.js"></script>
+   
+   <!-- <script type="text/javascript" src="fade.js"></script> -->
 
 </head>
 
@@ -155,13 +156,15 @@
     </div>
 
 
-     <div id="divConsole" style="margin:4px; width:500px; height:500px; float:left;">
-        <canvas id="display"
-                width="500px"
-                height="500px"
-                tabindex="3">
-        </canvas>
-     </div>
+     <!-- <div id="consoleMain" style = "margin-top: 10px; width: 510px; height: 510px;"> -->
+       <div id="divConsole" style="margin:4px; width:500px; height:500px; float:left; overflow-y: scroll;">
+          <canvas id="display"
+                  width="500px"
+                  height="500px"
+                  tabindex="3">
+          </canvas>
+       </div>
+     <!-- </div> -->
      <div id="divLog" style="margin-left:520px;">
         <label>
            Host Log

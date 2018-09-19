@@ -74,18 +74,34 @@ module TSOS {
             }
          }
 
+        /*public canvasScrolling():void{
+        var canvas = _DrawingContext.getCanvas(0, 0, _Canvas.width, _Canvas.height);
+
+
+
+        }
+        */
+
+
         public advanceLine(): void {
             this.currentXPosition = 0;
             /*
              * Font size measures from the baseline to the highest point in the font.
-             * Font descent measures from the baseline to the lowest point in the font.
              * Font height margin is extra spacing between the lines.
+             TODO: Handle scrolling. (iProject 1)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
              */
             this.currentYPosition += _DefaultFontSize + 
                                      _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                                      _FontHeightMargin;
 
-            // TODO: Handle scrolling. (iProject 1)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            /*var startYPosition = this.currentYPosition;
+            if (this.currentYPosition >= _CanvasYHeight){
+                this.canvasScrolling(startYPosition);
+
+            }*/
+
+            
         }
+        
     }
  }
