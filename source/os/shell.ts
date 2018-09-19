@@ -402,18 +402,22 @@ and return that string to the html file
 */
         public shellStatus(args){
             if (args.length > 0) {
-                _OsShell.statusStr = args[0];
+                var status = "";
+                for (var i = 0; i < args.length; i++) {
+                }
+
             } else {
                 _StdOut.putText("Usage: status <string>  Please supply a string.");
             }
+            
         }
 
 
         public shellLoad(args){
         var val;
-        if (args.length > 0){
+            if (args.length > 0){
             
-        }
+            }
 
 
 

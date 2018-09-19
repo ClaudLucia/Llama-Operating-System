@@ -46,7 +46,15 @@ module TSOS {
                     _OsShell.handleInput(this.buffer);
                     // ... and reset our buffer.
                     this.buffer = "";
-                } else {
+                }
+                else if (chr === "backspace") {
+                    if (this.buffer !== "") {
+
+                    }
+
+                }
+
+                else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
                     this.putText(chr);
@@ -72,30 +80,30 @@ module TSOS {
             // Move the current X position.
             var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
             this.currentXPosition = this.currentXPosition + offset;
-            if (text !== "") {
-                if (this.currentXPosition > _CanvasXWidth) {
-                    this.lineWrap();
-                }
-            }
-            else if (text !== "" && text === "\n") {
-                this.advanceLine();
-            }
+
+            //if (text !== "" && text !== "\n") {
+            //    if (this.currentXPosition > _CanvasXWidth) {
+            //        this.lineWrap();
+            //    }
+            //}
+            //else if (text !== "" && text === "\n") {
+            //    this.advanceLine();
+            //}
         }
 
 
-        public lineWrap(): void {
-            _wrapp.push({ X: this.currentXPosition, Y: this.currentYPosition });
-            this.advanceLine();
-            this.currentXPosition = 0;
+        //public lineWrap(): void {
+        //    _wrapp.push({ X: this.currentXPosition, Y: this.currentYPosition });
+        //    this.advanceLine();
+        //    this.currentXPosition = 0;
+        //}
+
+
+        public canvasScrolling(): void {
+
+
+
         }
-
-        /*public canvasScrolling():void{
-        var canvas = _DrawingContext.getCanvas(0, 0, _Canvas.width, _Canvas.height);
-
-
-
-        }
-        */
 
 
         public advanceLine(): void {
@@ -105,16 +113,16 @@ module TSOS {
              * Font height margin is extra spacing between the lines.
              TODO: Handle scrolling. (iProject 1)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
              */
-            initialYPosition = this.currentYPosition;
+            
             this.currentYPosition += _DefaultFontSize + 
                                      _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                                      _FontHeightMargin;
 
-            /*var startYPosition = this.currentYPosition;
-            if (this.currentYPosition >= _CanvasYHeight){
-                this.canvasScrolling(startYPosition);
+            //initialYPosition = this.currentYPosition;
+            //if (this.currentYPosition >= _CanvasYHeight){
+            //    this.canvasScrolling(initialYPosition);
 
-            }*/
+            //}
 
             
         }

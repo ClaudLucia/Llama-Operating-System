@@ -45,6 +45,10 @@ var TSOS;
                     // ... and reset our buffer.
                     this.buffer = "";
                 }
+                else if (chr === "backspace") {
+                    if (this.buffer !== "") {
+                    }
+                }
                 else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
@@ -69,27 +73,22 @@ var TSOS;
             // Move the current X position.
             var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
             this.currentXPosition = this.currentXPosition + offset;
-            if (text !== "") {
-                if (this.currentXPosition > _CanvasXWidth) {
-                    this.lineWrap();
-                }
-            }
-            else if (text !== "" && text === "\n") {
-                this.advanceLine();
-            }
+            //if (text !== "" && text !== "\n") {
+            //    if (this.currentXPosition > _CanvasXWidth) {
+            //        this.lineWrap();
+            //    }
+            //}
+            //else if (text !== "" && text === "\n") {
+            //    this.advanceLine();
+            //}
         };
-        Console.prototype.lineWrap = function () {
-            _wrapp.push({ X: this.currentXPosition, Y: this.currentYPosition });
-            this.advanceLine();
-            this.currentXPosition = 0;
+        //public lineWrap(): void {
+        //    _wrapp.push({ X: this.currentXPosition, Y: this.currentYPosition });
+        //    this.advanceLine();
+        //    this.currentXPosition = 0;
+        //}
+        Console.prototype.canvasScrolling = function () {
         };
-        /*public canvasScrolling():void{
-        var canvas = _DrawingContext.getCanvas(0, 0, _Canvas.width, _Canvas.height);
-
-
-
-        }
-        */
         Console.prototype.advanceLine = function () {
             this.currentXPosition = 0;
             /*
@@ -97,15 +96,13 @@ var TSOS;
              * Font height margin is extra spacing between the lines.
              TODO: Handle scrolling. (iProject 1)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
              */
-            initialYPosition = this.currentYPosition;
             this.currentYPosition += _DefaultFontSize +
                 _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                 _FontHeightMargin;
-            /*var startYPosition = this.currentYPosition;
-            if (this.currentYPosition >= _CanvasYHeight){
-                this.canvasScrolling(startYPosition);
-
-            }*/
+            //initialYPosition = this.currentYPosition;
+            //if (this.currentYPosition >= _CanvasYHeight){
+            //    this.canvasScrolling(initialYPosition);
+            //}
         };
         return Console;
     }());

@@ -332,7 +332,9 @@ var TSOS;
         */
         Shell.prototype.shellStatus = function (args) {
             if (args.length > 0) {
-                _OsShell.statusStr = args[0];
+                var status = "";
+                for (var i = 0; i < args.length; i++) {
+                }
             }
             else {
                 _StdOut.putText("Usage: status <string>  Please supply a string.");
