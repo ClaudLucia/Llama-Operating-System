@@ -75,9 +75,10 @@ var TSOS;
             this.putPrompt();
         };
         //CLASSES
-        Shell.prototype.putStatus = function () {
-            _StdOut.putText(this.statusStr);
-        };
+        //public putStatus(args) {
+        //    i
+        //    _StdOut.putText(this.statusStr);
+        //}
         Shell.prototype.putPrompt = function () {
             _StdOut.putText(this.promptStr);
         };
@@ -332,9 +333,7 @@ var TSOS;
         */
         Shell.prototype.shellStatus = function (args) {
             if (args.length > 0) {
-                var status = "";
-                for (var i = 0; i < args.length; i++) {
-                }
+                TSOS.Control.hostStatus(args.join(' '));
             }
             else {
                 _StdOut.putText("Usage: status <string>  Please supply a string.");

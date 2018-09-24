@@ -131,11 +131,11 @@ module TSOS {
         //CLASSES
 
 
-        public putStatus(args) {
-            if
-            _StdOut.putText(this.statusStr);
+        //public putStatus(args) {
+        //    i
+        //    _StdOut.putText(this.statusStr);
 
-        }
+        //}
 
         public putPrompt() {
             _StdOut.putText(this.promptStr);

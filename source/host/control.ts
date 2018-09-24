@@ -119,9 +119,8 @@ module TSOS {
         }
 
         public static hostStatus(status): void {
-            //var taLog = <HTMLInputElement>document.getElementById("taHostLog");
-            var msgSta: <HTMLInputElement>document.getElementById("statusMsg");
-            msgSta.toString = status;
+            var msgSta = <HTMLInputElement>document.getElementById('statusMsg');
+            msgSta.textContent = status;
         }
     }
 }
