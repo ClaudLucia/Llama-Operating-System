@@ -131,8 +131,10 @@ module TSOS {
         //CLASSES
 
 
-        public putStatus(){
+        public putStatus(args) {
+            if
             _StdOut.putText(this.statusStr);
+
         }
 
         public putPrompt() {
@@ -402,10 +404,7 @@ and return that string to the html file
 */
         public shellStatus(args){
             if (args.length > 0) {
-                var status = "";
-                for (var i = 0; i < args.length; i++) {
-                }
-
+                TSOS.Control.hostStatus(args.join(' '));
             } else {
                 _StdOut.putText("Usage: status <string>  Please supply a string.");
             }

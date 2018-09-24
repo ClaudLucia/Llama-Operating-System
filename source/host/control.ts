@@ -117,5 +117,11 @@ module TSOS {
             // be reloaded from the server. If it is false or not specified the browser may reload the
             // page from its cache, which is not what we want.
         }
+
+        public static hostStatus(status): void {
+            //var taLog = <HTMLInputElement>document.getElementById("taHostLog");
+            var msgSta: <HTMLInputElement>document.getElementById("statusMsg");
+            msgSta.toString = status;
+        }
     }
 }
