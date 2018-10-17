@@ -102,7 +102,7 @@ var TSOS;
             _DrawingContext.clrLine(this.currentXPosition, this.currentYPosition, this.currentFont, this.currentFontSize);
             if (this.currentYPosition > _Canvas.height) {
                 var oldCanvas = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
-                this.clearScreen;
+                this.clearScreen();
                 _DrawingContext.putImageData(oldCanvas, 0, -lineHeight);
                 this.currentYPosition -= lineHeight;
                 this.scrollIng += lineHeight;

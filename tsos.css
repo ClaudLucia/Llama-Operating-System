@@ -76,21 +76,27 @@ h3 {
 
 }
 
-#divConsole {
+.divConsole {
     margin:50px; 
     width:500px; 
     height:500px; 
-    float:left; 
-    overflow: auto;
-    //border-radius: 25px;
+    float:left;
+    /*border-radius: 25px;*/
 }
 
-#divLog {
+.divLog {
     margin-left: 950px;
-    float: top left;
+    float: top right;
+    color: rgba(35, 216, 99, 0.60);
 }
 
-#divUserProgramInput {
+.divUserProgramInput {
     margin-left: 950px;
-    float: bottom left;
+    float: bottom right;
+    color: rgba(35, 216, 99, 0.60);
 }
+
+/*#taProgramInput, #taHostLog {
+    background: transparent;
+    color: rgba(35, 216, 99, 0.60);
+}*/

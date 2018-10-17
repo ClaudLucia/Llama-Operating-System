@@ -120,7 +120,7 @@ module TSOS {
                                     this.currentFont, this.currentFontSize);
             if (this.currentYPosition > _Canvas.height) {
                 var oldCanvas = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
-                this.clearScreen;
+                this.clearScreen();
                 _DrawingContext.putImageData(oldCanvas, 0, -lineHeight);
                 this.currentYPosition -= lineHeight;
                 this.scrollIng += lineHeight;
@@ -140,25 +140,6 @@ module TSOS {
             this.advanceLine(true);
             this.wrapLines.push(x);
         }
-
-        //Line Wrap....
-        /*public lineWrap(text): void {
-            var availWidth = _Canvas.width - this.currentXPosition;
-            var buffer = "";
-            var lineWrap = [];
-            while (text.length > 0) {
-                while (text.length > 0 && _DrawingContext.measureText
-                    (this.currentFont, this.currentFontSize,
-                    (buffer + text.charAt(0))) <= availWidth) {
-                        buffer += text.charAt(0);
-                        text = text.slice(1);
-                }
-                lineWrap.push(buffer);
-                buffer = "";
-                availWidth = _Canvas.width;
-            }
-            return lineWrap;
-        }
-        */
+        
     }
  }
