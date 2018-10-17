@@ -18,9 +18,33 @@
  * ----------------- */
 var TSOS;
 (function (TSOS) {
-    var CanvasTextFunctions = (function () {
+    var CanvasTextFunctions = /** @class */ (function () {
         function CanvasTextFunctions() {
         }
+        CanvasTextFunctions.clrLine = function (x, y, font, size) {
+            _DrawingContext.clearRect(x, y - size, _Canvas.width - x, this.ascent(font, size)
+                + this.descent(font, size));
+        };
+        CanvasTextFunctions.backSpace = function () {
+            if (_Console.buffer !== '') {
+                var newCmd = _Console.buffer.substr(0, _Console.buffer.length - 1);
+                var x = _Console.currentXPosition;
+                var y = _Console.currentYPosition;
+                var font = _Console.currentFont;
+                var size = _Console.currentFontSize;
+                var width = this.measure(font, size, _Console.buffer);
+                this.clrLine(x - width, y, font, size);
+                _Console.currentXPosition -= width;
+                _Console.buffer = '';
+                _Console.putText(newCmd);
+                _Console.buffer = newCmd;
+                var rouXPos = Math.round(_Console.currentXPosition);
+                if (_Console.lineWrap.length > 0 && rouXPos === 0) {
+                    _Console.currentXPosition = _Console.wrapLines.pop();
+                    _Console.currentYPosition -= _Console.lineHeight();
+                }
+            }
+        };
         CanvasTextFunctions.letter = function (ch) {
             return CanvasTextFunctions.symbols[ch];
         };
@@ -53,6 +77,11 @@ var TSOS;
                 var c = CanvasTextFunctions.letter(str.charAt(i));
                 if (!c) {
                     continue;
+                }
+                if (x + c.width * mag > _Canvas.width) {
+                    _Console.lineWrap(x);
+                    x = _Console.currentXPosition;
+                    y = _Console.currentYPosition;
                 }
                 ctx.beginPath();
                 var penUp = true;
@@ -89,6 +118,12 @@ var TSOS;
             ctx.drawTextCenter = function (font, size, x, y, text) {
                 var w = CanvasTextFunctions.measure(font, size, text);
                 return CanvasTextFunctions.draw(ctx, font, size, x - w / 2, y, text);
+            };
+            ctx.clrLine = function (x, y, font, size) {
+                return CanvasTextFunctions.clrLine(x, y, font, size);
+            };
+            ctx.backSpace = function () {
+                return CanvasTextFunctions.backSpace();
             };
         };
         CanvasTextFunctions.symbols = {
@@ -189,6 +224,6 @@ var TSOS;
             '~': { width: 24, points: [[3, 6], [3, 8], [4, 11], [6, 12], [8, 12], [10, 11], [14, 8], [16, 7], [18, 7], [20, 8], [21, 10], [-1, -1], [3, 8], [4, 10], [6, 11], [8, 11], [10, 10], [14, 7], [16, 6], [18, 6], [20, 7], [21, 10], [21, 12]] }
         };
         return CanvasTextFunctions;
-    })();
+    }());
     TSOS.CanvasTextFunctions = CanvasTextFunctions;
 })(TSOS || (TSOS = {}));

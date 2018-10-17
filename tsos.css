@@ -1,11 +1,26 @@
 /* TSOS.css */
 
 body {
-  background: #909193 url(distrib/images/linen.png) repeat;
+  background: #909193 url(distrib/images/mp1.jpg)no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
   font-family: Helvetica, Verdana, Arial, sans-serif;
   font-size: 12pt;
   font-weight: normal;
   font-style: normal;
+  opacity: 1;
+  transition: 1s opacity;
+}
+
+html {
+    background-color: ;
+}
+
+body.fade-out {
+    opacity: 0;
+    transition: none;
 }
 
 h1 {
@@ -32,7 +47,7 @@ h3 {
 
 #display {
   background-color:#DFDBC3;
-  border: 2px solid red;
+  /*border: 2px solid blue;*/
   cursor: default;
 }
 
@@ -45,4 +60,37 @@ h3 {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 8pt;
   text-align: center;
+}
+
+#taskBar {
+    font-size: 16px;
+    margin: 5px;
+    color: #000000;
+    font-family: Helvetica, Verdana, Arial, sans-serif;
+    border-radius: 25px;
+    background-color: skyblue;
+}
+
+#dateTime{
+
+
+}
+
+#divConsole {
+    margin:50px; 
+    width:500px; 
+    height:500px; 
+    float:left; 
+    overflow: auto;
+    //border-radius: 25px;
+}
+
+#divLog {
+    margin-left: 950px;
+    float: top left;
+}
+
+#divUserProgramInput {
+    margin-left: 950px;
+    float: bottom left;
 }
