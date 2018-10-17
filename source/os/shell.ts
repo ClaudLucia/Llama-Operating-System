@@ -26,6 +26,8 @@ module TSOS {
         public curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
         public apologies = "[sorry]";
         public statusStr = "";
+        public cmdHistory = [];
+        public hisInd = 0;
 
         constructor() {
         }
@@ -392,12 +394,7 @@ module TSOS {
             _StdOut.advanceLine();
             _StdOut.putText("Also they're awesome");
         }
-/*
-How do you change the "status" message in html
-How do I make a command from shell.ts to change html
-I must get an input frmo the user from the command prompt 
-and return that string to the html file 
-*/
+
         public shellStatus(args){
             if (args.length > 0) {
                 TSOS.Control.hostStatus(args.join(' '));
@@ -407,6 +404,26 @@ and return that string to the html file
             
         }
 
+        public getLastCmd() {
+            if (!this.cmdHistory.length) {
+                return "";
+            }
+            if (this.hisInd > 0) {
+                this.hisInd--;
+            }
+            return this.cmdHistory[this.hisInd];
+        }
+        public getFirstCmd() {
+            if (!this.cmdHistory.length) {
+                return "";
+            }
+            if (this.hisInd < this.cmdHistory.length) {
+                this.hisInd++;
+            }if (this.hisInd === this.cmdHistory.length) {
+                return "";
+            }
+            return this.cmdHistory[this.hisInd];
+        }
 
         public shellLoad(args){
         var val;

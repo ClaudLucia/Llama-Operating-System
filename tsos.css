@@ -71,12 +71,8 @@ h3 {
     background-color: skyblue;
 }
 
-#dateTime{
 
-
-}
-
-.divConsole {
+#divConsole {
     margin:50px; 
     width:500px; 
     height:500px; 
@@ -84,19 +80,24 @@ h3 {
     /*border-radius: 25px;*/
 }
 
-.divLog {
+#divLog {
     margin-left: 950px;
-    float: top right;
-    color: rgba(35, 216, 99, 0.60);
+    float:initial;
+    font-size: 16px;
+    /*color: rgba(35, 216, 99, 0.60);*/
 }
 
-.divUserProgramInput {
+#divUserProgramInput {
     margin-left: 950px;
-    float: bottom right;
-    color: rgba(35, 216, 99, 0.60);
+    float: initial;
+    font-size: 16px;
+    /*color: rgba(35, 216, 99, 0.60);*/
 }
 
-/*#taProgramInput, #taHostLog {
+/*set the background color-profile the User input command dialog 
+transparante command make the
+headings visible
+textarea {
     background: transparent;
     color: rgba(35, 216, 99, 0.60);
 }*/

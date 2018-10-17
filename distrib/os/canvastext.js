@@ -26,7 +26,7 @@ var TSOS;
                 + this.descent(font, size));
         };
         CanvasTextFunctions.backSpace = function () {
-            if (_Console.buffer !== '') {
+            if (_Console.buffer !== "") {
                 var newCmd = _Console.buffer.substr(0, _Console.buffer.length - 1);
                 var x = _Console.currentXPosition;
                 var y = _Console.currentYPosition;
@@ -35,11 +35,11 @@ var TSOS;
                 var width = this.measure(font, size, _Console.buffer);
                 this.clrLine(x - width, y, font, size);
                 _Console.currentXPosition -= width;
-                _Console.buffer = '';
+                _Console.buffer = "";
                 _Console.putText(newCmd);
                 _Console.buffer = newCmd;
                 var rouXPos = Math.round(_Console.currentXPosition);
-                if (_Console.lineWrap.length > 0 && rouXPos === 0) {
+                if (_Console.wrapLines.length > 0 && rouXPos === 0) {
                     _Console.currentXPosition = _Console.wrapLines.pop();
                     _Console.currentYPosition -= _Console.lineHeight();
                 }

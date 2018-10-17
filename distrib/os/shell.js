@@ -24,6 +24,8 @@ var TSOS;
             this.curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
             this.apologies = "[sorry]";
             this.statusStr = "";
+            this.cmdHistory = [];
+            this.hisInd = 0;
         }
         Shell.prototype.init = function () {
             var sc;
@@ -321,12 +323,6 @@ var TSOS;
             _StdOut.advanceLine();
             _StdOut.putText("Also they're awesome");
         };
-        /*
-        How do you change the "status" message in html
-        How do I make a command from shell.ts to change html
-        I must get an input frmo the user from the command prompt
-        and return that string to the html file
-        */
         Shell.prototype.shellStatus = function (args) {
             if (args.length > 0) {
                 TSOS.Control.hostStatus(args.join(' '));
@@ -334,6 +330,27 @@ var TSOS;
             else {
                 _StdOut.putText("Usage: status <string>  Please supply a string.");
             }
+        };
+        Shell.prototype.getLastCmd = function () {
+            if (!this.cmdHistory.length) {
+                return "";
+            }
+            if (this.hisInd > 0) {
+                this.hisInd--;
+            }
+            return this.cmdHistory[this.hisInd];
+        };
+        Shell.prototype.getFirstCmd = function () {
+            if (!this.cmdHistory.length) {
+                return "";
+            }
+            if (this.hisInd < this.cmdHistory.length) {
+                this.hisInd++;
+            }
+            if (this.hisInd === this.cmdHistory.length) {
+                return "";
+            }
+            return this.cmdHistory[this.hisInd];
         };
         Shell.prototype.shellLoad = function (args) {
             var val;

@@ -50,8 +50,43 @@ var TSOS;
                     // ... and reset our buffer.
                     this.buffer = "";
                 }
+                //Does backspace on the canvas
                 else if (chr === String.fromCharCode(8)) {
-                    _DrawingContext.eraseLetter();
+                    _DrawingContext.backSpace();
+                }
+                //Finish the command with tab
+                else if (chr === String.fromCharCode(9)) {
+                    if (this.buffer.length !== 0) {
+                        var wordS = this.buffer.toLowerCase().split(" ");
+                        var word = wordS[wordS.length - 1];
+                        var cmdS = _OsShell.commandList.filter(function (value) {
+                            return value.command.indexOf(word) === 0;
+                        });
+                        if (cmdS.length === 1) {
+                            var cmd = cmdS[0].command.substr(word.length) + " ";
+                            this.putText(cmd);
+                            this.buffer += cmd;
+                        }
+                        else if (cmdS.length > 1) {
+                            var prevX = this.currentXPosition;
+                            var prevY = this.currentYPosition;
+                            this.scrollIng = 0;
+                            this.advanceLine;
+                            this.putText(cmdS.map(function (value) {
+                                return value.command;
+                            }).join(", "));
+                            this.currentXPosition = prevX;
+                            this.currentYPosition = prevY - this.scrollIng;
+                        }
+                    }
+                }
+                //Recall the last command
+                else if (chr === String.fromCharCode(38)) {
+                    this.reCall(_OsShell.getLastCmd());
+                }
+                //Recall the first command
+                else if (chr === String.fromCharCode(40)) {
+                    this.reCall(_OsShell.getFirstCmd());
                 }
                 else {
                     // This is a "normal" character, so ...
@@ -78,8 +113,23 @@ var TSOS;
             var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
             this.currentXPosition = this.currentXPosition + offset;
         };
-        //public canvasScrolling(): void {
-        //}
+        Console.prototype.reCall = function (cmd) {
+            _DrawingContext.clrLine(0, this.currentYPosition, this.currentFont, this.currentFontSize);
+            if (this.wrapLines.length > 0) {
+                for (var i = 0; i < this.wrapLines.length; i++) {
+                    this.currentYPosition -= this.lineHeight();
+                    _DrawingContext.clrLine(0, this.currentYPosition, this.currentFont, this.currentFontSize);
+                }
+                this.wrapLines = [];
+            }
+            this.currentXPosition = 0;
+            this.buffer = "";
+            _OsShell.putPrompt();
+            if (cmd) {
+                this.putText(cmd);
+            }
+            this.buffer = cmd;
+        };
         Console.prototype.advanceLine = function (wrap) {
             if (wrap = 0) {
                 wrap = false;
@@ -89,13 +139,11 @@ var TSOS;
             }
             this.currentXPosition = 0;
             //this.currentXPosition = 0;
-            //this.currentYPosition += _DefaultFontSize + 
-            //                         _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
-            //                         _FontHeightMargin;
+            //this.currentYPosition += 
             /*
              * Font size measures from the baseline to the highest point in the font.
              * Font height margin is extra spacing between the lines.
-             TODO: Handle scrolling. (iProject 1)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+             TODO: Handle scrolling. (iProject 1)
              */
             var lineHeight = this.lineHeight();
             this.currentYPosition += lineHeight;
@@ -112,7 +160,9 @@ var TSOS;
             }
         };
         Console.prototype.lineHeight = function () {
-            return _DefaultFontSize + _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) + _FontHeightMargin;
+            return _DefaultFontSize +
+                _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
+                _FontHeightMargin;
         };
         Console.prototype.lineWrap = function (x) {
             this.advanceLine(true);
