@@ -56,29 +56,7 @@ var TSOS;
                 }
                 //Finish the command with tab
                 else if (chr === String.fromCharCode(9)) {
-                    if (this.buffer.length !== 0) {
-                        var wordS = this.buffer.toLowerCase().split(" ");
-                        var word = wordS[wordS.length - 1];
-                        var cmdS = _OsShell.commandList.filter(function (value) {
-                            return value.command.indexOf(word) === 0;
-                        });
-                        if (cmdS.length === 1) {
-                            var cmd = cmdS[0].command.substr(word.length) + " ";
-                            this.putText(cmd);
-                            this.buffer += cmd;
-                        }
-                        else if (cmdS.length > 1) {
-                            var prevX = this.currentXPosition;
-                            var prevY = this.currentYPosition;
-                            this.scrollIng = 0;
-                            this.advanceLine;
-                            this.putText(cmdS.map(function (value) {
-                                return value.command;
-                            }).join(", "));
-                            this.currentXPosition = prevX;
-                            this.currentYPosition = prevY - this.scrollIng;
-                        }
-                    }
+                    _DrawingContext.tabCompletion();
                 }
                 //Recall the last command
                 else if (chr === String.fromCharCode(38)) {

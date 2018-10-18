@@ -45,6 +45,31 @@ var TSOS;
                 }
             }
         };
+        CanvasTextFunctions.tabCompletion = function () {
+            if (_Console.buffer.length !== 0) {
+                var wordS = _Console.buffer.toLowerCase().split(" ");
+                var word = wordS[wordS.length - 1];
+                var cmdS = _OsShell.commandList.filter(function (value) {
+                    return value.command.indexOf(word) === 0;
+                });
+                if (cmdS.length === 1) {
+                    var cmd = cmdS[0].command.substr(word.length) + " ";
+                    _Console.putText(cmd);
+                    _Console.buffer += cmd;
+                }
+                else if (cmdS.length > 1) {
+                    var prevX = _Console.currentXPosition;
+                    var prevY = _Console.currentYPosition;
+                    _Console.scrollIng = 0;
+                    _Console.advanceLine;
+                    _Console.putText(cmdS.map(function (value) {
+                        return value.command;
+                    }).join(", "));
+                    _Console.currentXPosition = prevX;
+                    _Console.currentYPosition = prevY - _Console.scrollIng;
+                }
+            }
+        };
         CanvasTextFunctions.letter = function (ch) {
             return CanvasTextFunctions.symbols[ch];
         };
