@@ -419,7 +419,8 @@ module TSOS {
             }
             if (this.hisInd < this.cmdHistory.length) {
                 this.hisInd++;
-            }if (this.hisInd === this.cmdHistory.length) {
+            }
+            if (this.hisInd === this.cmdHistory.length) {
                 return "";
             }
             return this.cmdHistory[this.hisInd];

@@ -58,7 +58,6 @@ module TSOS {
                 else if (chr === String.fromCharCode(9)) {
                     _DrawingContext.tabCompletion();
                 }
-
                 //Recall the last command
                 else if (chr === String.fromCharCode(38)) {
                     this.reCall(_OsShell.getLastCmd());
@@ -96,7 +95,6 @@ module TSOS {
             this.currentXPosition = this.currentXPosition + offset;
             
         }
-
         
         public reCall(cmd): any {
             _DrawingContext.clrLine(0, this.currentYPosition, this.currentFont, this.currentFontSize);
