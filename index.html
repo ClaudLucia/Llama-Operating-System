@@ -6,7 +6,7 @@
    <link rel="stylesheet" href="tsos.css" type="text/css" media="screen" />
    
    <!-- Splash screen CSS -->
-   <link rel="stylesheet" href="splash.css" type="text/css" media="screen" />
+   <!--<link rel="stylesheet" href="splash.css" type="text/css" media="screen" />-->
 
    <title>
       LlamaOS - a browser-based virtual Operating System in TypeScript featuring Llamas
@@ -92,26 +92,6 @@
                                 <script type="text/javascript">
                                     function startTime() {
                                         var dt = new Date();
-
-                                        // Just the clock
-                                        // var hrs = dt.getHours();
-                                        // var min = dt.getMinutes();
-                                        // var sec = dt.getSeconds();
-                                        // var session = "AM";
-
-                                        // if (hrs > 12){
-                                        //     hrs = hrs-12;
-                                        //     session = "PM";
-
-                                        // }
-                                        // if (hrs == 0){
-                                        //     hrs = 12
-                                        // }
-
-                                        // hrs = (hrs < 10) ? "0" + hrs : hrs;
-                                        // min = (min < 10) ? "0" + min : min;
-                                        // sec = (sec < 10) ? "0" + sec : sec;
-
                                         document.getElementById('dateTime').innerHTML = dt;
                                         var t = setTimeout(startTime, 500);
                                     }
@@ -127,34 +107,28 @@
 
         <div id="divButtonBar">
             
-            <button type="button"
-                    id="btnStartOS"
+            <button id="btnStartOS"
                     name="brnStartOS"
                     class="btn btn-primary btn-lg"
                     value="Start"
-                    tabindex="0"
                     onclick="TSOS.Control.hostBtnStartOS_click(this);">
                 Start
             </button>
             
-            <button type="button"
-                    id="btnHaltOS"
+            <button id="btnHaltOS"
                     name="brnHaltOS"
                     class="btn btn-sucess btn-lg"
                     disabled="disabled"
                     value="Halt"
-                    tabindex="1"
                     onclick="TSOS.Control.hostBtnHaltOS_click(this);">
                 Halt
             </button>
             
-            <button type="button"
-                    id="btnReset"
+            <button id="btnReset"
                     name="brnReset"
                     class="btn btn-warning btn-lg"
                     disabled="disabled"
                     value="Reset"
-                    tabindex="2"
                     onclick="TSOS.Control.hostBtnReset_click(this);">
                 Reset
             </button>

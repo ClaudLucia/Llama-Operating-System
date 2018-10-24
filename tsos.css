@@ -49,13 +49,8 @@ h3 {
 
 #display {
   background-color:#DFDBC3;
-  /*border: 2px solid blue;*/
-  cursor: default;
 }
 
-.normal_button {
-  width: 100px;
-}
 
 .footerText {
   color: black;
@@ -106,8 +101,8 @@ textarea {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
-#startBtn, #haltBtn, #resetBtn {
-    /*background-color: coral;
+#btnStartOS, #btnHaltOS, #btnReset {
+    background-color: coral;
     border: none;
     color: white;
     padding: 15px 32px;
@@ -115,5 +110,10 @@ textarea {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);*/
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+#llamaLogo {
+    height: 5%;
+    width: 5%;
 }
