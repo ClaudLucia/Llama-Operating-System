@@ -1,7 +1,7 @@
 /* TSOS.css */
 
 body {
-  background: #909193 url(distrib/images/mp1.jpg)no-repeat center center fixed;
+  background: #909193 url(distrib/images/llamascarf.jpg)no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -15,7 +15,7 @@ body {
 }
 
 html {
-    background-color: ;
+    background-color: transparent;
 }
 
 body.fade-out {
@@ -32,10 +32,12 @@ h1 {
 }
 
 h2 {
-  color: black;
+  color: rgb(243, 119, 62);
   font-size: 20pt;
-  font-weight: normal;
+  font-weight: bold;
   font-style: normal;
+  font-family: 'Trebuchet MS';
+
 }
 
 h3 {
@@ -68,36 +70,50 @@ h3 {
     color: #000000;
     font-family: Helvetica, Verdana, Arial, sans-serif;
     border-radius: 25px;
-    background-color: skyblue;
+    background-color: rgba(228, 88, 29, 0.74);
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
 
 #divConsole {
-    margin:50px; 
-    width:500px; 
-    height:500px; 
-    float:left;
+    margin: 50px;
+    width: 500px;
+    height: 500px;
+    float: left;
     /*border-radius: 25px;*/
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
 #divLog {
     margin-left: 950px;
     float:initial;
     font-size: 16px;
-    /*color: rgba(35, 216, 99, 0.60);*/
+    position: relative;
+    font-size: 16px;
 }
 
 #divUserProgramInput {
     margin-left: 950px;
     float: initial;
     font-size: 16px;
-    /*color: rgba(35, 216, 99, 0.60);*/
+    position:relative;
 }
 
-/*set the background color-profile the User input command dialog 
-transparante command make the
-headings visible
 textarea {
-    background: transparent;
-    color: rgba(35, 216, 99, 0.60);
-}*/
+    background: white;
+    opacity: 0.5;
+    color: black;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+#startBtn, #haltBtn, #resetBtn {
+    /*background-color: coral;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);*/
+}

@@ -74,86 +74,96 @@
 
     <div id="divMain" style="width:100%;">
 
-       <div id="divButtonBar" style="margin:4px;">
-          <input type="button"
-                 id = "btnStartOS"
-                 name="brnStartOS"
-                 class="normal_button"
-                 value="Start"
-                 tabindex="0"
-                 onclick="TSOS.Control.hostBtnStartOS_click(this);">
+        <div id="taskBar" class="row">
 
-          <input type="button"
-                 id = "btnHaltOS"
-                 name="brnHaltOS"
-                 class="normal_button"
-                 disabled="disabled"
-                 value="Halt"
-                 tabindex="1"
-                 onclick="TSOS.Control.hostBtnHaltOS_click(this);">
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>
+                            <div id="statusBar" class="col-sm-4">
+                                <p id="statusMsg">
+                                    Status
+                                </p>
+                            </div>
+                        </th>
+                        <th>
+                            <!-- Trying to find a way in order not to hardcode the clock here -->
+                            <div id="dateTime" class="col-sm-8">
+                                <script type="text/javascript">
+                                    function startTime() {
+                                        var dt = new Date();
 
-          <input type="button"
-                 id = "btnReset"
-                 name="brnReset"
-                 class="normal_button"
-                 disabled="disabled"
-                 value="Reset"
-                 tabindex="2"
-                 onclick="TSOS.Control.hostBtnReset_click(this);">
-       </div>
+                                        // Just the clock
+                                        // var hrs = dt.getHours();
+                                        // var min = dt.getMinutes();
+                                        // var sec = dt.getSeconds();
+                                        // var session = "AM";
+
+                                        // if (hrs > 12){
+                                        //     hrs = hrs-12;
+                                        //     session = "PM";
+
+                                        // }
+                                        // if (hrs == 0){
+                                        //     hrs = 12
+                                        // }
+
+                                        // hrs = (hrs < 10) ? "0" + hrs : hrs;
+                                        // min = (min < 10) ? "0" + min : min;
+                                        // sec = (sec < 10) ? "0" + sec : sec;
+
+                                        document.getElementById('dateTime').innerHTML = dt;
+                                        var t = setTimeout(startTime, 500);
+                                    }
+                                    startTime();
+                                </script>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+
+        </div>
+
+        <div id="divButtonBar">
+            
+            <button type="button"
+                    id="btnStartOS"
+                    name="brnStartOS"
+                    class="btn btn-primary btn-lg"
+                    value="Start"
+                    tabindex="0"
+                    onclick="TSOS.Control.hostBtnStartOS_click(this);">
+                Start
+            </button>
+            
+            <button type="button"
+                    id="btnHaltOS"
+                    name="brnHaltOS"
+                    class="btn btn-sucess btn-lg"
+                    disabled="disabled"
+                    value="Halt"
+                    tabindex="1"
+                    onclick="TSOS.Control.hostBtnHaltOS_click(this);">
+                Halt
+            </button>
+            
+            <button type="button"
+                    id="btnReset"
+                    name="brnReset"
+                    class="btn btn-warning btn-lg"
+                    disabled="disabled"
+                    value="Reset"
+                    tabindex="2"
+                    onclick="TSOS.Control.hostBtnReset_click(this);">
+                Reset
+            </button>
+            
+        </div>
     </div>
      
    <!-- Task bar for the user -->
-    <div id="taskBar" class="row">
-      
-        <table width="100%">
-          <thead>
-            <tr>
-              <th>
-                <div id="statusBar" class="col-sm-4">
-                  <p id="statusMsg">
-                    Status
-                  </p>
-                </div>
-              </th>
-              <th>
-                    <!-- Trying to find a way in order not to hardcode the clock here -->
-                <div id = "dateTime" class="col-sm-8">
-                  <script type="text/javascript">
-                    function startTime() {
-                      var dt = new Date();
-                      
-                      // Just the clock
-                      // var hrs = dt.getHours();
-                      // var min = dt.getMinutes();
-                      // var sec = dt.getSeconds();
-                      // var session = "AM";
-
-                      // if (hrs > 12){
-                      //     hrs = hrs-12;
-                      //     session = "PM";
-
-                      // }
-                      // if (hrs == 0){
-                      //     hrs = 12
-                      // }
-
-                      // hrs = (hrs < 10) ? "0" + hrs : hrs;
-                      // min = (min < 10) ? "0" + min : min;
-                      // sec = (sec < 10) ? "0" + sec : sec;
-
-                      document.getElementById('dateTime').innerHTML = dt;
-                      var t = setTimeout(startTime, 500);
-                    } 
-                    startTime();
-                  </script>
-                </div>
-              </th>
-            </tr>
-          </thead>
-      </table>
-
-    </div>
+    
 
 
        <div id="divConsole">
@@ -165,7 +175,7 @@
        </div>
      <div id="divLog">
         <label>
-           Host Log
+            <h2>Host Log</h2>
            <br>
            <textarea name="taHostLog"
                      id  ="taHostLog"
@@ -177,7 +187,7 @@
 
      <div id="divUserProgramInput">
         <label>
-           User Program Input
+            <h2>User Program Input</h2>
            <br>
            <textarea name="taProgramInput"
                      id  ="taProgramInput"
