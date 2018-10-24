@@ -18,9 +18,58 @@
  * ----------------- */
 var TSOS;
 (function (TSOS) {
-    var CanvasTextFunctions = (function () {
+    var CanvasTextFunctions = /** @class */ (function () {
         function CanvasTextFunctions() {
         }
+        CanvasTextFunctions.clrLine = function (x, y, font, size) {
+            _DrawingContext.clearRect(x, y - size, _Canvas.width - x, this.ascent(font, size)
+                + this.descent(font, size));
+        };
+        CanvasTextFunctions.backSpace = function () {
+            if (_Console.buffer !== "") {
+                var newCmd = _Console.buffer.substr(0, _Console.buffer.length - 1);
+                var x = _Console.currentXPosition;
+                var y = _Console.currentYPosition;
+                var font = _Console.currentFont;
+                var size = _Console.currentFontSize;
+                var width = this.measure(font, size, _Console.buffer);
+                this.clrLine(x - width, y, font, size);
+                _Console.currentXPosition -= width;
+                _Console.buffer = "";
+                _Console.putText(newCmd);
+                _Console.buffer = newCmd;
+                var rouXPos = Math.round(_Console.currentXPosition);
+                if (_Console.wrapLines.length > 0 && rouXPos === 0) {
+                    _Console.currentXPosition = _Console.wrapLines.pop();
+                    _Console.currentYPosition -= _Console.lineHeight();
+                }
+            }
+        };
+        CanvasTextFunctions.tabCompletion = function () {
+            if (_Console.buffer.length !== 0) {
+                var wordS = _Console.buffer.toLowerCase().split(" ");
+                var word = wordS[wordS.length - 1];
+                var cmdS = _OsShell.commandList.filter(function (value) {
+                    return value.command.indexOf(word) === 0;
+                });
+                if (cmdS.length === 1) {
+                    var cmd = cmdS[0].command.substr(word.length) + " ";
+                    _Console.putText(cmd);
+                    _Console.buffer += cmd;
+                }
+                else if (cmdS.length > 1) {
+                    var prevX = _Console.currentXPosition;
+                    var prevY = _Console.currentYPosition;
+                    _Console.scrollIng = 0;
+                    _Console.advanceLine;
+                    _Console.putText(cmdS.map(function (value) {
+                        return value.command;
+                    }).join(", "));
+                    _Console.currentXPosition = prevX;
+                    _Console.currentYPosition = prevY - _Console.scrollIng;
+                }
+            }
+        };
         CanvasTextFunctions.letter = function (ch) {
             return CanvasTextFunctions.symbols[ch];
         };
@@ -54,6 +103,11 @@ var TSOS;
                 if (!c) {
                     continue;
                 }
+                if (x + c.width * mag > _Canvas.width) {
+                    _Console.lineWrap(x);
+                    x = _Console.currentXPosition;
+                    y = _Console.currentYPosition;
+                }
                 ctx.beginPath();
                 var penUp = true;
                 var needStroke = 0;
@@ -78,10 +132,18 @@ var TSOS;
             return total;
         };
         CanvasTextFunctions.enable = function (ctx) {
-            ctx.drawText = function (font, size, x, y, text) { return CanvasTextFunctions.draw(ctx, font, size, x, y, text); };
-            ctx.measureText = function (font, size, text) { return CanvasTextFunctions.measure(font, size, text); };
-            ctx.fontAscent = function (font, size) { return CanvasTextFunctions.ascent(font, size); };
-            ctx.fontDescent = function (font, size) { return CanvasTextFunctions.descent(font, size); };
+            ctx.drawText = function (font, size, x, y, text) {
+                return CanvasTextFunctions.draw(ctx, font, size, x, y, text);
+            };
+            ctx.measureText = function (font, size, text) {
+                return CanvasTextFunctions.measure(font, size, text);
+            };
+            ctx.fontAscent = function (font, size) {
+                return CanvasTextFunctions.ascent(font, size);
+            };
+            ctx.fontDescent = function (font, size) {
+                return CanvasTextFunctions.descent(font, size);
+            };
             ctx.drawTextRight = function (font, size, x, y, text) {
                 var w = CanvasTextFunctions.measure(font, size, text);
                 return CanvasTextFunctions.draw(ctx, font, size, x - w, y, text);
@@ -89,6 +151,15 @@ var TSOS;
             ctx.drawTextCenter = function (font, size, x, y, text) {
                 var w = CanvasTextFunctions.measure(font, size, text);
                 return CanvasTextFunctions.draw(ctx, font, size, x - w / 2, y, text);
+            };
+            ctx.clrLine = function (x, y, font, size) {
+                return CanvasTextFunctions.clrLine(x, y, font, size);
+            };
+            ctx.backSpace = function () {
+                return CanvasTextFunctions.backSpace();
+            };
+            ctx.tabCompletion = function () {
+                return CanvasTextFunctions.tabCompletion();
             };
         };
         CanvasTextFunctions.symbols = {
@@ -189,6 +260,6 @@ var TSOS;
             '~': { width: 24, points: [[3, 6], [3, 8], [4, 11], [6, 12], [8, 12], [10, 11], [14, 8], [16, 7], [18, 7], [20, 8], [21, 10], [-1, -1], [3, 8], [4, 10], [6, 11], [8, 11], [10, 10], [14, 7], [16, 6], [18, 6], [20, 7], [21, 10], [21, 12]] }
         };
         return CanvasTextFunctions;
-    })();
+    }());
     TSOS.CanvasTextFunctions = CanvasTextFunctions;
 })(TSOS || (TSOS = {}));

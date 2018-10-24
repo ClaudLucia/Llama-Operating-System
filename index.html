@@ -1,11 +1,15 @@
-<!DOCTYPE HTML>
+﻿<!DOCTYPE HTML>
 <html>
 <head>
    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
    <meta name="author"             content="Alan G. Labouseur" />
    <link rel="stylesheet" href="tsos.css" type="text/css" media="screen" />
+   
+   <!-- Splash screen CSS -->
+   <!--<link rel="stylesheet" href="splash.css" type="text/css" media="screen" />-->
+
    <title>
-      TSOS - a browser-based virtual Operating System in TypeScript
+      LlamaOS - a browser-based virtual Operating System in TypeScript featuring Llamas
    </title>
 
    <!-- Globals CONSTANTS and _Variables. Must included be first. -->
@@ -31,82 +35,152 @@
    <!-- Other Routines -->
    <script type="text/javascript" src="distrib/utils.js"></script>
    <!-- Uncomment the line below to enable GLaDOS testing. -->
-   <script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip0.js"></script>
+    <script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip0.js"></script>
+    
+   <!-- Script for the clock -->
+   <!-- <script type="text/javascript" src="distrib/os/clock.js"></script> -->
    
+   <!-- <script type="text/javascript" src="fade.js"></script> -->
+
 </head>
 
 <body onload="onDocumentLoad()">
+<!-- <script>document.body.className += ' fade-out';</script>
+ -->
 
-<div id="divMain" style="width:100%;">
+  
+<!-- Splash screen-->  
+  <!-- <div class = "preload">
+      <div class="logo">
+          <img id = "splashLlama" src="distrib/images/llama-logo.png">
+          <span style=" color:white;"></span>
+      <h1 id="wel">Welcome</h1>
+      <h2 id="enter">Enter</h2>
+      </div>
+  </div> -->
 
-   <div id="divButtonBar" style="margin:4px;">
-      <input type="button"
-             id = "btnStartOS"
-             name="brnStartOS"
-             class="normal_button"
-             value="Start"
-             tabindex="0"
-             onclick="TSOS.Control.hostBtnStartOS_click(this);">
 
-      <input type="button"
-             id = "btnHaltOS"
-             name="brnHaltOS"
-             class="normal_button"
-             disabled="disabled"
-             value="Halt"
-             tabindex="1"
-             onclick="TSOS.Control.hostBtnHaltOS_click(this);">
 
-      <input type="button"
-             id = "btnReset"
-             name="brnReset"
-             class="normal_button"
-             disabled="disabled"
-             value="Reset"
-             tabindex="2"
-             onclick="TSOS.Control.hostBtnReset_click(this);">
-   </div>
 
-   <div id="divConsole" style="margin:4px; width:500px; height:500px; float:left;">
-      <canvas id="display"
-              width="500px"
-              height="500px"
-              tabindex="3">
-      </canvas>
-   </div>
+<!-- Home screen -->
+  <div id="welcomeScreen" class="hidden">
+    <div id="title">
+          <h1 class="page-header">
+            <img id = "llamaLogo" src="distrib/images/llamalogo.png">
+            OS
+          </h1>
+    </div>
 
-   <div id="divLog" style="margin-left:520px;">
-      <label>
-         Host Log
-         <br>
-         <textarea name="taHostLog"
-                   id  ="taHostLog"
-                   rows="26"
-                   cols="48"
-         ></textarea>
-      </label>
-   </div>
 
-   <div id="divUserProgramInput" style="margin-left:520px;">
-      <label>
-         User Program Input
-         <br>
-         <textarea name="taProgramInput"
-                   id  ="taProgramInput"
-                   rows="8"
-                   cols="48"
-         ></textarea>
-      </label>
-   </div>
+    <div id="divMain" style="width:100%;">
+
+        <div id="taskBar" class="row">
+
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>
+                            <div id="statusBar" class="col-sm-4">
+                                <p id="statusMsg">
+                                    Status
+                                </p>
+                            </div>
+                        </th>
+                        <th>
+                            <!-- Trying to find a way in order not to hardcode the clock here -->
+                            <div id="dateTime" class="col-sm-8">
+                                <script type="text/javascript">
+                                    function startTime() {
+                                        var dt = new Date();
+                                        document.getElementById('dateTime').innerHTML = dt;
+                                        var t = setTimeout(startTime, 500);
+                                    }
+                                    startTime();
+                                </script>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+
+        </div>
+
+        <div id="divButtonBar">
+            
+            <button id="btnStartOS"
+                    name="brnStartOS"
+                    class="btn btn-primary btn-lg"
+                    value="Start"
+                    onclick="TSOS.Control.hostBtnStartOS_click(this);">
+                Start
+            </button>
+            
+            <button id="btnHaltOS"
+                    name="brnHaltOS"
+                    class="btn btn-sucess btn-lg"
+                    disabled="disabled"
+                    value="Halt"
+                    onclick="TSOS.Control.hostBtnHaltOS_click(this);">
+                Halt
+            </button>
+            
+            <button id="btnReset"
+                    name="brnReset"
+                    class="btn btn-warning btn-lg"
+                    disabled="disabled"
+                    value="Reset"
+                    onclick="TSOS.Control.hostBtnReset_click(this);">
+                Reset
+            </button>
+            
+        </div>
+    </div>
+     
+   <!-- Task bar for the user -->
+    
+
+
+       <div id="divConsole">
+          <canvas id="display"
+                  width="500px"
+                  height="500px"
+                  tabindex="3">
+          </canvas>
+       </div>
+     <div id="divLog">
+        <label>
+            <h2>Host Log</h2>
+           <br>
+           <textarea name="taHostLog"
+                     id  ="taHostLog"
+                     rows="26"
+                     cols="48"
+           ></textarea>
+        </label>
+     </div>
+
+     <div id="divUserProgramInput">
+        <label>
+            <h2>User Program Input</h2>
+           <br>
+           <textarea name="taProgramInput"
+                     id  ="taProgramInput"
+                     rows="8"
+                     cols="48"
+           ></textarea>
+        </label>
+     </div>
+
+
+  <p class="footerText" style="clear:both;">
+     <br>
+     Copyright &copy; 2008 - 2016 No Rights Reserved.
+     <br>
+     Reproduction is inhibited without the express written consent of
+     Ted Codd, Stevie Ray Vaughan, and Ian Fleming.
+  </p>
+
 </div>
-
-<p class="footerText" style="clear:both;">
-   <br>
-   Copyright &copy; 2008 - 2016 No Rights Reserved.
-   <br>
-   Reproduction is inhibited without the express written consent of
-   Ted Codd, Stevie Ray Vaughan, and Ian Fleming.
-</p>
 
 </body>
 </html>

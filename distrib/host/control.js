@@ -23,7 +23,7 @@
 //
 var TSOS;
 (function (TSOS) {
-    var Control = (function () {
+    var Control = /** @class */ (function () {
         function Control() {
         }
         Control.hostInit = function () {
@@ -98,7 +98,12 @@ var TSOS;
             // be reloaded from the server. If it is false or not specified the browser may reload the
             // page from its cache, which is not what we want.
         };
+        //Status Bar
+        Control.hostStatus = function (status) {
+            var msgSta = document.getElementById('statusMsg');
+            msgSta.textContent = status;
+        };
         return Control;
-    })();
+    }());
     TSOS.Control = Control;
 })(TSOS || (TSOS = {}));

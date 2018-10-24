@@ -1,11 +1,26 @@
 /* TSOS.css */
 
 body {
-  background: #909193 url(distrib/images/linen.png) repeat;
+  background: #909193 url(distrib/images/llamascarf.jpg)no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
   font-family: Helvetica, Verdana, Arial, sans-serif;
   font-size: 12pt;
   font-weight: normal;
   font-style: normal;
+  opacity: 1;
+  transition: 1s opacity;
+}
+
+html {
+    background-color: transparent;
+}
+
+body.fade-out {
+    opacity: 0;
+    transition: none;
 }
 
 h1 {
@@ -17,10 +32,12 @@ h1 {
 }
 
 h2 {
-  color: black;
+  color: rgb(243, 119, 62);
   font-size: 20pt;
-  font-weight: normal;
+  font-weight: bold;
   font-style: normal;
+  font-family: 'Trebuchet MS';
+
 }
 
 h3 {
@@ -32,17 +49,109 @@ h3 {
 
 #display {
   background-color:#DFDBC3;
-  border: 2px solid red;
-  cursor: default;
 }
 
-.normal_button {
-  width: 100px;
-}
 
 .footerText {
   color: black;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 8pt;
   text-align: center;
+}
+
+#taskBar {
+    font-size: 16px;
+    margin: 5px;
+    color: #000000;
+    font-family: Helvetica, Verdana, Arial, sans-serif;
+    border-radius: 25px;
+    background-color: rgba(228, 88, 29, 0.74);
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+
+#divConsole {
+    margin: 50px;
+    width: 500px;
+    height: 500px;
+    float: left;
+    /*border-radius: 25px;*/
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+#divLog {
+    margin-left: 950px;
+    float:initial;
+    font-size: 16px;
+    position: relative;
+    font-size: 16px;
+}
+
+#divUserProgramInput {
+    margin-left: 950px;
+    float: initial;
+    font-size: 16px;
+    position:relative;
+}
+
+textarea {
+    background: white;
+    opacity: 0.5;
+    color: black;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+/*#btnStartOS, #btnHaltOS, #btnReset {
+    background-color: coral;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}*/
+button {
+    display: inline-block;
+    border: none;
+    padding: 1rem 2rem;
+    margin: 0;
+    text-decoration: none;
+    background-color: coral;
+    color: #ffffff;
+    font-family: sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    transition: background 250ms ease-in-out, transform 150ms ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    border-radius: 25px;
+}
+
+    button:hover,
+    button:focus {
+        background-color: chocolate;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        border-radius: 25px;
+    }
+
+    button:focus {
+        outline: 1px solid #fff;
+        outline-offset: -4px;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        border-radius: 25px;
+    }
+
+    button:active {
+        transform: scale(0.99);
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        border-radius: 25px;
+    }
+
+#llamaLogo {
+    height: 5%;
+    width: 5%;
 }

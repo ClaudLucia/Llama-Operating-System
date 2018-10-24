@@ -17,7 +17,10 @@ module TSOS {
                     public currentFontSize = _DefaultFontSize,
                     public currentXPosition = 0,
                     public currentYPosition = _DefaultFontSize,
-                    public buffer = "") {
+                    public buffer = "",
+                    public scrollIng = 0,
+                    public wrapLines = []) {
+
         }
 
         public init(): void {
@@ -27,6 +30,7 @@ module TSOS {
 
         private clearScreen(): void {
             _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
+            _Canvas.height = 500;
         }
 
         private resetXY(): void {
@@ -45,7 +49,24 @@ module TSOS {
                     _OsShell.handleInput(this.buffer);
                     // ... and reset our buffer.
                     this.buffer = "";
-                } else {
+                }
+                //Does backspace on the canvas
+                else if (chr === String.fromCharCode(8)) {
+                    _DrawingContext.backSpace();
+                }
+                //Finish the command with tab
+                else if (chr === String.fromCharCode(9)) {
+                    _DrawingContext.tabCompletion();
+                }
+                //Recall the last command
+                else if (chr === String.fromCharCode(38)) {
+                    this.reCall(_OsShell.getLastCmd());
+                }
+                //Recall the first command
+                else if (chr === String.fromCharCode(40)) {
+                    this.reCall(_OsShell.getFirstCmd());
+                }
+                else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
                     this.putText(chr);
@@ -56,6 +77,7 @@ module TSOS {
             }
         }
 
+
         public putText(text): void {
             // My first inclination here was to write two functions: putChar() and putString().
             // Then I remembered that JavaScript is (sadly) untyped and it won't differentiate
@@ -65,27 +87,85 @@ module TSOS {
             //
             // UPDATE: Even though we are now working in TypeScript, char and string remain undistinguished.
             //         Consider fixing that.
-            if (text !== "") {
-                // Draw the text at the current X and Y coordinates.
-                _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text);
-                // Move the current X position.
-                var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
-                this.currentXPosition = this.currentXPosition + offset;
+            
+            // Draw the text at the current X and Y coordinates.
+            _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text);
+            // Move the current X position.
+            var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
+            this.currentXPosition = this.currentXPosition + offset;
+            
+        }
+        
+        public reCall(cmd): any {
+            _DrawingContext.clrLine(0, this.currentYPosition,
+                                       this.currentFont,
+                                       this.currentFontSize);
+            if (this.wrapLines.length > 0) {
+                for (var i = 0; i < this.wrapLines.length; i++) {
+                    this.currentYPosition -= this.lineHeight();
+                    _DrawingContext.clrLine(0, this.currentYPosition,
+                                            this.currentFont,
+                                            this.currentFontSize);
+                }
+                this.wrapLines = [];
             }
-         }
-
-        public advanceLine(): void {
             this.currentXPosition = 0;
+            this.buffer = "";
+            _OsShell.putPrompt();
+            if (cmd) {
+                this.putText(cmd);
+            }
+            this.buffer = cmd;
+        }
+
+        
+
+        public advanceLine(wrap): void {
+            if (wrap = 0) {
+                wrap = false;
+            }
+            if (!wrap) {
+                this.wrapLines = [];
+            }
+
+            this.currentXPosition = 0;
+            
+            //this.currentXPosition = 0;
+            //this.currentYPosition += 
+
             /*
              * Font size measures from the baseline to the highest point in the font.
-             * Font descent measures from the baseline to the lowest point in the font.
              * Font height margin is extra spacing between the lines.
+             TODO: Handle scrolling. (iProject 1)
              */
-            this.currentYPosition += _DefaultFontSize + 
-                                     _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
-                                     _FontHeightMargin;
+            var lineHeight = this.lineHeight();
+            this.currentYPosition += lineHeight;
+            _DrawingContext.clrLine(this.currentXPosition, this.currentYPosition,
+                                    this.currentFont, this.currentFontSize);
+            if (this.currentYPosition > _Canvas.height) {
+                var oldCanvas = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
+                this.clearScreen();
+                _DrawingContext.putImageData(oldCanvas, 0, -lineHeight);
+                this.currentYPosition -= lineHeight;
+                this.scrollIng += lineHeight;
+            }
+            else {
+                this.scrollIng = 0;
+            }
 
-            // TODO: Handle scrolling. (iProject 1)
+
+            
         }
+        public lineHeight(): any {
+            return _DefaultFontSize + 
+                   _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
+                   _FontHeightMargin;
+        }
+
+        public lineWrap(x): void {
+            this.advanceLine(true);
+            this.wrapLines.push(x);
+        }
+        
     }
  }

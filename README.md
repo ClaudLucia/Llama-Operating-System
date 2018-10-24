@@ -1,8 +1,3 @@
-============================================
-
-New commits have been made under the Project1 branch
-
-
 Browser-based Operating System in TypeScript
 ============================================
 
