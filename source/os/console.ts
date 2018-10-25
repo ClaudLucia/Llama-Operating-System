@@ -38,6 +38,13 @@ module TSOS {
             this.currentYPosition = this.currentFontSize;
         }
 
+        public uhOh(): void {
+            document.getElementById('canvas').classList.add('ohno');
+            document.getElementById('display').classList.add('ohno');
+
+            
+        }
+
         public handleInput(): void {
             while (_KernelInputQueue.getSize() > 0) {
                 // Get the next character from the kernel input queue.
@@ -97,7 +104,9 @@ module TSOS {
         }
         
         public reCall(cmd): any {
-            _DrawingContext.clrLine(0, this.currentYPosition, this.currentFont, this.currentFontSize);
+            _DrawingContext.clrLine(0, this.currentYPosition,
+                                       this.currentFont,
+                                       this.currentFontSize);
             if (this.wrapLines.length > 0) {
                 for (var i = 0; i < this.wrapLines.length; i++) {
                     this.currentYPosition -= this.lineHeight();
@@ -150,8 +159,6 @@ module TSOS {
             else {
                 this.scrollIng = 0;
             }
-
-
             
         }
         public lineHeight(): any {

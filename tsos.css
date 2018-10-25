@@ -47,11 +47,6 @@ h3 {
   font-style: normal;
 }
 
-#display {
-  background-color:#DFDBC3;
-}
-
-
 .footerText {
   color: black;
   font-family: Arial, Helvetica, sans-serif;
@@ -69,14 +64,65 @@ h3 {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
-
 #divConsole {
     margin: 50px;
-    width: 500px;
-    height: 500px;
     float: left;
     /*border-radius: 25px;*/
+}
+
+#canvas {
+    background: #DFDBC3;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+#canvas.ohno {
+    /*border-style: solid;
+    border-color: red;
+    border-width: 10px;*/
+    width: 500px;
+    height: 500px;
+    box-shadow: 0 0 0 rgb(255, 0, 0);
+    animation: pulse 2s infinite;
+}
+
+@-webkit-keyframes pulse {
+    0% {
+        -webkit-box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4);
+    }
+
+    70% {
+        -webkit-box-shadow: 0 0 0 15px rgba(255, 0, 0, 0);
+    }
+
+    100% {
+        -webkit-box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        -moz-box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4);
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4);
+    }
+
+    70% {
+        -moz-box-shadow: 0 0 0 15px rgba(255, 0, 0, 0);
+        box-shadow: 0 0 0 15px rgba(255, 0, 0, 0);
+    }
+
+    100% {
+        -moz-box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+    }
+}
+
+
+
+#display {
+}
+
+#display.ohno {
+    background-color: blue;
 }
 
 #divLog {
@@ -101,7 +147,7 @@ textarea {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
-#btnStartOS, #btnHaltOS, #btnReset {
+/*#btnStartOS, #btnHaltOS, #btnReset {
     background-color: coral;
     border: none;
     color: white;
@@ -111,9 +157,48 @@ textarea {
     display: inline-block;
     font-size: 16px;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}*/
+button {
+    display: inline-block;
+    border: none;
+    padding: 1rem 2rem;
+    margin: 0;
+    text-decoration: none;
+    background-color: coral;
+    color: #ffffff;
+    font-family: sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    transition: background 250ms ease-in-out, transform 150ms ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    border-radius: 25px;
+}
+
+button:hover,
+button:focus {
+    background-color: chocolate;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    border-radius: 25px;
+}
+
+button:focus {
+    outline: 1px solid #fff;
+    outline-offset: -4px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    border-radius: 25px;
+}
+
+button:active {
+    transform: scale(0.99);
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    border-radius: 25px;
 }
 
 #llamaLogo {
     height: 5%;
     width: 5%;
 }
+

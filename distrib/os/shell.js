@@ -17,6 +17,7 @@ Works like src in html
 var TSOS;
 (function (TSOS) {
     var Shell = /** @class */ (function () {
+        //public conceal = false;
         function Shell() {
             // Properties
             this.promptStr = ">";
@@ -70,6 +71,9 @@ var TSOS;
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
+            //Happy Halloween
+            sc = new TSOS.ShellCommand(this.shellBoo, "boo", " - Scary stuff may happen");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -82,6 +86,10 @@ var TSOS;
         };
         Shell.prototype.handleInput = function (buffer) {
             _Kernel.krnTrace("Shell Command~" + buffer);
+            if (buffer && buffer !== "") {
+                this.cmdHistory.push(buffer);
+                this.hisInd = this.cmdHistory.length;
+            }
             //
             // Parse the input...
             //
@@ -158,6 +166,27 @@ var TSOS;
             }
             return retVal;
         };
+        Shell.prototype.getLastCmd = function () {
+            if (!this.cmdHistory.length) {
+                return "";
+            }
+            if (this.hisInd > 0) {
+                this.hisInd--;
+            }
+            return this.cmdHistory[this.hisInd];
+        };
+        Shell.prototype.getFirstCmd = function () {
+            if (!this.cmdHistory.length) {
+                return "";
+            }
+            if (this.hisInd < this.cmdHistory.length) {
+                this.hisInd++;
+            }
+            if (this.hisInd === this.cmdHistory.length) {
+                return "";
+            }
+            return this.cmdHistory[this.hisInd];
+        };
         //
         // Shell Command Functions.  Kinda not part of Shell() class exactly, but
         // called from here, so kept here to avoid violating the law of least astonishment.
@@ -176,7 +205,7 @@ var TSOS;
         Shell.prototype.shellCurse = function () {
             _StdOut.putText("Oh, so that's how it's going to be, eh? Fine.");
             _StdOut.advanceLine();
-            _StdOut.putText("...Bitch.");
+            _StdOut.putText("...Cottonheaded Ninnymuggins.");
             _SarcasticMode = true;
         };
         Shell.prototype.shellApology = function () {
@@ -251,6 +280,9 @@ var TSOS;
                     case "load":
                         _StdOut.putText("Loads a program from User Program Input");
                         break;
+                    case "boo":
+                        _StdOut.putText("Try it and see what happens");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -258,6 +290,10 @@ var TSOS;
             else {
                 _StdOut.putText("Usage: man <topic>  Please supply a topic.");
             }
+        };
+        Shell.prototype.shellBoo = function (args) {
+            _Kernel.krnTrapError("OS Error");
+            //_OsShell.conceal = true;
         };
         Shell.prototype.shellTrace = function (args) {
             if (args.length > 0) {
@@ -331,30 +367,35 @@ var TSOS;
                 _StdOut.putText("Usage: status <string>  Please supply a string.");
             }
         };
-        Shell.prototype.getLastCmd = function () {
-            if (!this.cmdHistory.length) {
-                return "";
+        Shell.prototype.validate = function (program) {
+            if (!program) {
+                _StdOut.putText("Please enter a code in User Program Input");
+                return null;
             }
-            if (this.hisInd > 0) {
-                this.hisInd--;
-            }
-            return this.cmdHistory[this.hisInd];
-        };
-        Shell.prototype.getFirstCmd = function () {
-            if (!this.cmdHistory.length) {
-                return "";
-            }
-            if (this.hisInd < this.cmdHistory.length) {
-                this.hisInd++;
-            }
-            if (this.hisInd === this.cmdHistory.length) {
-                return "";
-            }
-            return this.cmdHistory[this.hisInd];
         };
         Shell.prototype.shellLoad = function (args) {
-            var val;
+            var val = Number.MAX_VALUE;
             if (args.length > 0) {
+                var nums = Number(args[0]);
+                if (isNaN(nums)) {
+                    _StdOut.putText("Please give priority a number");
+                    return;
+                }
+                val = nums;
+            }
+            var getCode = TSOS.Control.getInput();
+            var valid = _OsShell.validate(getCode);
+            if (valid != null) {
+                //NOTE TO SELF: Create the PCB file and Memory Management unit (MMU)
+                var pcb = new TSOS.PCB();
+                pcb.priority = priority;
+                if (_MMU.load(valid, pcb)) {
+                    TSOS.Control.updateMemoryDisplay();
+                    _StdOut.putText("Program [PID" + pcb.pid + "] lodaded.");
+                }
+                else {
+                    _StdOut.putTest("Error: Unable to load Program");
+                }
             }
         };
         return Shell;

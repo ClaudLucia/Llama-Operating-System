@@ -54,6 +54,7 @@ var TSOS;
         Kernel.prototype.krnShutdown = function () {
             this.krnTrace("begin shutdown OS");
             // TODO: Check for running processes.  If there are some, alert and stop. Else...
+            //Create a file for the Process Control Block
             // ... Disable the Interrupts.
             this.krnTrace("Disabling the interrupts.");
             this.krnDisableInterrupts();
@@ -155,6 +156,20 @@ var TSOS;
         Kernel.prototype.krnTrapError = function (msg) {
             TSOS.Control.hostLog("OS ERROR - TRAP: " + msg);
             // TODO: Display error on console, perhaps in some sort of colored screen. (Maybe blue?)
+            _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
+            _Console.currentXPosition = 0;
+            _Console.currentYPosition = _Console.currentFontSize;
+            _Console.uhOh();
+            _StdOut.putText("Uh-Oh");
+            _StdOut.advanceLine();
+            _StdOut.putText("Stomething Went Wrong...");
+            _StdOut.advanceLine();
+            _StdOut.putText("Bye...");
+            _StdOut.advanceLine();
+            _StdOut.putText("bye...");
+            _StdOut.advanceLine();
+            _StdOut.putText("x_x");
+            _StdOut.advanceLine();
             this.krnShutdown();
         };
         return Kernel;

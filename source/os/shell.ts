@@ -28,6 +28,7 @@ module TSOS {
         public statusStr = "";
         public cmdHistory = [];
         public hisInd = 0;
+        //public conceal = false;
 
         constructor() {
         }
@@ -121,6 +122,12 @@ module TSOS {
                                   "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
 
+            //Happy Halloween
+            sc = new ShellCommand(this.shellBoo,
+                                  "boo",
+                                  " - Scary stuff may happen");
+            this.commandList[this.commandList.length] = sc;
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -141,6 +148,10 @@ module TSOS {
 
         public handleInput(buffer) {
             _Kernel.krnTrace("Shell Command~" + buffer);
+            if (buffer && buffer !== "") {
+                this.cmdHistory.push(buffer);
+                this.hisInd = this.cmdHistory.length;
+            }
             //
             // Parse the input...
             //
@@ -221,6 +232,29 @@ module TSOS {
             return retVal;
         }
 
+
+        public getLastCmd() {
+            if (!this.cmdHistory.length) {
+                return "";
+            }
+            if (this.hisInd > 0) {
+                this.hisInd--;
+            }
+            return this.cmdHistory[this.hisInd];
+        }
+        public getFirstCmd() {
+            if (!this.cmdHistory.length) {
+                return "";
+            }
+            if (this.hisInd < this.cmdHistory.length) {
+                this.hisInd++;
+            }
+            if (this.hisInd === this.cmdHistory.length) {
+                return "";
+            }
+            return this.cmdHistory[this.hisInd];
+        }
+
         //
         // Shell Command Functions.  Kinda not part of Shell() class exactly, but
         // called from here, so kept here to avoid violating the law of least astonishment.
@@ -239,7 +273,7 @@ module TSOS {
         public shellCurse() {
             _StdOut.putText("Oh, so that's how it's going to be, eh? Fine.");
             _StdOut.advanceLine();
-            _StdOut.putText("...Bitch.");
+            _StdOut.putText("...Cottonheaded Ninnymuggins.");
             _SarcasticMode = true;
         }
 
@@ -277,6 +311,8 @@ module TSOS {
             _StdOut.clearScreen();
             _StdOut.resetXY();
         }
+
+        
 
         public shellMan(args) {
             if (args.length > 0) {
@@ -319,6 +355,9 @@ module TSOS {
                     case "load":
                         _StdOut.putText("Loads a program from User Program Input");
                         break;
+                    case "boo":
+                        _StdOut.putText("Try it and see what happens");
+                        break;
 
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -326,6 +365,11 @@ module TSOS {
             } else {
                 _StdOut.putText("Usage: man <topic>  Please supply a topic.");
             }
+        }
+
+        public shellBoo(args) {
+            _Kernel.krnTrapError("OS Error");
+            //_OsShell.conceal = true;
         }
 
         public shellTrace(args) {
@@ -404,36 +448,37 @@ module TSOS {
             
         }
 
-        public getLastCmd() {
-            if (!this.cmdHistory.length) {
-                return "";
+        public validate(program) {
+            if (!program) {
+                _StdOut.putText("Please enter a code in User Program Input");
+                return null;
             }
-            if (this.hisInd > 0) {
-                this.hisInd--;
-            }
-            return this.cmdHistory[this.hisInd];
-        }
-        public getFirstCmd() {
-            if (!this.cmdHistory.length) {
-                return "";
-            }
-            if (this.hisInd < this.cmdHistory.length) {
-                this.hisInd++;
-            }
-            if (this.hisInd === this.cmdHistory.length) {
-                return "";
-            }
-            return this.cmdHistory[this.hisInd];
         }
 
-        public shellLoad(args){
-        var val;
-            if (args.length > 0){
-            
+        public shellLoad(args) {
+            var val = Number.MAX_VALUE;
+            if (args.length > 0) {
+                var nums = Number(args[0]);
+                if (isNaN(nums)) {
+                    _StdOut.putText("Please give priority a number");
+                    return;
+                }
+                val = nums;
             }
-
-
-
+            var getCode = TSOS.Control.getInput();
+            var valid = _OsShell.validate(getCode);
+            if (valid != null) {
+                //NOTE TO SELF: Create the PCB file and Memory Management unit (MMU)
+                var pcb = new TSOS.PCB();
+                pcb.priority = priority;
+                if (_MMU.load(valid, pcb)) {
+                    TSOS.Control.updateMemoryDisplay();
+                    _StdOut.putText("Program [PID" + pcb.pid + "] lodaded.");
+                }
+                else {
+                    _StdOut.putTest("Error: Unable to load Program");
+                }
+            }
         }
     }
 }

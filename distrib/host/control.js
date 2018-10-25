@@ -103,6 +103,9 @@ var TSOS;
             var msgSta = document.getElementById('statusMsg');
             msgSta.textContent = status;
         };
+        Control.getInput = function () {
+            return document.getElementById("taProgramInput").value;
+        };
         return Control;
     }());
     TSOS.Control = Control;

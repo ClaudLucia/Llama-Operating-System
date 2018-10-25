@@ -115,7 +115,7 @@ var TSOS;
                 }
                 else if ((keyCode === 38) || (keyCode === 40)) {
                     //Up and down arrows
-                    chr = String.fromCharCode(keyCode + 2153);
+                    chr = String.fromCharCode(keyCode);
                 }
                 else {
                     //more special characters(non-numerical)
