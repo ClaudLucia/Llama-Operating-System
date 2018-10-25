@@ -17,6 +17,7 @@ Works like src in html
 var TSOS;
 (function (TSOS) {
     var Shell = /** @class */ (function () {
+        //public conceal = false;
         function Shell() {
             // Properties
             this.promptStr = ">";
@@ -69,6 +70,9 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
+            this.commandList[this.commandList.length] = sc;
+            //Happy Halloween
+            sc = new TSOS.ShellCommand(this.shellBoo, "boo", " - Scary stuff may happen");
             this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
@@ -276,6 +280,9 @@ var TSOS;
                     case "load":
                         _StdOut.putText("Loads a program from User Program Input");
                         break;
+                    case "boo":
+                        _StdOut.putText("Try it and see what happens");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -283,6 +290,10 @@ var TSOS;
             else {
                 _StdOut.putText("Usage: man <topic>  Please supply a topic.");
             }
+        };
+        Shell.prototype.shellBoo = function (args) {
+            _Kernel.krnTrapError("OS Error");
+            //_OsShell.conceal = true;
         };
         Shell.prototype.shellTrace = function (args) {
             if (args.length > 0) {

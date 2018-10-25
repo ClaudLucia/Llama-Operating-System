@@ -63,7 +63,7 @@
 
 
 <!-- Home screen -->
-  <div id="welcomeScreen" class="hidden">
+  <div id="welcomeScreen">
     <div id="title">
           <h1 class="page-header">
             <img id = "llamaLogo" src="distrib/images/llamalogo.png">
@@ -104,9 +104,10 @@
             </table>
 
         </div>
+        <!-- Task bar for the user -->
 
         <div id="divButtonBar">
-            
+
             <button id="btnStartOS"
                     name="brnStartOS"
                     class="btn btn-primary btn-lg"
@@ -114,7 +115,7 @@
                     onclick="TSOS.Control.hostBtnStartOS_click(this);">
                 Start
             </button>
-            
+
             <button id="btnHaltOS"
                     name="brnHaltOS"
                     class="btn btn-sucess btn-lg"
@@ -123,7 +124,7 @@
                     onclick="TSOS.Control.hostBtnHaltOS_click(this);">
                 Halt
             </button>
-            
+
             <button id="btnReset"
                     name="brnReset"
                     class="btn btn-warning btn-lg"
@@ -132,21 +133,19 @@
                     onclick="TSOS.Control.hostBtnReset_click(this);">
                 Reset
             </button>
-            
+
         </div>
     </div>
      
-   <!-- Task bar for the user -->
-    
 
-
-       <div id="divConsole">
-          <canvas id="display"
-                  width="500px"
-                  height="500px"
-                  tabindex="3">
-          </canvas>
-       </div>
+     <div id="divConsole">
+         <div id = "canvas" class="outline">
+             <canvas id="display"
+                     width="500px"
+                     height="500px"
+                     tabindex="3"></canvas>
+         </div>
+     </div>
      <div id="divLog">
         <label>
             <h2>Host Log</h2>

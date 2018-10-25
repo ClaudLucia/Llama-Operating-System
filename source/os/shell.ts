@@ -28,6 +28,7 @@ module TSOS {
         public statusStr = "";
         public cmdHistory = [];
         public hisInd = 0;
+        //public conceal = false;
 
         constructor() {
         }
@@ -119,6 +120,12 @@ module TSOS {
             sc = new ShellCommand(this.shellPrompt,
                                   "prompt",
                                   "<string> - Sets the prompt.");
+            this.commandList[this.commandList.length] = sc;
+
+            //Happy Halloween
+            sc = new ShellCommand(this.shellBoo,
+                                  "boo",
+                                  " - Scary stuff may happen");
             this.commandList[this.commandList.length] = sc;
 
             // ps  - list the running processes and their IDs
@@ -305,6 +312,8 @@ module TSOS {
             _StdOut.resetXY();
         }
 
+        
+
         public shellMan(args) {
             if (args.length > 0) {
                 var topic = args[0];
@@ -346,6 +355,9 @@ module TSOS {
                     case "load":
                         _StdOut.putText("Loads a program from User Program Input");
                         break;
+                    case "boo":
+                        _StdOut.putText("Try it and see what happens");
+                        break;
 
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -353,6 +365,11 @@ module TSOS {
             } else {
                 _StdOut.putText("Usage: man <topic>  Please supply a topic.");
             }
+        }
+
+        public shellBoo(args) {
+            _Kernel.krnTrapError("OS Error");
+            //_OsShell.conceal = true;
         }
 
         public shellTrace(args) {

@@ -38,6 +38,10 @@ var TSOS;
             this.currentXPosition = 0;
             this.currentYPosition = this.currentFontSize;
         };
+        Console.prototype.uhOh = function () {
+            document.getElementById('canvas').classList.add('ohno');
+            document.getElementById('display').classList.add('ohno');
+        };
         Console.prototype.handleInput = function () {
             while (_KernelInputQueue.getSize() > 0) {
                 // Get the next character from the kernel input queue.
