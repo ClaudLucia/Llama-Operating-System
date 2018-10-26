@@ -1,45 +1,46 @@
-﻿//
+//
 // Process COntrol Block
 //
-
 /* ------------
- * 
+ *
  * The Process Control Block
  * manages the processes for the OS
- * 
- * 
- * 
+ *
+ *
+ *
  ------------ */
-
-
-module TSOS {
-
-    export class PCB {
+var TSOS;
+(function (TSOS) {
+    var PCB = /** @class */ (function () {
         //Properties
-        constructor(public PC,
-                    public IR,
-                    public xReg,
-                    public yReg,
-                    public zFlag,
-                    public base,
-                    public Acc,
-                    public limit,
-                    public state,
-                    public isTerm = false,
-                    public rediOutput = "",
-                    public preTime = 0,
-                    public runTime = 0,
-                    public waitTime = 0,
-                    public inMem = true,
-                    public priority = -1,
-                    public pid = PCB.processCounter,
-                    //public preTime = _OSclock,
-                    //public PCB.processList[PCB.processCount] = this,
-                    //public PCB.processCount++
-                    ) {
+        function PCB(PC, IR, xReg, yReg, zFlag, base, Acc, limit, state, isTerm, rediOutput, preTime, runTime, waitTime, inMem, priority, pid) {
+            if (isTerm === void 0) { isTerm = false; }
+            if (rediOutput === void 0) { rediOutput = ""; }
+            if (preTime === void 0) { preTime = 0; }
+            if (runTime === void 0) { runTime = 0; }
+            if (waitTime === void 0) { waitTime = 0; }
+            if (inMem === void 0) { inMem = true; }
+            if (priority === void 0) { priority = -1; }
+            if (pid === void 0) { pid = PCB.processCounter; }
+            this.PC = PC;
+            this.IR = IR;
+            this.xReg = xReg;
+            this.yReg = yReg;
+            this.zFlag = zFlag;
+            this.base = base;
+            this.Acc = Acc;
+            this.limit = limit;
+            this.state = state;
+            this.isTerm = isTerm;
+            this.rediOutput = rediOutput;
+            this.preTime = preTime;
+            this.runTime = runTime;
+            this.waitTime = waitTime;
+            this.inMem = inMem;
+            this.priority = priority;
+            this.pid = pid;
         }
-
-        public ready(): any {
+        PCB.prototype.ready = function () {
             if (this.state == _State.RESIDENT) {
                 this.state = _State.READY;
                 return true;
@@ -47,9 +48,8 @@ module TSOS {
             else {
                 return false;
             }
-        }
-
-        public start(): any {
+        };
+        PCB.prototype.start = function () {
             if (this.state == _State.READY) {
                 this.state = _State.RUNNING;
                 return true;
@@ -57,9 +57,8 @@ module TSOS {
             else {
                 return false;
             }
-        }
-
-        public preempt(): any {
+        };
+        PCB.prototype.preempt = function () {
             if (this.state == _State.RUNNING) {
                 this.state = _State.READY;
                 this.syncing();
@@ -69,9 +68,8 @@ module TSOS {
             else {
                 return false;
             }
-        }
-
-        public stop(): any {
+        };
+        PCB.prototype.stop = function () {
             if (this.state == _State.RUNNING || this.state == _State.READY) {
                 this.syncing();
                 this.remove();
@@ -82,9 +80,8 @@ module TSOS {
             else {
                 return false;
             }
-        }
-
-        public remove(): phase {
+        };
+        PCB.prototype.remove = function () {
             if (phase === void 0) {
                 phase = false;
             }
@@ -95,12 +92,10 @@ module TSOS {
             }
             else if (!phase) {
                 var processN = "~p" + this.pid + ".swp";
-                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(FILESYS_IRQ,
-                    { COMMAND: "del", file: processN, data: "" }));
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(FILESYS_IRQ, { COMMAND: "del", file: processN, data: "" }));
             }
-        }
-
-        public syncing(): void {
+        };
+        PCB.prototype.syncing = function () {
             var PC = _CPU.PC;
             var IR = _CPU.IR;
             var Acc = _CPU.Acc;
@@ -113,27 +108,25 @@ module TSOS {
             this.xReg = xReg;
             this.yReg = yReg;
             this.zFlag = zFlag;
-        }
-
-        public showStats(): void {
+        };
+        PCB.prototype.showStats = function () {
             _StdOut.putText("Process [PID " + this.pid + " ] stats");
             _StdOut.advanceLine();
             _StdOut.putText("Turnaround Time: " + this.turnAround + " cycle(s)");
             _StdOut.advanceLine();
             _StdOut.putText("Wait Time: " + this.waitTime + " cycle(s)");
             _OsShell.putPrompt();
-        }
-
-        public static getProcesses(pr): void {
+        };
+        PCB.getProcesses = function (pr) {
             return this.processList.filter(function (pcb) {
                 return pcb.pid == p;
-            })[0]
-        }
-
-        public static proccessCount(): any {
-        }
-
-        public static processList(): Array{
-        }
-    }
-}
+            })[0];
+        };
+        PCB.proccessCount = function () {
+        };
+        PCB.processList = function () {
+        };
+        return PCB;
+    }());
+    TSOS.PCB = PCB;
+})(TSOS || (TSOS = {}));

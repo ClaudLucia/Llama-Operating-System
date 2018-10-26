@@ -104,7 +104,7 @@ var TSOS;
             msgSta.textContent = status;
         };
         Control.getInput = function () {
-            return document.getElementById("taProgramInput").value;
+            //return document.getElementById("taProgramInput").value;
         };
         return Control;
     }());

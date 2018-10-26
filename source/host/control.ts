@@ -125,7 +125,7 @@ module TSOS {
         }
 
         public static getInput(): void{
-            return document.getElementById("taProgramInput").value;
+            //return document.getElementById("taProgramInput").value;
         }
     }
 }
