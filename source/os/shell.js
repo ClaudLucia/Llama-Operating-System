@@ -367,10 +367,36 @@ var TSOS;
                 _StdOut.putText("Usage: status <string>  Please supply a string.");
             }
         };
-        Shell.prototype.shellLoad = function (args) {
-            var val;
-            if (args.length > 0) {
+        Shell.prototype.validate = function (program) {
+            if (!program) {
+                _StdOut.putText("Please enter a code in User Program Input");
+                return null;
             }
+        };
+        Shell.prototype.shellLoad = function (args) {
+            //    var val = Number.MAX_VALUE;
+            //    if (args.length > 0) {
+            //        var nums = Number(args[0]);
+            //        if (isNaN(nums)) {
+            //            _StdOut.putText("Please give priority a number");
+            //            return;
+            //        }
+            //        val = nums;
+            //    }
+            //    var getCode = TSOS.Control.getInput();
+            //    var valid = _OsShell.validate(getCode);
+            //    if (valid != null) {
+            //        //NOTE TO SELF: Create the PCB file and Memory Management unit (MMU)
+            //        var pcb = new TSOS.PCB();
+            //        pcb.priority = priority;
+            //        if (_MMU.load(valid, pcb)) {
+            //            TSOS.Control.updateMemoryDisplay();
+            //            _StdOut.putText("Program [PID" + pcb.pid + "] lodaded.");
+            //        }
+            //        else {
+            //            _StdOut.putTest("Error: Unable to load Program");
+            //        }
+            //    }
         };
         return Shell;
     }());

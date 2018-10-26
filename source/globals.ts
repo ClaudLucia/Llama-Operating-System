@@ -65,6 +65,24 @@ var _krnKeyboardDriver; //  = null;
 
 var _hardwareClockID: number = null;
 
+//Memory and Processes
+var _Memory;
+var _MemorySize = 0x300;
+var _MMU;
+var _State = {
+              NEW: "New",
+              RESIDENT: "Resident",
+              READY: "Ready",
+              RUNNING: "Runningw",
+              TERMINATED: "Terminated",
+              WAITING: "Waiting",
+}
+var SYSCALL_IRQ: number = 2;
+var FILESYS_IRQ: number = 3;
+
+
+
+
 // For testing (and enrichment)...
 var Glados: any = null;  // This is the function Glados() in glados.js on Labouseur.com.
 var _GLaDOS: any = null; // If the above is linked in, this is the instantiated instance of Glados.

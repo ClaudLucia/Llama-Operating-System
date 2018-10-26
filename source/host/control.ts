@@ -123,5 +123,9 @@ module TSOS {
             var msgSta = <HTMLInputElement>document.getElementById('statusMsg');
             msgSta.textContent = status;
         }
+
+        public static getInput(): void{
+            //return document.getElementById("taProgramInput").value;
+        }
     }
 }
