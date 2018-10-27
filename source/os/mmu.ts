@@ -31,7 +31,7 @@ module TSOS {
         public static createProcess(priority, program): any {
             var pid = this.createPID;
             var base = this.findBase(pid);
-            this.createPID += 1;
+            this.createPID = this.createPID + 1;
 
             var limit = base !== -1 ? _MemorySegmentSize : -1;
 
@@ -40,37 +40,34 @@ module TSOS {
             var storeProgram = program.map(x => TSOS.Utils.fHex(x));
             if (base !== -1) {
                 this.zeroBytesBaseLimit(base, limit);
-                this.setBsLogicalAddr(0, prog, base, limit);
+                this.setBsLogicalAddr(0, storeProgram, base, limit);
             }
-            else {
-                TSOS.Devices.hostStoreProgramOnDisk(pid, prog);
-            }
-            TSOS.Control.updateDisplay();
+            //else {
+            //    TSOS.Devices.storeProgram(pid, prog);
+            //}
+            //TSOS.Control.hUpdateDisplay();
             return pid;
         }
 
+        static createPID = 0;
+        
 
-
-        public createPID(): any {
-            return 0;
-        }
-
-        public zeroBytesBaseLimit(base, limit) {
+        public static zeroBytesBaseLimit(base, limit) {
             return _Memory.zeroBytes(base, limit);
         }
 
-        public setBLogicalAddr(logAddr, bytes, base, limit) {
-            return this.setBsLogicalAddr(logAddr, [bytes], base, limit);
+        public static setBLogicalAddr(logAddr, byte, base, limit) {
+            return this.setBsLogicalAddr(logAddr, [byte], base, limit);
         }
         
-        public setBsLogicalAddr(logAddr, bytes, base, limit) {
+        public static setBsLogicalAddr(logAddr, bytes, base, limit) {
             if (this.isValid(logAddr, bytes.length, base, limit) === false) {
                 return;
             }
             _Memory.setBytes(this.getAddr(logAddr, base), bytes);
         }
 
-        public findBase(pid): any {
+        public static findBase(pid): any {
             for (var i = 0; i < this.status.length; i++) {
                 if (this.status[i] === -1) {
                     this.status[i] = pid;
@@ -80,8 +77,7 @@ module TSOS {
             return -1;
         }
 
-        public status() {
-            return -1;
-        }
+        static status = Array(_MemorySegmentCount)
+        
     }
 }

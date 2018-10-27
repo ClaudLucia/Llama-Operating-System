@@ -30,37 +30,34 @@ var TSOS;
         MMU.createProcess = function (priority, program) {
             var pid = this.createPID;
             var base = this.findBase(pid);
-            this.createPID += 1;
+            this.createPID = this.createPID + 1;
             var limit = base !== -1 ? _MemorySegmentSize : -1;
             _Scheduler.residentList.push(new TSOS.PCB(pid, base, limit, priority));
             _Scheduler.sortResidentList();
             var storeProgram = program.map(function (x) { return TSOS.Utils.fHex(x); });
             if (base !== -1) {
                 this.zeroBytesBaseLimit(base, limit);
-                this.setBsLogicalAddr(0, prog, base, limit);
+                this.setBsLogicalAddr(0, storeProgram, base, limit);
             }
-            else {
-                TSOS.Devices.hostStoreProgramOnDisk(pid, prog);
-            }
-            TSOS.Control.updateDisplay();
+            //else {
+            //    TSOS.Devices.storeProgram(pid, prog);
+            //}
+            //TSOS.Control.hUpdateDisplay();
             return pid;
         };
-        MMU.prototype.createPID = function () {
-            return 0;
-        };
-        MMU.prototype.zeroBytesBaseLimit = function (base, limit) {
+        MMU.zeroBytesBaseLimit = function (base, limit) {
             return _Memory.zeroBytes(base, limit);
         };
-        MMU.prototype.setBLogicalAddr = function (logAddr, bytes, base, limit) {
-            return this.setBsLogicalAddr(logAddr, [bytes], base, limit);
+        MMU.setBLogicalAddr = function (logAddr, byte, base, limit) {
+            return this.setBsLogicalAddr(logAddr, [byte], base, limit);
         };
-        MMU.prototype.setBsLogicalAddr = function (logAddr, bytes, base, limit) {
+        MMU.setBsLogicalAddr = function (logAddr, bytes, base, limit) {
             if (this.isValid(logAddr, bytes.length, base, limit) === false) {
                 return;
             }
             _Memory.setBytes(this.getAddr(logAddr, base), bytes);
         };
-        MMU.prototype.findBase = function (pid) {
+        MMU.findBase = function (pid) {
             for (var i = 0; i < this.status.length; i++) {
                 if (this.status[i] === -1) {
                     this.status[i] = pid;
@@ -69,9 +66,8 @@ var TSOS;
             }
             return -1;
         };
-        MMU.prototype.status = function () {
-            return -1;
-        };
+        MMU.createPID = 0;
+        MMU.status = Array(_MemorySegmentCount);
         return MMU;
     }());
     TSOS.MMU = MMU;

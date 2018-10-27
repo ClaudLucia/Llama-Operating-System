@@ -46,7 +46,7 @@ var TSOS;
         };
         Utils.tHex = function (num, dig) {
             if (dig === void 0) { dig = 2; }
-            //return ("0".repeat(dig) + num.toStrin(16).toUpperCase()).slice(-dig);
+            return ("0".repeat(dig) + num.toStrin(16).toUpperCase()).slice(-dig);
         };
         Utils.fHex = function (String) {
             return parseInt(String, 16);

@@ -49,6 +49,7 @@ var _krnKeyboardDriver; //  = null;
 var _hardwareClockID = null;
 //Memory and Processes
 var _MMU;
+var _MemorySegmentCount = 3;
 var _MemorySegmentSize = 256;
 var SYSCALL_IRQ = 2;
 var FILESYS_IRQ = 3;

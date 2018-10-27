@@ -104,7 +104,7 @@ var TSOS;
             msgSta.textContent = status;
         };
         Control.load = function (priority) {
-            var program = document.getElementById("taProgramInput").value;
+            var program = document.getElementById("taProgramInput").nodeValue;
             program = program.replace(/\s+/g, "");
             if (program.length === 0 || program.length > (_MemorySegmentSize * 2)) {
                 return -1;

@@ -103,13 +103,21 @@ var TSOS;
             var msgSta = document.getElementById('statusMsg');
             msgSta.textContent = status;
         };
-        Control.getInput = function () {
-            //return document.getElementById("taProgramInput").value;
-        };
-        Control.removeProcess = function (pid) {
-            var table = document.getElementById("procTable");
-            //var rows = table.item(0).rows;
-            //for (var i = 0)
+        Control.load = function (priority) {
+            var program = document.getElementById("taProgramInput").nodeValue;
+            program = program.replace(/\s+/g, "");
+            if (program.length === 0 || program.length > (_MemorySegmentSize * 2)) {
+                return -1;
+            }
+            var re = new RegExp("[^0-9a-fA-F]");
+            var invChars = re.test(program);
+            if (invChars === true) {
+                return -1;
+            }
+            else {
+                var progArray = program.match(/.{2}/g);
+                return TSOS.MMU.createProcess(priority, progArray);
+            }
         };
         return Control;
     }());

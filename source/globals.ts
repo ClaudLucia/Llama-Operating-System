@@ -67,6 +67,7 @@ var _hardwareClockID: number = null;
 
 //Memory and Processes
 var _MMU;
+var _MemorySegmentCount: number = 3;
 var _MemorySegmentSize: number = 256;
 var SYSCALL_IRQ: number = 2;
 var FILESYS_IRQ: number = 3;

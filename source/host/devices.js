@@ -55,6 +55,9 @@ var TSOS;
                 _KernelInterruptQueue.enqueue(new TSOS.Interrupt(KEYBOARD_IRQ, params));
             }
         };
+        Devices.storeProgram = function (pid, porgram) {
+            //var params = [TSOS.DeviceDriverD]
+        };
         return Devices;
     }());
     TSOS.Devices = Devices;
