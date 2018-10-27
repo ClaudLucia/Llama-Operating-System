@@ -1,6 +1,8 @@
 ﻿//
 // Memory Management Unit
 ///<reference path="../globals.ts" />
+///<reference path="kernel.ts" />
+///<reference path="interrupt.ts" />
 /* ------------
  *
  * The Memory Management Unit
@@ -14,68 +16,72 @@ module TSOS {
 
     export class MMU {
         //Properties
-        constructor(
-            public partitions) {
+        static isValid(logAddr, size, base, limit) {
+            if ((logAddr < 0x0 ||
+                logAddr >= limit) ||
+                (logAddr + size > limit)) {
+                return false;
+            }
+        }
+        public static getAddr(logAddr, base) {
+            return base + logAddr;
         }
 
-        public init(): void {
-            this.cleanStart();
-        } 
-        public load(pcb, program): any {
-            var fPart = this.check();
-            if (fPart.isFree !== undefined) {
-                fPart.isFree = false;
 
-                pcb.memInd = fPart.memInd;
+        public static createProcess(priority, program): any {
+            var pid = this.createPID;
+            var base = this.findBase(pid);
+            this.createPID += 1;
 
-                pcb.inst = _MemoryAcc.readmem(pcb.memInd, pcb.PC).toUpperCase();
+            var limit = base !== -1 ? _MemorySegmentSize : -1;
 
-                pcb.loc = _ProcessMan.processLoc.memory;
-
-                pcb.predictBurst = _Scheduler.removeZeros(program).length + _Scheduler.addWeight(program);
-
-                _ProcessMan.processlist.push(pcb);
-
-                TSOS.Control.updateMem(fPart.memInd);
-
-                TSOS.Control.initProcess(pcb);
-
-                _StdOut.putText("Program " + pcb.programID + " loaded");
-            }
-            else if (_HDD.isFormatted) {
-                pcb.inst = program[0];
-
-                pcb.loc = _ProcessMan.processLoc.hdd;
-
-                pcb.predictBurst = _Scheduler.removeZeros(program).length + _Scheduler.addWeight(program);
-
-                _ProcessMan.processList.push(pcb);
-
-                TSOS.Control.initProcess(pcb);
-
-                _krnSysFile.rollOut(pcb.programID, program);
-
-                _StdOut.putText("Program " + pcb.programID + " loaded");
+            _Scheduler.residentList.push(new TSOS.PCB(pid, base, limit, priority));
+            _Scheduler.sortResidentList();
+            var storeProgram = program.map(x => TSOS.Utils.fHex(x));
+            if (base !== -1) {
+                this.zeroBytesBaseLimit(base, limit);
+                this.setBsLogicalAddr(0, prog, base, limit);
             }
             else {
-                _StdOut.putText("Unable to Load. Memory is full");
+                TSOS.Devices.hostStoreProgramOnDisk(pid, prog);
             }
+            TSOS.Control.updateDisplay();
+            return pid;
         }
 
-        public loadHDD() {
-            var fPart
+
+
+        public createPID(): any {
+            return 0;
         }
 
-        public cleanStart(): any {
-            for (var i = 0; i < _Memory.memSize; i++) {
-                _Memory.memArray[0][i] = "00";
-                _Memory.memArray[1][i] = "00";
-                _Memory.memArray[2][i] = "00";
-            }
-            for (var i = 0; i < _ProcessMan.processList.length; i++) {
-                TSOS.Control.removeProcess(_ProcessMan.processList[i].programID);
-            }
+        public zeroBytesBaseLimit(base, limit) {
+            return _Memory.zeroBytes(base, limit);
+        }
 
+        public setBLogicalAddr(logAddr, bytes, base, limit) {
+            return this.setBsLogicalAddr(logAddr, [bytes], base, limit);
+        }
+        
+        public setBsLogicalAddr(logAddr, bytes, base, limit) {
+            if (this.isValid(logAddr, bytes.length, base, limit) === false) {
+                return;
+            }
+            _Memory.setBytes(this.getAddr(logAddr, base), bytes);
+        }
+
+        public findBase(pid): any {
+            for (var i = 0; i < this.status.length; i++) {
+                if (this.status[i] === -1) {
+                    this.status[i] = pid;
+                    return i * _MemorySegmentSize;
+                }
+            }
+            return -1;
+        }
+
+        public status() {
+            return -1;
         }
     }
 }

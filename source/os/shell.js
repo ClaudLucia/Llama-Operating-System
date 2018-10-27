@@ -374,28 +374,20 @@ var TSOS;
             }
         };
         Shell.prototype.shellLoad = function (args) {
-            var val = Number.MAX_VALUE;
+            var priority = 0;
             if (args.length > 0) {
-                var nums = Number(args[0]);
-                if (isNaN(nums)) {
-                    _StdOut.putText("Please give priority a number");
+                if (isNaN(parseInt(args[0])) || parseInt(args[0]) < 0) {
+                    _StdOut.putText("Usage: load <priority?>  Please supply a valid positive integer priority greater than 0.");
                     return;
                 }
-                val = nums;
+                priority = parseInt(args[0]);
             }
-            var getCode = TSOS.Control.getInput();
-            var valid = _OsShell.validate(getCode);
-            if (valid != null) {
-                //NOTE TO SELF: Create the PCB file and Memory Management unit (MMU)
-                var pcb = new TSOS.PCB();
-                //pcb.priority = priority;
-                //if (_MMU.load(valid, pcb)) {
-                //    TSOS.Control.updateMemoryDisplay();
-                //    _StdOut.putText("Program [PID" + pcb.pid + "] lodaded.");
-                //}
-                //else {
-                //    _StdOut.putTest("Error: Unable to load Program");
-                //}
+            var pid = TSOS.Control.load(priority);
+            if (pid === -1) {
+                _StdOut.putText("Invalid program. Valid characters are 0-9, a-z, and A-Z.");
+            }
+            else {
+                _StdOut.putText("Program loaded. PID " + pid);
             }
         };
         return Shell;

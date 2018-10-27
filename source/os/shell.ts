@@ -456,26 +456,20 @@ module TSOS {
         }
 
         public shellLoad(args) {
-            var userIn = $("#taProgramInput").val();
-            userIn = TSOS.Utils.cleanIn(userIn);
-            var hex = TSOS.Utils.isHex(userIn);
-            var validHex = hexObj.isHex;
-            if (userIn !== "Overflow") {
-                if (validHex && userIn !== "") {
-                    hexObj.hexVal = hexObj.hexVal.split(" ");
-
-                    var pcb = new TSOS.PCB();
-
-                    if (args.length > 0 && /\d+/.test(args[0])) {
-                        pcb.priority = parseInt(args[0]);
-                        _StdOut.putText("Priority is set to " + args[0]);
-                        _StdOut.advanceLine();
-                    }
-                    else if (args.length === 0) {
-                        _StdOut.putText("Invalid. Input valid Hex");
-                    }
+            var priority = 0;
+            if (args.length > 0) {
+                if (isNaN(parseInt(args[0])) || parseInt(args[0]) < 0) {
+                    _StdOut.putText("Usage: load <priority?>  Please supply a valid positive integer priority greater than 0.");
+                    return;
                 }
+                priority = parseInt(args[0]);
             }
+            var pid = TSOS.Control.load(priority);
+            if (pid === -1) {
+                _StdOut.putText("Invalid program. Valid characters are 0-9, a-z, and A-Z.");
+            }
+            else {
+                _StdOut.putText(`Program loaded. PID ${pid}`);
             }
         }
     }

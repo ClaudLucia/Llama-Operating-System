@@ -11,13 +11,13 @@
 //
 // Global CONSTANTS (TypeScript 1.5 introduced const. Very cool.)
 //
-const APP_NAME: string    = "TSOS";   // 'cause Bob and I were at a loss for a better name.
+const APP_NAME: string = "TSOS";   // 'cause Bob and I were at a loss for a better name.
 const APP_VERSION: string = "1.1.5";   // What did you expect?
 
 const CPU_CLOCK_INTERVAL: number = 100;   // This is in ms (milliseconds) so 1000 = 1 second.
 
 const TIMER_IRQ: number = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interrupt priority).
-                              // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
+// NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 const KEYBOARD_IRQ: number = 1;
 
 
@@ -66,34 +66,19 @@ var _krnKeyboardDriver; //  = null;
 var _hardwareClockID: number = null;
 
 //Memory and Processes
-var _Memory;
-var _MemorySize = 0x300;
-var _MemoryAcc;
-var _ProcessMan;
-var _Scheduler;
-var _HDD;
-var _krnSysFile;
 var _MMU;
-var _State = {
-              NEW: "New",
-              RESIDENT: "Resident",
-              READY: "Ready",
-              RUNNING: "Runningw",
-              TERMINATED: "Terminated",
-              WAITING: "Waiting",
-}
-var _SegmentSz: number = 256;
+var _MemorySegmentSize: number = 256;
 var SYSCALL_IRQ: number = 2;
 var FILESYS_IRQ: number = 3;
 
-var _ProcessCount: number = 0;
-
+var _Scheduler;
+var _Memory;
 
 
 // For testing (and enrichment)...
 var Glados: any = null;  // This is the function Glados() in glados.js on Labouseur.com.
 var _GLaDOS: any = null; // If the above is linked in, this is the instantiated instance of Glados.
 
-var onDocumentLoad = function() {
-	TSOS.Control.hostInit();
+var onDocumentLoad = function () {
+    TSOS.Control.hostInit();
 };

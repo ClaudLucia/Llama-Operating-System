@@ -1,6 +1,8 @@
 //
 // Memory Management Unit
 ///<reference path="../globals.ts" />
+///<reference path="kernel.ts" />
+///<reference path="interrupt.ts" />
 /* ------------
  *
  * The Memory Management Unit
@@ -12,51 +14,63 @@
 var TSOS;
 (function (TSOS) {
     var MMU = /** @class */ (function () {
-        //Properties
-        function MMU(partitions) {
-            this.partitions = partitions;
+        function MMU() {
         }
-        MMU.prototype.init = function () {
-            this.cleanStart();
-        };
-        MMU.prototype.load = function (pcb, program) {
-            var fPart = this.check();
-            if (fPart.isFree !== undefined) {
-                fPart.isFree = false;
-                pcb.memInd = fPart.memInd;
-                pcb.inst = _MemoryAcc.readmem(pcb.memInd, pcb.PC).toUpperCase();
-                pcb.loc = _ProcessMan.processLoc.memory;
-                pcb.predictBurst = _Scheduler.removeZeros(program).length + _Scheduler.addWeight(program);
-                _ProcessMan.processlist.push(pcb);
-                TSOS.Control.updateMem(fPart.memInd);
-                TSOS.Control.initProcess(pcb);
-                _StdOut.putText("Program " + pcb.programID + " loaded");
+        //Properties
+        MMU.isValid = function (logAddr, size, base, limit) {
+            if ((logAddr < 0x0 ||
+                logAddr >= limit) ||
+                (logAddr + size > limit)) {
+                return false;
             }
-            else if (_HDD.isFormatted) {
-                pcb.inst = program[0];
-                pcb.loc = _ProcessMan.processLoc.hdd;
-                pcb.predictBurst = _Scheduler.removeZeros(program).length + _Scheduler.addWeight(program);
-                _ProcessMan.processList.push(pcb);
-                TSOS.Control.initProcess(pcb);
-                _krnSysFile.rollOut(pcb.programID, program);
-                _StdOut.putText("Program " + pcb.programID + " loaded");
+        };
+        MMU.getAddr = function (logAddr, base) {
+            return base + logAddr;
+        };
+        MMU.createProcess = function (priority, program) {
+            var pid = this.createPID;
+            var base = this.findBase(pid);
+            this.createPID += 1;
+            var limit = base !== -1 ? _MemorySegmentSize : -1;
+            _Scheduler.residentList.push(new TSOS.PCB(pid, base, limit, priority));
+            _Scheduler.sortResidentList();
+            var storeProgram = program.map(function (x) { return TSOS.Utils.fHex(x); });
+            if (base !== -1) {
+                this.zeroBytesBaseLimit(base, limit);
+                this.setBsLogicalAddr(0, prog, base, limit);
             }
             else {
-                _StdOut.putText("Unable to Load. Memory is full");
+                TSOS.Devices.hostStoreProgramOnDisk(pid, prog);
             }
+            TSOS.Control.updateDisplay();
+            return pid;
         };
-        MMU.prototype.loadHDD = function () {
-            var fPart;
+        MMU.prototype.createPID = function () {
+            return 0;
         };
-        MMU.prototype.cleanStart = function () {
-            for (var i = 0; i < _Memory.memSize; i++) {
-                _Memory.memArray[0][i] = "00";
-                _Memory.memArray[1][i] = "00";
-                _Memory.memArray[2][i] = "00";
+        MMU.prototype.zeroBytesBaseLimit = function (base, limit) {
+            return _Memory.zeroBytes(base, limit);
+        };
+        MMU.prototype.setBLogicalAddr = function (logAddr, bytes, base, limit) {
+            return this.setBsLogicalAddr(logAddr, [bytes], base, limit);
+        };
+        MMU.prototype.setBsLogicalAddr = function (logAddr, bytes, base, limit) {
+            if (this.isValid(logAddr, bytes.length, base, limit) === false) {
+                return;
             }
-            for (var i = 0; i < _ProcessMan.processList.length; i++) {
-                TSOS.Control.removeProcess(_ProcessMan.processList[i].programID);
+            _Memory.setBytes(this.getAddr(logAddr, base), bytes);
+        };
+        MMU.prototype.findBase = function (pid) {
+            for (var i = 0; i < this.status.length; i++) {
+                if (this.status[i] === -1) {
+                    this.status[i] = pid;
+                    return i * _MemorySegmentSize;
+                }
             }
+            return -1;
+        };
+        MMU.prototype.status = function () {
+            return -1;
         };
         return MMU;
     }());
