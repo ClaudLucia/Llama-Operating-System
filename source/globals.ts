@@ -68,6 +68,11 @@ var _hardwareClockID: number = null;
 //Memory and Processes
 var _Memory;
 var _MemorySize = 0x300;
+var _MemoryAcc;
+var _ProcessMan;
+var _Scheduler;
+var _HDD;
+var _krnSysFile;
 var _MMU;
 var _State = {
               NEW: "New",
@@ -77,9 +82,11 @@ var _State = {
               TERMINATED: "Terminated",
               WAITING: "Waiting",
 }
+var _SegmentSz: number = 256;
 var SYSCALL_IRQ: number = 2;
 var FILESYS_IRQ: number = 3;
 
+var _ProcessCount: number = 0;
 
 
 

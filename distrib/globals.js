@@ -50,6 +50,11 @@ var _hardwareClockID = null;
 //Memory and Processes
 var _Memory;
 var _MemorySize = 0x300;
+var _MemoryAcc;
+var _ProcessMan;
+var _Scheduler;
+var _HDD;
+var _krnSysFile;
 var _MMU;
 var _State = {
     NEW: "New",
@@ -59,8 +64,10 @@ var _State = {
     TERMINATED: "Terminated",
     WAITING: "Waiting"
 };
+var _SegmentSz = 256;
 var SYSCALL_IRQ = 2;
 var FILESYS_IRQ = 3;
+var _ProcessCount = 0;
 // For testing (and enrichment)...
 var Glados = null; // This is the function Glados() in glados.js on Labouseur.com.
 var _GLaDOS = null; // If the above is linked in, this is the instantiated instance of Glados.

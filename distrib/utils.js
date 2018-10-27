@@ -44,6 +44,21 @@ var TSOS;
             }
             return retVal;
         };
+        Utils.prototype.cleanIn = function (userIn) {
+            var validString = userIn.replace(new RegExp(" ", 'g'), "");
+            var validArray = validString.match(/.{1,2}/g);
+            if (validArray.length <= _SegmentSz) {
+                // Append 00 to end of code for standardization
+                for (var i = validArray.length; i < _SegmentSz; i++) {
+                    validArray.push("00");
+                }
+                validString = validArray.join(" ").toUpperCase();
+            }
+            else {
+                validString = "Overflow";
+            }
+            return validString;
+        };
         return Utils;
     }());
     TSOS.Utils = Utils;

@@ -456,28 +456,26 @@ module TSOS {
         }
 
         public shellLoad(args) {
-            var val = Number.MAX_VALUE;
-            if (args.length > 0) {
-                var nums = Number(args[0]);
-                if (isNaN(nums)) {
-                    _StdOut.putText("Please give priority a number");
-                    return;
+            var userIn = $("#taProgramInput").val();
+            userIn = TSOS.Utils.cleanIn(userIn);
+            var hex = TSOS.Utils.isHex(userIn);
+            var validHex = hexObj.isHex;
+            if (userIn !== "Overflow") {
+                if (validHex && userIn !== "") {
+                    hexObj.hexVal = hexObj.hexVal.split(" ");
+
+                    var pcb = new TSOS.PCB();
+
+                    if (args.length > 0 && /\d+/.test(args[0])) {
+                        pcb.priority = parseInt(args[0]);
+                        _StdOut.putText("Priority is set to " + args[0]);
+                        _StdOut.advanceLine();
+                    }
+                    else if (args.length === 0) {
+                        _StdOut.putText("Invalid. Input valid Hex");
+                    }
                 }
-                val = nums;
             }
-            var getCode = TSOS.Control.getInput();
-            var valid = _OsShell.validate(getCode);
-            if (valid != null) {
-                //NOTE TO SELF: Create the PCB file and Memory Management unit (MMU)
-                var pcb = new TSOS.PCB();
-                pcb.priority = priority;
-                if (_MMU.load(valid, pcb)) {
-                    TSOS.Control.updateMemoryDisplay();
-                    _StdOut.putText("Program [PID" + pcb.pid + "] lodaded.");
-                }
-                else {
-                    _StdOut.putTest("Error: Unable to load Program");
-                }
             }
         }
     }

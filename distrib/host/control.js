@@ -103,8 +103,30 @@ var TSOS;
             var msgSta = document.getElementById('statusMsg');
             msgSta.textContent = status;
         };
-        Control.getInput = function () {
-            //return document.getElementById("taProgramInput").value;
+        Control.initProcess = function (pcb) {
+            var currMess = document.getElementById('taProcess');
+            if (currMess === Control.defMessage) {
+                currMess = null;
+            }
+            var row = "process-row-" + pcb.programID;
+            var procDis = "<tr id=\"" + row + "\"><td>" + Control.hex(pcb.programId) +
+                "</td><td>" + Control.hex(pcb.priority) +
+                "</td><td>" + pcb.state +
+                "</td><td>" + Control.hex(pcb.PC) +
+                "</td><td>" + pcb.instruction +
+                "</td><td>" + Control.hex(pcb.Acc) +
+                "</td><td>" + Control.hex(pcb.Xreg) +
+                "</td><td>" + Control.hex(pcb.Yreg) +
+                "</td><td>" + Control.hex(pcb.Zflag) +
+                "</td><td>" + pcb.location + "</td></tr>";
+            $("#taProcess").append(procDis);
+        };
+        Control.prototype.hex = function (input) {
+            var hex = input.toString(16);
+            if (hex.length < 2) {
+                hex = "0" + hex;
+            }
+            return hex.toUpperCase();
         };
         return Control;
     }());

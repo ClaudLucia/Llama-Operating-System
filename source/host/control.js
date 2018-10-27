@@ -106,6 +106,11 @@ var TSOS;
         Control.getInput = function () {
             //return document.getElementById("taProgramInput").value;
         };
+        Control.removeProcess = function (pid) {
+            var table = document.getElementById("procTable");
+            //var rows = table.item(0).rows;
+            //for (var i = 0)
+        };
         return Control;
     }());
     TSOS.Control = Control;
