@@ -1,3 +1,7 @@
+
+Changes can be viewed in Project2/changes branch
+============================================
+
 Browser-based Operating System in TypeScript
 ============================================
 
