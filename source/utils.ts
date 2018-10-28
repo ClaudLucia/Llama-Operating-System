@@ -45,7 +45,7 @@ module TSOS {
         }
 
         public static tHex(num, dig = 2): string {
-            return ("0".repeat(dig) + num.toStrin(16).toUpperCase()).slice(-dig);
+            return ("0".repeat(dig) + num.toString(16).toUpperCase()).slice(-dig);
         }
 
         public static fHex(String): number {

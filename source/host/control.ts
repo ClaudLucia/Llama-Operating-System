@@ -125,20 +125,15 @@ module TSOS {
         }
 
         public static load(priority): any {
-            var program = document.getElementById("taProgramInput").nodeValue;
-            program = program.replace(/\s+/g, "");
+            var program = (<HTMLInputElement>document.getElementById('taProgramInput')).value;
+            program = program.replace(/^\s+ | \s+$/g, "");
             if (program.length === 0 || program.length > (_MemorySegmentSize * 2)) {
                 return -1;
             }
-            var re = new RegExp("[^0-9a-fA-F]");
-            var invChars = re.test(program); 
-            if (invChars === true) {
-                return -1;
-            }
-            else {
+            else
                 var progArray = program.match(/.{2}/g); 
                 return TSOS.MMU.createProcess(priority, progArray);
-            }
+            
         }
         //public static hUpdateDisplay(): void {
         //    Control.hostUpdateDisplayCPU();
