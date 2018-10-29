@@ -1,3 +1,7 @@
+
+To acces the console click on the leftmost side within the console to type.
+============================================
+
 Browser-based Operating System in TypeScript
 ============================================
 
