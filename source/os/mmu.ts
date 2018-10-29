@@ -35,8 +35,8 @@ module TSOS {
 
             var limit = base !== -1 ? _MemorySegmentSize : -1;
 
-            _Scheduler.residentList.push(new TSOS.PCB(pid, base, limit, priority));
-            _Scheduler.sortResidentList();
+            //_Scheduler.residentList.push(new TSOS.PCB(pid, base, limit, priority));
+            //_Scheduler.sortResidentList();
             var storeProgram = program.map(x => TSOS.Utils.fHex(x));
             if (base !== -1) {
                 this.zeroBytesBaseLimit(base, limit);
@@ -55,7 +55,16 @@ module TSOS {
         public static zeroBytesBaseLimit(base, limit) {
             return _Memory.zeroBytes(base, limit);
         }
+        public static getBLogicalAddress(logAddr, base, limit) {
+            return this.getBsLogicalAddress(logAddr, 1, base, limit)[0];
+        }
 
+        public static getBsLogicalAddress(logAddr, size, base, limit) {
+            if (this.isValid(logAddr, size, base, limit) === false) {
+                return [0];
+            }
+            return _Memory.getBytes(this.getAddr(logAddr, base), size);
+        }
         public static setBLogicalAddr(logAddr, byte, base, limit) {
             return this.setBsLogicalAddr(logAddr, [byte], base, limit);
         }

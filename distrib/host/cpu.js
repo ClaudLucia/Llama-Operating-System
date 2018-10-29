@@ -16,14 +16,18 @@
 var TSOS;
 (function (TSOS) {
     var Cpu = /** @class */ (function () {
-        function Cpu(PC, Acc, Xreg, Yreg, Zflag, isExecuting, IR) {
+        function Cpu(PC, Acc, Xreg, Yreg, Zflag, isExecuting, IR, pid, base, limit
+        /*public opCode */ ) {
             if (PC === void 0) { PC = 0; }
             if (Acc === void 0) { Acc = 0; }
             if (Xreg === void 0) { Xreg = 0; }
             if (Yreg === void 0) { Yreg = 0; }
             if (Zflag === void 0) { Zflag = 0; }
             if (isExecuting === void 0) { isExecuting = false; }
-            if (IR === void 0) { IR = null; }
+            if (IR === void 0) { IR = -1; }
+            if (pid === void 0) { pid = -1; }
+            if (base === void 0) { base = -1; }
+            if (limit === void 0) { limit = -1; }
             this.PC = PC;
             this.Acc = Acc;
             this.Xreg = Xreg;
@@ -31,6 +35,9 @@ var TSOS;
             this.Zflag = Zflag;
             this.isExecuting = isExecuting;
             this.IR = IR;
+            this.pid = pid;
+            this.base = base;
+            this.limit = limit;
         }
         Cpu.prototype.init = function () {
             this.PC = 0;
@@ -53,6 +60,34 @@ var TSOS;
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+            var opCodeByte = TSOS.MMU.getBLogicalAddress(this.PC, this.base, this.limit);
+            this.IR = opCodeByte;
+            this.PC += 1;
+            //var opCode = this.opCode[opCodeByte];
+            //if (opCode === undefined) {
+            //    _KernelInterruptQueue.enqueue(new TSOS.Interrupt(OpCodeError, this.pid));
+            //    return;
+            //}
+            //_Scheduler.updateStatistics();
+            //opCode.fn.call(this);
+            //this.PC += opCode.operandSize;
+            this.store(this.current());
+            if (SingleStepMode === true) {
+                this.isExecuting = false;
+            }
+            _Scheduler.cpuDidCycle();
+            TSOS.Control.hUpdateDisplay();
+        };
+        Cpu.prototype.store = function (pcb) {
+            pcb.pc = this.PC;
+            pcb.Acc = this.Acc;
+            pcb.IR = this.IR;
+            pcb.xREg = this.Xreg;
+            pcb.yReg = this.Yreg;
+            pcb.xFlag = this.Zflag;
+        };
+        Cpu.prototype.current = function () {
+            return _Scheduler.getProcessforPid(this.pid);
         };
         return Cpu;
     }());

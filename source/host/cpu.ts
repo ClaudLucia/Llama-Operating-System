@@ -20,12 +20,16 @@ module TSOS {
     export class Cpu {
 
         constructor(public PC: number = 0,
-                    public Acc: number = 0,
-                    public Xreg: number = 0,
-                    public Yreg: number = 0,
-                    public Zflag: number = 0,
-                    public isExecuting: boolean = false,
-                    public IR: number = null) {
+            public Acc: number = 0,
+            public Xreg: number = 0,
+            public Yreg: number = 0,
+            public Zflag: number = 0,
+            public isExecuting: boolean = false,
+            public IR: number = -1,
+            public pid: number = -1,
+            public base: number = -1,
+            public limit: number = -1
+            /*public opCode */){
 
         }
 
@@ -53,6 +57,36 @@ module TSOS {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+            var opCodeByte = TSOS.MMU.getBLogicalAddress(this.PC, this.base, this.limit);
+            this.IR = opCodeByte;
+            this.PC += 1;
+            //var opCode = this.opCode[opCodeByte];
+            //if (opCode === undefined) {
+            //    _KernelInterruptQueue.enqueue(new TSOS.Interrupt(OpCodeError, this.pid));
+            //    return;
+            //}
+            //_Scheduler.updateStatistics();
+            //opCode.fn.call(this);
+            //this.PC += opCode.operandSize;
+            this.store(this.current());
+            if (SingleStepMode === true) {
+                this.isExecuting = false;
+            }
+            _Scheduler.cpuDidCycle();
+            TSOS.Control.hUpdateDisplay();
+            
+        }
+        public store(pcb):void {
+            pcb.pc = this.PC;
+            pcb.Acc = this.Acc;
+            pcb.IR = this.IR;
+            pcb.xREg = this.Xreg;
+            pcb.yReg = this.Yreg;
+            pcb.xFlag = this.Zflag;
+        }
+
+        public current(): void {
+            return _Scheduler.getProcessforPid(this.pid);
         }
     }
 }

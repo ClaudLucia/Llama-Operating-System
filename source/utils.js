@@ -5,6 +5,9 @@
    -------- */
 var TSOS;
 (function (TSOS) {
+    //interface String {
+    //    repeat: (string) => string;
+    //}
     var Utils = /** @class */ (function () {
         function Utils() {
         }
@@ -48,8 +51,8 @@ var TSOS;
             if (dig === void 0) { dig = 2; }
             return ("0".repeat(dig) + num.toString(16).toUpperCase()).slice(-dig);
         };
-        Utils.fHex = function (String) {
-            return parseInt(String, 16);
+        Utils.fHex = function (nString) {
+            return parseInt(nString, 16);
         };
         return Utils;
     }());

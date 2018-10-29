@@ -55,6 +55,8 @@ var SYSCALL_IRQ = 2;
 var FILESYS_IRQ = 3;
 var _Scheduler;
 var _Memory;
+var OpCodeError;
+var SingleStepMode = false;
 // For testing (and enrichment)...
 var Glados = null; // This is the function Glados() in glados.js on Labouseur.com.
 var _GLaDOS = null; // If the above is linked in, this is the instantiated instance of Glados.

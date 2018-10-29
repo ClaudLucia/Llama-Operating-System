@@ -6,6 +6,11 @@
 
 module TSOS {
 
+    //interface String {
+    //    repeat: (string) => string;
+        
+    //}
+
     export class Utils {
 
         public static trim(str): string {
@@ -44,12 +49,14 @@ module TSOS {
             return retVal;
         }
 
-        public static tHex(num, dig = 2): string {
+        public static tHex(num: number, dig: number = 2): any {
             return ("0".repeat(dig) + num.toString(16).toUpperCase()).slice(-dig);
         }
 
-        public static fHex(String): number {
-            return parseInt(String, 16);
+
+
+        public static fHex(nString): number {
+            return parseInt(nString, 16);
         }
     }
 }

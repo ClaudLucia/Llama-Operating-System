@@ -75,6 +75,9 @@ var FILESYS_IRQ: number = 3;
 var _Scheduler;
 var _Memory;
 
+var OpCodeError;
+
+var SingleStepMode: boolean = false;
 
 // For testing (and enrichment)...
 var Glados: any = null;  // This is the function Glados() in glados.js on Labouseur.com.

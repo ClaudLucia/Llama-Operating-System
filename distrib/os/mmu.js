@@ -32,8 +32,8 @@ var TSOS;
             var base = this.findBase(pid);
             this.createPID = this.createPID + 1;
             var limit = base !== -1 ? _MemorySegmentSize : -1;
-            _Scheduler.residentList.push(new TSOS.PCB(pid, base, limit, priority));
-            _Scheduler.sortResidentList();
+            //_Scheduler.residentList.push(new TSOS.PCB(pid, base, limit, priority));
+            //_Scheduler.sortResidentList();
             var storeProgram = program.map(function (x) { return TSOS.Utils.fHex(x); });
             if (base !== -1) {
                 this.zeroBytesBaseLimit(base, limit);
@@ -47,6 +47,15 @@ var TSOS;
         };
         MMU.zeroBytesBaseLimit = function (base, limit) {
             return _Memory.zeroBytes(base, limit);
+        };
+        MMU.getBLogicalAddress = function (logAddr, base, limit) {
+            return this.getBsLogicalAddress(logAddr, 1, base, limit)[0];
+        };
+        MMU.getBsLogicalAddress = function (logAddr, size, base, limit) {
+            if (this.isValid(logAddr, size, base, limit) === false) {
+                return [0];
+            }
+            return _Memory.getBytes(this.getAddr(logAddr, base), size);
         };
         MMU.setBLogicalAddr = function (logAddr, byte, base, limit) {
             return this.setBsLogicalAddr(logAddr, [byte], base, limit);
