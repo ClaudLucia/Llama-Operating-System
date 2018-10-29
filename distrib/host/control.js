@@ -113,6 +113,52 @@ var TSOS;
                 var progArray = program.match(/.{2}/g);
             return TSOS.MMU.createProcess(priority, progArray);
         };
+        Control.hUpdateDisplay = function () {
+            Control.hostUpdateDisplayCPU();
+            Control.hostUpdateDisplayMemory();
+            Control.hostUpdateDisplayProcesses();
+        };
+        Control.hostUpdateDisplayCPU = function () {
+            var IR = _CPU.IR === -1 ? "00" : TSOS.Utils.tHex(_CPU.IR);
+            var mnemonic = _CPU.IR === -1 ? "00" : _CPU.opCodeMap[_CPU.IR].mnemonic;
+            var CPUElement = document.getElementById("displayCPU");
+            var CPUData = "<table style='table-layout:fixed; width: 100%; text-align: center;'>" +
+                "<tbody><tr><th>PC</th><th>ACC</th><th>IR</th><th>MNE</th><th>X</th><th>Y</th><th>Z</th></tr>" +
+                "<tr><td>" + TSOS.Utils.tHex(_CPU.PC) + "</td><td>" + TSOS.Utils.tHex(_CPU.Acc) + "</td><td>" + IR +
+                "</td><td>" + mnemonic + "</td><td>" + TSOS.Utils.tHex(_CPU.Xreg) +
+                "</td><td>" + TSOS.Utils.tHex(_CPU.Yreg) + "</td><td>" + _CPU.Zflag + "</td></tr></tbody>" +
+                "</table>";
+            CPUElement.innerHTML = CPUData;
+        };
+        Control.hostUpdateDisplayMemory = function () {
+            var memory = _Memory.getBytes(0, _MemorySegmentSize * _MemorySegmentCount);
+            for (var i = 0; i < memory.length; i++) {
+                var cell = document.getElementById("th" + i);
+                cell.innerHTML = TSOS.Utils.tHex(memory[i]);
+            }
+        };
+        Control.hostUpdateDisplayProcesses = function () {
+            var processData = "<tbody><tr><th>PID</th><th>PC</th><th>ACC</th><th>IR</th><th>MNE</th><th>X</th><th>Y</th>" +
+                "<th>Z</th><th>Prio</th><th>Swap</th><th>State</th></tr>";
+            var processes = _Scheduler.residentList;
+            if (processes.length == 0) {
+                processData += "<tr><td colspan='11'>No programs in execution</td></tr>";
+            }
+            else {
+                for (var i = 0; i < processes.length; i++) {
+                    var process = processes[i];
+                    var IR = process.IR === -1 ? "00" : TSOS.Utils.tHex(process.IR);
+                    var mnemonic = process.IR === -1 ? "00" : _CPU.opCodeMap[process.IR].mnemonic;
+                    var swap = process.base !== -1 ? "N" : "Y";
+                    var state = _Scheduler.readyQueue.peek() == process.pid ? "Executing" : "Ready";
+                    processData += "<tr><td>" + process.pid + "</td><td>" + TSOS.Utils.tHex(process.PC) + "</td><td>" + TSOS.Utils.tHex(process.Acc) + "</td>" +
+                        ("<td>" + IR + "</td><td>" + mnemonic + "</td><td>" + TSOS.Utils.tHex(process.Xreg) + "</td><td>" + TSOS.Utils.tHex(process.Yreg) + "</td><td>" + process.Zflag + "</td>") +
+                        ("<td>" + process.priority + "</td><td>" + swap + "</td><td>" + state + "</td></tr>");
+                }
+            }
+            var processesElement = document.getElementById("displayProcessesTable");
+            processesElement.innerHTML = processData;
+        };
         return Control;
     }());
     TSOS.Control = Control;

@@ -201,15 +201,15 @@ th{
     padding:3px;
 }
 
-#divPCB {
+/*#divPCB {
     padding: 3px;
     color: black;
     float: initial;
     font-size: 16px;
     position: relative;
     font-size: 16px;
-    margin-left: 900px;
-}
+    margin-right: 515px;
+}*/
 
 .PCB {
     background: white;
@@ -218,3 +218,37 @@ th{
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
+.CPU {
+    background: white;
+    opacity: 0.5;
+    color: black;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+#middlePage {
+    padding: 3px;
+    color: black;
+    float:initial;
+    font-size: 16px;
+    font-size: 16px;
+    position: absolute;
+    left: 40%;
+    top: 50%;
+}
+
+#rightPage {
+    padding: 3px;
+    color: black;
+    float: initial;
+    font-size: 16px;
+    font-size: 16px;
+    position: absolute;
+    right: 3%;
+    top: 50%;
+}
+
+#bottomPage {
+    position:center;
+    float: initial;
+    top:90%;
+}

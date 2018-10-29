@@ -74,7 +74,7 @@
         </div>
 
 
-        <div id="divMain" style="width:100%;">
+        <div id="bar" style="width:100%;">
 
             <div id="taskBar" class="row">
 
@@ -106,50 +106,50 @@
                 </table>
 
             </div>
-            <!-- Task bar for the user -->
+        </div>
+        
+        
+        <div id="divButtonBar">
+            <button id="btnStartOS"
+                    name="brnStartOS"
+                    class="btn btn-primary btn-lg"
+                    value="Start"
+                    onclick="TSOS.Control.hostBtnStartOS_click(this);">
+                Start
+            </button>
 
-            <div id="divButtonBar">
+            <button id="btnHaltOS"
+                    name="brnHaltOS"
+                    class="btn btn-sucess btn-lg"
+                    disabled="disabled"
+                    value="Halt"
+                    onclick="TSOS.Control.hostBtnHaltOS_click(this);">
+                Halt
+            </button>
 
-                <button id="btnStartOS"
-                        name="brnStartOS"
-                        class="btn btn-primary btn-lg"
-                        value="Start"
-                        onclick="TSOS.Control.hostBtnStartOS_click(this);">
-                    Start
-                </button>
+            <button id="btnReset"
+                    name="brnReset"
+                    class="btn btn-warning btn-lg"
+                    disabled="disabled"
+                    value="Reset"
+                    onclick="TSOS.Control.hostBtnReset_click(this);">
+                Reset
+            </button>
 
-                <button id="btnHaltOS"
-                        name="brnHaltOS"
-                        class="btn btn-sucess btn-lg"
-                        disabled="disabled"
-                        value="Halt"
-                        onclick="TSOS.Control.hostBtnHaltOS_click(this);">
-                    Halt
-                </button>
-
-                <button id="btnReset"
-                        name="brnReset"
-                        class="btn btn-warning btn-lg"
-                        disabled="disabled"
-                        value="Reset"
-                        onclick="TSOS.Control.hostBtnReset_click(this);">
-                    Reset
-                </button>
-
-            </div>
         </div>
 
-
-        <div id="divConsole">
-            <div id="canvas" class="outline">
-                <canvas id="display"
-                        width="500px"
-                        height="500px"
-                        tabindex="3"></canvas>
+        <div id="leftPage">
+            <div id="divConsole">
+                <div id="canvas" class="outline">
+                    <canvas id="display"
+                            width="500px"
+                            height="500px"
+                            tabindex="3"></canvas>
+                </div>
             </div>
         </div>
-
-        <div id="divPCB" class="col-lg-8">
+        <div id="middlePage">
+            <div id="divPCB" class="col-lg-8">
                 <h2>Process Control Block</h2>
                 <br>
                 <div id="displayPCB">
@@ -175,41 +175,65 @@
                         </tbody>
                     </table>
                 </div>
-        </div>
-
-
-        <div id="divLog">
-            <label>
-                <h2>Host Log</h2>
+            </div>
+            <div id="divCPU">
+                <h2>CPU</h2>
                 <br>
-                <textarea name="taHostLog"
-                          id="taHostLog"
-                          rows="26"
-                          cols="48"></textarea>
-            </label>
+                <div id="displayCPU">
+                    <table class="CPU">
+                        <thead>
+                            <th>PC</th>
+                            <th>IR</th>
+                            <th>ACC</th>
+                            <th>X</th>
+                            <th>Y</th>
+                            <th>Z</th>
+                            <th>MNE</th>
+                        </thead>
+                        <tbody id="taCPU">
+                            <tr>
+                                <td colspan="10">Nothing</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <div id="divUserProgramInput">
-            <label>
-                <h2>User Program Input</h2>
+
+        <div id="rightPage">
+            <div id="divLog">
+                <label>
+                    <h2>Host Log</h2>
+                    <br>
+                    <textarea name="taHostLog"
+                              id="taHostLog"
+                              rows="26"
+                              cols="48"></textarea>
+                </label>
+            </div>
+
+            <div id="divUserProgramInput">
+                <label>
+                    <h2>User Program Input</h2>
+                    <br>
+                    <textarea name="taProgramInput"
+                              id="taProgramInput"
+                              rows="8"
+                              cols="48"></textarea>
+                </label>
+            </div>
+        </div>
+
+        <div id="bottomPage">
+            <p class="footerText" style="clear:both;">
                 <br>
-                <textarea name="taProgramInput"
-                          id="taProgramInput"
-                          rows="8"
-                          cols="48"></textarea>
-            </label>
+                Copyright &copy; 2008 - 2016 No Rights Reserved.
+                <br>
+                Reproduction is inhibited without the express written consent of
+                Ted Codd, Stevie Ray Vaughan, and Ian Fleming.
+            </p>
         </div>
-
-
-
-        <p class="footerText" style="clear:both;">
-            <br>
-            Copyright &copy; 2008 - 2016 No Rights Reserved.
-            <br>
-            Reproduction is inhibited without the express written consent of
-            Ted Codd, Stevie Ray Vaughan, and Ian Fleming.
-        </p>
-
     </div>
 
 </body>
