@@ -113,6 +113,7 @@ var TSOS;
                 var progArray = program.match(/.{2}/g);
             return TSOS.MMU.createProcess(priority, progArray);
         };
+        //Dsiplay the Processes in the CPU Display
         Control.hUpdateDisplay = function () {
             Control.hostUpdateDisplayCPU();
             Control.hostUpdateDisplayMemory();

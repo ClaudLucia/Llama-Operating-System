@@ -135,6 +135,9 @@ module TSOS {
                 return TSOS.MMU.createProcess(priority, progArray);
             
         }
+
+
+        //Dsiplay the Processes in the CPU Display
         public static hUpdateDisplay(): void {
             Control.hostUpdateDisplayCPU();
             Control.hostUpdateDisplayMemory();

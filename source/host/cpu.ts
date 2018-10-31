@@ -1,4 +1,5 @@
 ///<reference path="../globals.ts" />
+///<reference path="../host/memoryAccessor.ts" />
 
 /* ------------
      CPU.ts
@@ -28,12 +29,13 @@ module TSOS {
             public IR: number = -1,
             public pid: number = -1,
             public base: number = -1,
-            public limit: number = -1
-            /*public opCode */){
+            public limit: number = -1,
+            public opCode: string = "") {
 
         }
 
         public init(): void {
+            this.pid = 0;
             this.PC = 0;
             this.Acc = 0;
             this.Xreg = 0;
@@ -45,6 +47,7 @@ module TSOS {
         }
 
         public sync(): void {
+            this.pid = 0;
             this.PC = 0;
             this.Acc = 0;
             this.Xreg = 0;
@@ -57,36 +60,73 @@ module TSOS {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+
+            var opCodeInd = TSOS.MMU.getAddr(this.PC, this.base);
             var opCodeByte = TSOS.MMU.getBLogicalAddress(this.PC, this.base, this.limit);
             this.IR = opCodeByte;
             this.PC += 1;
-            //var opCode = this.opCode[opCodeByte];
-            //if (opCode === undefined) {
-            //    _KernelInterruptQueue.enqueue(new TSOS.Interrupt(OpCodeError, this.pid));
-            //    return;
-            //}
-            //_Scheduler.updateStatistics();
-            //opCode.fn.call(this);
-            //this.PC += opCode.operandSize;
+
+            var opCode = this.opCodeExec[opCodeByte];
+
+            opCode.fn.call(this);
+            this.PC += opCode.operandSize;
+
             this.store(this.current());
-            if (SingleStepMode === true) {
+
+
+            if (_SingleStepMode === true) {
                 this.isExecuting = false;
             }
-            _Scheduler.cpuDidCycle();
             TSOS.Control.hUpdateDisplay();
             
         }
-        public store(pcb):void {
+        public store(pcb): void {
+            pcb.pid = this.pid;
             pcb.pc = this.PC;
             pcb.Acc = this.Acc;
             pcb.IR = this.IR;
-            pcb.xREg = this.Xreg;
+            pcb.xReg = this.Xreg;
             pcb.yReg = this.Yreg;
-            pcb.xFlag = this.Zflag;
+            pcb.zFlag = this.Zflag;
+        }
+        public load(pcb) {
+            this.pid = pcb.pid;
+            this.PC = pcb.pc;
+            this.Acc = pcb.Acc;
+            this.IR = pcb.IR;
+            this.Xreg = pcb.xReg;
+            this.Yreg = pcb.yReg;
+            this.Zflag = pcb.zFlag;
+        }
+        public killProcesses() {
+            this.isExecuting = false;
+            this.pid = -1;
         }
 
+        public opCodeExec(pcb) {
+            //Use a switch case for the opCode
+
+            //Grap the opCode from User Program Input
+            var code = _MemoryAccessor.readMemory(this.PC);
+            switch (code) {
+                /*break*/
+                case "0x00":
+                    break;
+
+                /*LDA*/
+                case "0x":
+                    break;
+
+                /*STA*/
+                case "0x":
+                    break;
+
+            }
+
+        }
+        
         public current(): void {
-            return _Scheduler.getProcessforPid(this.pid);
+            //return _Scheduler.getProcessforPid(this.pid);
         }
     }
 }

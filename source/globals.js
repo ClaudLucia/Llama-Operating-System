@@ -53,10 +53,14 @@ var _MemorySegmentCount = 3;
 var _MemorySegmentSize = 256;
 var SYSCALL_IRQ = 2;
 var FILESYS_IRQ = 3;
-var _Scheduler;
+//Hardware(host)
 var _Memory;
-var OpCodeError;
-var SingleStepMode = false;
+var _MemoryAccessor;
+//Software(OS)
+var _MemoryManager = null;
+//Scheduler
+//var _Scheduler: TSOS.Scheduler;
+var _SingleStepMode = false;
 // For testing (and enrichment)...
 var Glados = null; // This is the function Glados() in glados.js on Labouseur.com.
 var _GLaDOS = null; // If the above is linked in, this is the instantiated instance of Glados.

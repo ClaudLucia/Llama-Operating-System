@@ -31,12 +31,10 @@ module TSOS {
         public static createProcess(priority, program): any {
             var pid = this.createPID;
             var base = this.findBase(pid);
-            this.createPID = this.createPID + 1;
+            this.createPID += 1;
 
             var limit = base !== -1 ? _MemorySegmentSize : -1;
-
-            //_Scheduler.residentList.push(new TSOS.PCB(pid, base, limit, priority));
-            //_Scheduler.sortResidentList();
+            
             var storeProgram = program.map(x => TSOS.Utils.fHex(x));
             if (base !== -1) {
                 this.zeroBytesBaseLimit(base, limit);
