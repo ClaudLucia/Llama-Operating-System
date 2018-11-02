@@ -19,6 +19,8 @@
    <script type="text/javascript" src="distrib/host/control.js"></script>
    <script type="text/javascript" src="distrib/host/devices.js"></script>
    <script type="text/javascript" src="distrib/host/cpu.js"></script>
+   <script type="text/javascript" src="distrib/host/memory.js"></script>
+   <script type="text/javascript" src="distrib/host/memoryAccessor.js"></script>
 
    <!-- Virtual OS Routines: Make sure Kernel code is last, since it needs those above it. -->
    <script type="text/javascript" src="distrib/os/interrupt.js"></script>
@@ -32,6 +34,7 @@
    <script type="text/javascript" src="distrib/os/userCommand.js"></script>
    <script type="text/javascript" src="distrib/os/mmu.js"></script>
    <script type="text/javascript" src="distrib/os/pcb.js"></script>
+   <script type="text/javascript" src="distrib/os/processManager.js"></script>
    <script type="text/javascript" src="distrib/os/kernel.js"></script>
 
    <!-- Other Routines -->
@@ -228,7 +231,7 @@
             </div>
         </div>
 
-        <div id="bottomPage">
+        
             <p class="footerText" style="clear:both;">
                 <br>
                 Copyright &copy; 2008 - 2016 No Rights Reserved.
@@ -236,7 +239,6 @@
                 Reproduction is inhibited without the express written consent of
                 Ted Codd, Stevie Ray Vaughan, and Ian Fleming.
             </p>
-        </div>
     </div>
 
 </body>

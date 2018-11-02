@@ -51,69 +51,54 @@ var TSOS;
             this.isExecuting = false;
             this.IR = null;
         };
-        Cpu.prototype.sync = function () {
-            this.pid = 0;
-            this.PC = 0;
-            this.Acc = 0;
-            this.Xreg = 0;
-            this.Yreg = 0;
-            this.Zflag = 0;
-            this.isExecuting = false;
-        };
+        //public sync(): void {
+        //    this.pid = 0;
+        //    this.PC = 0;
+        //    this.Acc = 0;
+        //    this.Xreg = 0;
+        //    this.Yreg = 0;
+        //    this.Zflag = 0;
+        //    this.isExecuting = false;
+        //}
         Cpu.prototype.cycle = function () {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
-            var opCodeByte = TSOS.MMU.getBLogicalAddress(this.PC, this.base, this.limit);
-            this.IR = opCodeByte;
-            this.PC += 1;
-            this.store(this.current());
+            //var opCodeInd = TSOS.MMU.getAddr(this.PC, this.base);
+            //var opCodeByte = TSOS.MMU.getBLogicalAddress(this.PC, this.base, this.limit);
+            //this.IR = opCodeByte;
+            //this.PC += 1;
+            //var opCode = this.opCodeExec[opCodeByte];
+            //opCode.fn.call(this);
+            //this.PC += opCode.operandSize;
+            //this.store(this.current());
+            if (!_MemoryAccessor.withinBounds(this.PC)) {
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(ERR_BOUND, 0));
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(EXIT, false));
+            }
+            //Use a switch case for the opCode
+            else {
+                //Grap the opCode
+                var opCode = _MemoryAccessor.readMem(this.PC);
+                _Kernel.krnTrace('CPU executing: ' + opCode);
+                switch (opCode) {
+                    /*LDA*/
+                    case "AD":
+                        var hex = _MemoryAccessor.readMem(this.PC + 1);
+                        hex = _MemoryAccessor.readMem(this.PC + 2) + hex;
+                        var addr = parseInt(_MemoryAccessor.readMem(addr), 16);
+                        this.PC += 3;
+                        break;
+                    /*STA*/
+                    case "8D":
+                        var hex = _MemoryAccessor.readMem(this.PC + 1);
+                        break;
+                }
+            }
             if (_SingleStepMode === true) {
                 this.isExecuting = false;
             }
-            _Scheduler.cpuDidCycle();
             TSOS.Control.hUpdateDisplay();
-        };
-        Cpu.prototype.store = function (pcb) {
-            pcb.pid = this.pid;
-            pcb.pc = this.PC;
-            pcb.Acc = this.Acc;
-            pcb.IR = this.IR;
-            pcb.xReg = this.Xreg;
-            pcb.yReg = this.Yreg;
-            pcb.zFlag = this.Zflag;
-        };
-        Cpu.prototype.load = function (pcb) {
-            this.pid = pcb.pid;
-            this.PC = pcb.pc;
-            this.Acc = pcb.Acc;
-            this.IR = pcb.IR;
-            this.Xreg = pcb.xReg;
-            this.Yreg = pcb.yReg;
-            this.Zflag = pcb.zFlag;
-        };
-        Cpu.prototype.killProcesses = function () {
-            this.isExecuting = false;
-            this.pid = -1;
-        };
-        Cpu.prototype.opCodeExec = function (pcb) {
-            //Use a switch case for the opCode
-            //Grap the opCode from User Program Input
-            var code = _MemoryAccessor.readMemory(this.PC);
-            switch (code) {
-                /*break*/
-                case "0x00":
-                    break;
-                /*LDA*/
-                case "0x":
-                    break;
-                /*STA*/
-                case "0x":
-                    break;
-            }
-        };
-        Cpu.prototype.current = function () {
-            return _Scheduler.getProcessforPid(this.pid);
         };
         return Cpu;
     }());

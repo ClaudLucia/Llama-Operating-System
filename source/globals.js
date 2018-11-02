@@ -48,7 +48,6 @@ var _SarcasticMode = false;
 var _krnKeyboardDriver; //  = null;
 var _hardwareClockID = null;
 //Memory and Processes
-var _MMU;
 var _MemorySegmentCount = 3;
 var _MemorySegmentSize = 256;
 var SYSCALL_IRQ = 2;
@@ -56,10 +55,17 @@ var FILESYS_IRQ = 3;
 //Hardware(host)
 var _Memory;
 var _MemoryAccessor;
+var ERR_BOUND = 5;
+var EXIT = 2;
 //Software(OS)
-var _MemoryManager = null;
+var _MMU;
+;
 //Scheduler
 //var _Scheduler: TSOS.Scheduler;
+//Process Manager
+var _ProcessManager;
+var PID = 0;
+var _Scheduler;
 var _SingleStepMode = false;
 // For testing (and enrichment)...
 var Glados = null; // This is the function Glados() in glados.js on Labouseur.com.

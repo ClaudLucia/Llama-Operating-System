@@ -26,6 +26,9 @@ var TSOS;
     var Control = /** @class */ (function () {
         function Control() {
         }
+        Control.hostMemory = function () {
+            throw new Error("Method not implemented.");
+        };
         Control.hostInit = function () {
             // This is called from index.html's onLoad event via the onDocumentLoad function pointer.
             // Get a global reference to the canvas.  TODO: Should we move this stuff into a Display Device Driver?
@@ -111,7 +114,48 @@ var TSOS;
             }
             else
                 var progArray = program.match(/.{2}/g);
-            return TSOS.MMU.createProcess(priority, progArray);
+            //return TSOS.MMU.createProcess(priority, progArray);
+        };
+        //Dsiplay the Processes in the CPU Display
+        Control.hUpdateDisplay = function () {
+            Control.hostUpdateDisplayCPU();
+            Control.hostUpdateDisplayMemory();
+            Control.hostUpdateDisplayProcesses();
+        };
+        Control.hostUpdateDisplayCPU = function () {
+            var IR = _CPU.IR === -1 ? "00" : TSOS.Utils.tHex(_CPU.IR);
+            var CPUElement = document.getElementById("displayCPU");
+            var CPUData = document.getElementById('CPU') +
+                "<thead>< th > PC < /th>< th > IR < /th>< th > ACC < /th>< th > X < /th>< th > Y < /th>< th > Z < /th>< th > MNE < /th></thead>" +
+                "<tr><td>" + TSOS.Utils.tHex(_CPU.PC) + "</td><td>" + IR + "</td><td>" + TSOS.Utils.tHex(_CPU.Acc) +
+                "</td><td>" + TSOS.Utils.tHex(_CPU.Xreg) + "</td><td>" + TSOS.Utils.tHex(_CPU.Yreg) +
+                "</td><td>" + _CPU.Zflag + "</td></tr></tbody>" +
+                "</table>";
+            CPUElement.innerHTML = CPUData;
+        };
+        Control.hostUpdateDisplayMemory = function () {
+            var memory = _Memory.getBytes(0, _MemorySegmentSize * _MemorySegmentCount);
+            for (var i = 0; i < memory.length; i++) {
+                var cell = document.getElementById("th" + i);
+                cell.innerHTML = TSOS.Utils.tHex(memory[i]);
+            }
+        };
+        Control.hostUpdateDisplayProcesses = function () {
+            var processData = "<th>PID</th>< th > State < /th>< th > Priority < /th>< th > PC < /th>< th > IR < /th>< th > ACC < /th>< th > X < /th>< th > Y < /th>< th > Z </th>";
+            var processes = _Scheduler.residentList;
+            if (processes.length == 0) {
+                processData += "<tr><td colspan='10'>No Programs Running</td></tr>";
+            }
+            else {
+                for (var i = 0; i < processes.length; i++) {
+                    var process = processes[i];
+                    var IR = process.IR === -1 ? "00" : TSOS.Utils.tHex(process.IR);
+                    var state = _Scheduler.readyQueue.peek() == process.pid ? "Executing" : "Ready";
+                    processData += "<tr><th>" + process.pid + "< /th>< th >" + state + "< /th > <th>" + process.priority + "< /th>< th >" + TSOS.Utils.tHex(process.PC) + "< /th > <th>" + IR + "< /th>< th >" + TSOS.Utils.tHex(process.Acc) + "< /th > <th>" + TSOS.Utils.tHex(process.Xreg) + "< /th>< th >" + TSOS.Utils.tHex(process.Yreg) + "< /th > <th>" + process.Zflag + "< /th></tr>";
+                }
+            }
+            var processesElement = document.getElementById("processControlBlock");
+            processesElement.innerHTML = processData;
         };
         return Control;
     }());

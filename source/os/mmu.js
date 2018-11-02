@@ -16,67 +16,73 @@ var TSOS;
     var MMU = /** @class */ (function () {
         function MMU() {
         }
-        //Properties
-        MMU.isValid = function (logAddr, size, base, limit) {
-            if ((logAddr < 0x0 ||
-                logAddr >= limit) ||
-                (logAddr + size > limit)) {
-                return false;
+        MMU.loadMemory = function (opCodes, partition) {
+            var loadCount = this.partitions[partition].base;
+            for (var _i = 0, opCodes1 = opCodes; _i < opCodes1.length; _i++) {
+                var opCode = opCodes[i];
+                _Memory.memArr[loadCount] = opCode;
+                loadCount++;
             }
-        };
-        MMU.getAddr = function (logAddr, base) {
-            return base + logAddr;
-        };
-        MMU.createProcess = function (priority, program) {
-            var pid = this.createPID;
-            var base = this.findBase(pid);
-            this.createPID = this.createPID + 1;
-            var limit = base !== -1 ? _MemorySegmentSize : -1;
-            //_Scheduler.residentList.push(new TSOS.PCB(pid, base, limit, priority));
-            //_Scheduler.sortResidentList();
-            var storeProgram = program.map(function (x) { return TSOS.Utils.fHex(x); });
-            if (base !== -1) {
-                this.zeroBytesBaseLimit(base, limit);
-                this.setBsLogicalAddr(0, storeProgram, base, limit);
+            for (var i = loadCount; i < this.partitions[partition].limit; i++) {
+                _Memory.memArr[i] = "00";
             }
-            //else {
-            //    TSOS.Devices.storeProgram(pid, prog);
-            //}
-            //TSOS.Control.hUpdateDisplay();
-            return pid;
+            this.partitions[partition].isEmpty = false;
         };
-        MMU.zeroBytesBaseLimit = function (base, limit) {
-            return _Memory.zeroBytes(base, limit);
-        };
-        MMU.getBLogicalAddress = function (logAddr, base, limit) {
-            return this.getBsLogicalAddress(logAddr, 1, base, limit)[0];
-        };
-        MMU.getBsLogicalAddress = function (logAddr, size, base, limit) {
-            if (this.isValid(logAddr, size, base, limit) === false) {
-                return [0];
-            }
-            return _Memory.getBytes(this.getAddr(logAddr, base), size);
-        };
-        MMU.setBLogicalAddr = function (logAddr, byte, base, limit) {
-            return this.setBsLogicalAddr(logAddr, [byte], base, limit);
-        };
-        MMU.setBsLogicalAddr = function (logAddr, bytes, base, limit) {
-            if (this.isValid(logAddr, bytes.length, base, limit) === false) {
-                return;
-            }
-            _Memory.setBytes(this.getAddr(logAddr, base), bytes);
-        };
-        MMU.findBase = function (pid) {
-            for (var i = 0; i < this.status.length; i++) {
-                if (this.status[i] === -1) {
-                    this.status[i] = pid;
-                    return i * _MemorySegmentSize;
+        MMU.checkMemory = function (opCodesLength) {
+            for (var i = 0; i < this.partitions.length; i++) {
+                if (this.partitions[i].isEmpty && this.partitions[i].limit > opCodesLength) {
+                    return true;
                 }
             }
-            return -1;
+            return false;
         };
-        MMU.createPID = 0;
-        MMU.status = Array(_MemorySegmentCount);
+        MMU.getPartitions = function (opCodesLength) {
+            for (var i = 0; i < this.partitions.length; i++) {
+                if (this.partitions[i].isEmpty && this.partitions[i].limit > opCodesLength) {
+                    return i;
+                }
+            }
+            return null;
+        };
+        MMU.clearPartitions = function (partition) {
+            var base = this.partitions[partition].base;
+            var limit = this.partitions[partition].limit + this.partitions[partition].base;
+            for (var i = base; i < limit; i++) {
+                _Memory.memArr[i] = "00";
+            }
+            this.partitions[partition].isEmpty = true;
+        };
+        MMU.clearAll = function () {
+            if (_CPU.isExecuting) {
+                return false;
+            }
+            if (_ProcessManager.readyQueue.length > 0) {
+                return false;
+            }
+            if (_ProcessManager.running != null) {
+                return false;
+            }
+            for (var j = 0; j < this.partitions.length; j++) {
+                var base = this.partitions[j].base;
+                var limit = this.partitions[j].limit + this.partitions[j].base;
+                for (var i = base; i < limit; i++) {
+                    _Memory.memArr[i] = "00";
+                }
+                this.partitions[j].isEmpty = true;
+            }
+            // Also, clear out the resident queue, for we don't have any programs in memory anymore
+            while (_ProcessManager.residentQueue.getSize() > 0) {
+                _ProcessManager.residentQueue.dequeue();
+            }
+            TSOS.Control.hostMemory();
+            return true;
+        };
+        MMU.totalLimit = 256;
+        MMU.partitions = [
+            { "base": 0, "limit": MMU.totalLimit, "isEmpty": true },
+            { "base": 256, "limit": MMU.totalLimit, "isEmpty": true },
+            { "base": 512, "limit": MMU.totalLimit, "isEmpty": true }
+        ];
         return MMU;
     }());
     TSOS.MMU = MMU;

@@ -1,5 +1,5 @@
 ﻿//
-// Process COntrol Block
+// Process Control Block
 //
 
 /* ------------
@@ -14,24 +14,47 @@
 
 module TSOS {
 
-    export class PCB {
+    export class PCB{
+        processID;
+        PID;
+        State: string;
+        PC: number;
+        IR: string;
+        Acc: number;
+        Xreg: number;
+        Yreg: number;
+        Zflag: number;
+        Partition;
+        turnAroundTime: number;
+        waitTime: number;
+        Priority:number;
+
+        constructor(processID) {
+            this.processID = processID,
+            this.PID = processID
+        }
+        //public PCB(processID) {
+        //    let PCB = (processID) => {
+        //        processID = processID;
+        //        var PID = processID;
+        //    }
+        
         //Properties
-        constructor(public pid,
-                    public base,
-                    public limit,
-                    public priority,
-                    public PC = 0,
-                    public xReg = 0,
-                    public yReg = 0,
-                    public zFlag = 0,
-                    public Acc = 0,
-                    public swap = false,
-                    public turnTime = 0,
-                    public waitTime = 0,
-                    public burstTime = 0,
-                    public memInd = null,
-                    public IR = -1,
-                    public location = null,) {
-                    }
+        
+
+        public init(partition): any {
+            var State = "Ready";
+            var PC = 0;
+            var IR = "00";
+            var Acc = 0;
+            var Xreg = 0;
+            var Yreg = 0;
+            var Zflag = 0;
+            var Partition = partition;
+            var turnAroundTime = 0;
+            var waitTime = 0;
+            var Priority = 1;
+        }
+
     }
 }

@@ -66,7 +66,6 @@ var _krnKeyboardDriver; //  = null;
 var _hardwareClockID: number = null;
 
 //Memory and Processes
-var _MMU;
 var _MemorySegmentCount: number = 3;
 var _MemorySegmentSize: number = 256;
 var SYSCALL_IRQ: number = 2;
@@ -76,12 +75,20 @@ var FILESYS_IRQ: number = 3;
 //Hardware(host)
 var _Memory: TSOS.Memory;
 var _MemoryAccessor: TSOS.MemoryAccessor;
+var ERR_BOUND: number = 5;
+var EXIT: number = 2;
 
 //Software(OS)
-var _MemoryManager: any = null;
+var _MMU: TSOS.MMU;;
 
 //Scheduler
 //var _Scheduler: TSOS.Scheduler;
+
+//Process Manager
+var _ProcessManager: TSOS.ProcessManager;
+var PID: number = 0;
+
+var _Scheduler: TSOS.Scheduler;
 
 var _SingleStepMode: boolean = false;
 

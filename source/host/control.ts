@@ -26,6 +26,9 @@
 module TSOS {
 
     export class Control {
+        static hostMemory(): any {
+            throw new Error("Method not implemented.");
+        }
 
         public static hostInit(): void {
             // This is called from index.html's onLoad event via the onDocumentLoad function pointer.
@@ -132,7 +135,7 @@ module TSOS {
             }
             else
                 var progArray = program.match(/.{2}/g); 
-                return TSOS.MMU.createProcess(priority, progArray);
+                //return TSOS.MMU.createProcess(priority, progArray);
             
         }
 

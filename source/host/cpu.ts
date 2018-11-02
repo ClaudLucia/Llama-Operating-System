@@ -20,7 +20,8 @@ module TSOS {
 
     export class Cpu {
 
-        constructor(public PC: number = 0,
+        constructor(
+            public PC: number = 0,
             public Acc: number = 0,
             public Xreg: number = 0,
             public Yreg: number = 0,
@@ -46,33 +47,62 @@ module TSOS {
 
         }
 
-        public sync(): void {
-            this.pid = 0;
-            this.PC = 0;
-            this.Acc = 0;
-            this.Xreg = 0;
-            this.Yreg = 0;
-            this.Zflag = 0;
-            this.isExecuting = false;
-        }
+        //public sync(): void {
+        //    this.pid = 0;
+        //    this.PC = 0;
+        //    this.Acc = 0;
+        //    this.Xreg = 0;
+        //    this.Yreg = 0;
+        //    this.Zflag = 0;
+        //    this.isExecuting = false;
+        //}
 
         public cycle(): void {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
 
-            var opCodeInd = TSOS.MMU.getAddr(this.PC, this.base);
-            var opCodeByte = TSOS.MMU.getBLogicalAddress(this.PC, this.base, this.limit);
-            this.IR = opCodeByte;
-            this.PC += 1;
+            //var opCodeInd = TSOS.MMU.getAddr(this.PC, this.base);
+            //var opCodeByte = TSOS.MMU.getBLogicalAddress(this.PC, this.base, this.limit);
+            //this.IR = opCodeByte;
+            //this.PC += 1;
 
-            var opCode = this.opCodeExec[opCodeByte];
+            //var opCode = this.opCodeExec[opCodeByte];
 
-            opCode.fn.call(this);
-            this.PC += opCode.operandSize;
+            //opCode.fn.call(this);
+            //this.PC += opCode.operandSize;
 
-            this.store(this.current());
+            //this.store(this.current());
 
+
+
+
+            if (!_MemoryAccessor.withinBounds(this.PC)) {
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(ERR_BOUND, 0));
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(EXIT, false));
+            }
+
+            //Use a switch case for the opCode
+            else {
+                //Grap the opCode
+                var opCode = _MemoryAccessor.readMem(this.PC);
+                _Kernel.krnTrace('CPU executing: ' + opCode);
+                switch (opCode) {
+                    /*LDA*/
+                    case "AD":
+                        var hex = _MemoryAccessor.readMem(this.PC + 1);
+                        hex = _MemoryAccessor.readMem(this.PC + 2) + hex;
+                        var addr = parseInt(_MemoryAccessor.readMem(addr), 16);
+                        this.PC += 3;
+                        break;
+
+                    /*STA*/
+                    case "8D":
+                        var hex = _MemoryAccessor.readMem(this.PC + 1);
+                        break;
+
+                }
+            }
 
             if (_SingleStepMode === true) {
                 this.isExecuting = false;
@@ -80,53 +110,28 @@ module TSOS {
             TSOS.Control.hUpdateDisplay();
             
         }
-        public store(pcb): void {
-            pcb.pid = this.pid;
-            pcb.pc = this.PC;
-            pcb.Acc = this.Acc;
-            pcb.IR = this.IR;
-            pcb.xReg = this.Xreg;
-            pcb.yReg = this.Yreg;
-            pcb.zFlag = this.Zflag;
-        }
-        public load(pcb) {
-            this.pid = pcb.pid;
-            this.PC = pcb.pc;
-            this.Acc = pcb.Acc;
-            this.IR = pcb.IR;
-            this.Xreg = pcb.xReg;
-            this.Yreg = pcb.yReg;
-            this.Zflag = pcb.zFlag;
-        }
-        public killProcesses() {
-            this.isExecuting = false;
-            this.pid = -1;
-        }
-
-        public opCodeExec(pcb) {
-            //Use a switch case for the opCode
-
-            //Grap the opCode from User Program Input
-            var code = _MemoryAccessor.readMemory(this.PC);
-            switch (code) {
-                /*break*/
-                case "0x00":
-                    break;
-
-                /*LDA*/
-                case "0x":
-                    break;
-
-                /*STA*/
-                case "0x":
-                    break;
-
-            }
-
-        }
+        //public store(pcb): void {
+        //    pcb.pid = this.pid;
+        //    pcb.pc = this.PC;
+        //    pcb.Acc = this.Acc;
+        //    pcb.IR = this.IR;
+        //    pcb.xReg = this.Xreg;
+        //    pcb.yReg = this.Yreg;
+        //    pcb.zFlag = this.Zflag;
+        //}
+        //public load(pcb) {
+        //    this.pid = pcb.pid;
+        //    this.PC = pcb.pc;
+        //    this.Acc = pcb.Acc;
+        //    this.IR = pcb.IR;
+        //    this.Xreg = pcb.xReg;
+        //    this.Yreg = pcb.yReg;
+        //    this.Zflag = pcb.zFlag;
+        //}
+        //public killProcesses() {
+        //    this.isExecuting = false;
+        //    this.pid = -1;
+        //}
         
-        public current(): void {
-            //return _Scheduler.getProcessforPid(this.pid);
-        }
     }
 }
