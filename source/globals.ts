@@ -25,7 +25,16 @@ const KEYBOARD_IRQ: number = 1;
 // Global Variables
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.
 //
+//Hardware(host)
+var _Memory: TSOS.Memory;
+var _MemoryAccessor: TSOS.MemoryAccessor;
+var ERR_BOUND: number = 5;
+var EXIT: number = 2;
 var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
+
+//Software(OS)
+//Memory manager
+var _MMU: any = null;;
 
 var _OSclock: number = 0;  // Page 23.
 
@@ -71,15 +80,6 @@ var _MemorySegmentSize: number = 256;
 var SYSCALL_IRQ: number = 2;
 var FILESYS_IRQ: number = 3;
 
-
-//Hardware(host)
-var _Memory: TSOS.Memory;
-var _MemoryAccessor: TSOS.MemoryAccessor;
-var ERR_BOUND: number = 5;
-var EXIT: number = 2;
-
-//Software(OS)
-var _MMU: TSOS.MMU;;
 
 //Scheduler
 //var _Scheduler: TSOS.Scheduler;
