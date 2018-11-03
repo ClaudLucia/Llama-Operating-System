@@ -11,7 +11,7 @@ var TSOS;
                 this.readyQueue = new TSOS.Queue();
         }
         ProcessManager.createProcesses = function (opCodes, args) {
-            if (opCodes.length > TSOS.MMU.totalLimit) {
+            if (opCodes.length > _MMU.totalLimit) {
                 _StdOut.putTest("Loading Failed! Program is over 256 bytes");
                 return;
             }

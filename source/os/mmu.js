@@ -15,11 +15,17 @@ var TSOS;
 (function (TSOS) {
     var MMU = /** @class */ (function () {
         function MMU() {
+            this.totalLimit = 256;
+            MMU.partitions = [
+                { "base": 0, "limit": this.totalLimit, "isEmpty": true },
+                { "base": 256, "limit": this.totalLimit, "isEmpty": true },
+                { "base": 512, "limit": this.totalLimit, "isEmpty": true }
+            ];
         }
         MMU.loadMemory = function (opCodes, partition) {
             var loadCount = this.partitions[partition].base;
-            for (var _i = 0, opCodes1 = opCodes; _i < opCodes1.length; _i++) {
-                var opCode = opCodes[i];
+            for (var _i = 0, opCodes_1 = opCodes; _i < opCodes_1.length; _i++) {
+                var opCode = opCodes_1[_i];
                 _Memory.memArr[loadCount] = opCode;
                 loadCount++;
             }
@@ -77,12 +83,6 @@ var TSOS;
             TSOS.Control.hostMemory();
             return true;
         };
-        MMU.totalLimit = 256;
-        MMU.partitions = [
-            { "base": 0, "limit": MMU.totalLimit, "isEmpty": true },
-            { "base": 256, "limit": MMU.totalLimit, "isEmpty": true },
-            { "base": 512, "limit": MMU.totalLimit, "isEmpty": true }
-        ];
         return MMU;
     }());
     TSOS.MMU = MMU;

@@ -106,16 +106,6 @@ var TSOS;
             var msgSta = document.getElementById('statusMsg');
             msgSta.textContent = status;
         };
-        Control.load = function (priority) {
-            var program = document.getElementById('taProgramInput').value;
-            program = program.replace(/^\s+ | \s+$/g, "");
-            if (program.length === 0 || program.length > (_MemorySegmentSize * 2)) {
-                return -1;
-            }
-            else
-                var progArray = program.match(/.{2}/g);
-            //return TSOS.MMU.createProcess(priority, progArray);
-        };
         //Dsiplay the Processes in the CPU Display
         Control.hUpdateDisplay = function () {
             Control.hostUpdateDisplayCPU();

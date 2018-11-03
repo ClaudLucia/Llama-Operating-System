@@ -45,6 +45,19 @@ module TSOS {
                                   "<[empty] | [int]> - Load a program from user input");
             this.commandList[this.commandList.length] = sc;
 
+            //Run
+            sc = new ShellCommand(this.shellRun,
+                                  "run",
+                                  "<[empty] | [int]> - Run a program from memory");
+            this.commandList[this.commandList.length] = sc;
+
+            //RunAll
+            sc = new ShellCommand(this.shellRunAll,
+                                  "runall",
+                                  "<[empty] | [int]> - Runs all programs from memory");
+            this.commandList[this.commandList.length] = sc;
+
+
 
             //Status Bar
             sc = new ShellCommand(this.shellStatus,
@@ -355,6 +368,12 @@ module TSOS {
                     case "load":
                         _StdOut.putText("Loads a program from User Program Input");
                         break;
+                    case "run":
+                        _StdOut.putText("Runs a program from memory");
+                        break;
+                    case "runall":
+                        _StdOut.putText("runs all programs from memory");
+                        break;
                     case "boo":
                         _StdOut.putText("Try it and see what happens");
                         break;
@@ -456,21 +475,63 @@ module TSOS {
         }
 
         public shellLoad(args) {
-            var priority = 0;
-            if (args.length > 0) {
-                if (isNaN(parseInt(args[0])) || parseInt(args[0]) < 0) {
-                    _StdOut.putText("Usage: load <priority?>  Please supply a valid positive integer priority greater than 0.");
+            var input = /[0-9A-Fa-f]{2}/i;
+            var errorHandling = false;
+            //Grab program input and format it
+            var program = (<HTMLInputElement>document.getElementById("taProgramInput")).value;
+            program = program.replace(/\r?\n|\r/g, " ");
+            program = program.replace(/\s+/g, " ").trim();
+            program = program.trim();
+
+            var programArr = program.split(" ");
+            for (var i = 0, programArrB = programArr; i < programArr.length; i++) {
+                var opCode = programArrB[i];
+                if ((opCode.length != 2 || !input.test(opCode))) {
+                    _StdOut.putText("Please enter a valid code in User Program Input");
+                    errorHandling = true
+                    break;
+                }
+            }
+            if (!errorHandling) {
+                if (args.length > 1) {
+                    _StdOut.putText("Usage: load <?priority>  Please supply a valid priority number.");
                     return;
                 }
-                priority = parseInt(args[0]);
+                if (args.length == 1) {
+                    if (!args[0].match(/^[0-9]\d*$/)) {
+                        _StdOut.putText("Usage: load <?priority>  Please supply a valid priority number.");
+                        return;
+                    }
+                }
+                ProcessManager.createProcesses(programArr, args);
             }
-            var pid = TSOS.Control.load(priority);
-            if (pid === -1) {
-                _StdOut.putText("Invalid program. Valid characters are 0-9, a-z, and A-Z.");
+
+        }
+        public shellRun(args) {
+            if (args.length == 1) {
+                var ifPid = false;
+                for (var i = 0; i < _ProcessManager.residentQueue.getSize(); i++) {
+                    var pcb = _ProcessManager.residentQueue.dequeue();
+                    if (pcb.Pid == args[0]) {
+                        _ProcessManager.readyQueue.enqueue(pcb);
+                        ifPid = true;
+                    }
+                    else {
+                        _ProcessManager.residentQueue.enqueue(pcb);
+                    }
+                }
+                if (!ifPid) {
+                    _StdOut.putText("Usage: run <pid>  Please input a valid process ID.");
+                }
             }
             else {
-                _StdOut.putText(`Program loaded. PID ${pid}`);
+                _StdOut.putText("Usage: run <pid>  Please input a valid process ID.");
             }
         }
+
+        public shellRunAll() {
+            ProcessManager.runAllP();
+        };
+
     }
 }

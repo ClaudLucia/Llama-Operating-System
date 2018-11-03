@@ -15,7 +15,7 @@ var TSOS;
         MemoryAccessor.prototype.readMem = function (addr) {
             if (this.withinBounds(addr)) {
                 var partition = _ProcessManager.running.Partition;
-                return _Memory.memArr[TSOS.MMU.partitions[partition].base + addr].toString();
+                return _Memory.memArr[_MMU.partitions[partition].base + addr].toString();
             }
             else {
                 _KernelInterruptQueue.enqueue(new TSOS.Interrupt(ERR_BOUND, 0));
@@ -31,11 +31,11 @@ var TSOS;
         };
         MemoryAccessor.prototype.withinBounds = function (addr) {
             var partition = _ProcessManager.running.Partitions;
-            if (addr + TSOS.MMU.partitions[partition].base <
-                TSOS.MMU.partitions[partition].base +
-                    TSOS.MMU.partitions[partition].limit && addr +
-                TSOS.MMU.partitions[partition].base >=
-                TSOS.MMU.partitions[partition].base) {
+            if (addr + _MMU.partitions[partition].base <
+                _MMU.partitions[partition].base +
+                    _MMU.partitions[partition].limit && addr +
+                _MMU.partitions[partition].base >=
+                _MMU.partitions[partition].base) {
                 return true;
             }
             else {

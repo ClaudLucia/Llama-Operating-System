@@ -22,12 +22,12 @@ module TSOS {
         }
 
         public static createProcesses(opCodes, args): any {
-            if (opCodes.length > MMU.totalLimit) {
+            if (opCodes.length > _MMU.totalLimit) {
                 _StdOut.putTest("Loading Failed! Program is over 256 bytes");
                 return;
             }
             if (MMU.checkMemory(opCodes.length)) {
-                var pcb = new TSOS.PCB(PID);
+                var pcb = new PCB(PID);
                 var partition = MMU.getPartitions(opCodes.length);
                 pcb.init(partition);
                 if (args.length > 0) {
@@ -40,7 +40,7 @@ module TSOS {
 
                 _ProcessManager.residentQueue.enqueue(pcb);
                 MMU.loadMemory(opCodes, partition);
-                TSOS.Control.hostMemory();
+                Control.hostMemory();
                 _StdOut.putText("Program loaded with PID " + PID)
                 PID++;
             }
@@ -58,15 +58,16 @@ module TSOS {
             _CPU.isExecuting = true;
 
             _ProcessManager.running.State = "Running";
+
             //TSOS.Control.hostUpdateDisplayProcesses();
             //TSOS.Control.hostUpdateDisplayCPU();
             //Update All displays
-            TSOS.Control.hUpdateDisplay();
-            TSOS.Control.hostLog("Running process " + _ProcessManager.running.PID);
+            Control.hUpdateDisplay();
+            Control.hostLog("Running process " + _ProcessManager.running.PID);
         }
 
         public static runAllP() {
-            TSOS.Control.hostLog("Running all programs");
+            Control.hostLog("Running all programs");
             while (!_ProcessManager.residentQueue.isEmpty()) {
                 _ProcessManager.readyQueue.enqueue(_ProcessManager.residentQueue.dequeue());
             }
@@ -95,8 +96,8 @@ module TSOS {
         public static exitProcesses(display) {
             _CPU.init();
             MMU.clearPartitions(_ProcessManager.running.Partition);
-            TSOS.Control.hostMemory();
-            TSOS.Control.hostLog("Exiting process " + _ProcessManager.running.PID);
+            Control.hostMemory();
+            Control.hostLog("Exiting process " + _ProcessManager.running.PID);
             if (display) {
                 _StdOut.advanceLine();
                 _StdOut.putText("Process ID: " + _ProcessManager.running.Pid);

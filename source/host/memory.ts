@@ -12,7 +12,7 @@ module TSOS {
         bytes: any[];
         zeroBytes: any;
         //public static memArr: any;
-        public memArr: any[];
+        public memArr: Array<String>;
         constructor(bytes = new Array(_MemorySegmentSize * _MemorySegmentCount)) {
             this.bytes = bytes;
             this.zeroBytes(0, bytes.length);
@@ -21,7 +21,7 @@ module TSOS {
 
 
         public init() {
-            _Memory.memArr = new Array(768);
+            this.memArr = new Array<String>(768);
             for (var i = 0; i < this.memArr.length; i++) {
                 this.memArr[i] = "00";
             }

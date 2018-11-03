@@ -44,7 +44,10 @@ module TSOS {
             //
             // ... more?
             //
-            _MMU = new MMU();
+            _MMU = new TSOS.MMU();
+            _ProcessManager = new TSOS.ProcessManager();
+
+
             // Enable the OS Interrupts.  (Not the CPU clock interrupt, as that is done in the hardware sim.)
             this.krnTrace("Enabling the interrupts.");
             this.krnEnableInterrupts();
