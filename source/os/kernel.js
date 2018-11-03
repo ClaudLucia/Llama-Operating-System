@@ -1,5 +1,11 @@
 ///<reference path="../globals.ts" />
 ///<reference path="queue.ts" />
+///<reference path="../host/control.ts" />
+///<reference path="../host/devices.ts" />
+///<reference path="deviceDriverKeyboard.ts" />
+///<reference path="MMU.ts" />
+///<reference path="processManager.ts" />
+///<reference path="shell.ts" />
 /* ------------
      Kernel.ts
 

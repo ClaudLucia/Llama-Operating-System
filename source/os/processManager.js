@@ -10,14 +10,14 @@ var TSOS;
             this.residentQueue = new TSOS.Queue(),
                 this.readyQueue = new TSOS.Queue();
         }
-        ProcessManager.createProcesses = function (opCodes, args) {
+        ProcessManager.prototype.createProcesses = function (opCodes, args) {
             if (opCodes.length > _MMU.totalLimit) {
                 _StdOut.putTest("Loading Failed! Program is over 256 bytes");
                 return;
             }
-            if (TSOS.MMU.checkMemory(opCodes.length)) {
+            if (_MMU.checkMemory(opCodes.length)) {
                 var pcb = new TSOS.PCB(PID);
-                var partition = TSOS.MMU.getPartitions(opCodes.length);
+                var partition = _MMU.getPartitions(opCodes.length);
                 pcb.init(partition);
                 if (args.length > 0) {
                     pcb.Priority = parseInt(args[0]);
@@ -26,13 +26,13 @@ var TSOS;
                     pcb.Priority = 1;
                 }
                 _ProcessManager.residentQueue.enqueue(pcb);
-                TSOS.MMU.loadMemory(opCodes, partition);
+                _MMU.loadMemory(opCodes, partition);
                 TSOS.Control.hostMemory();
                 _StdOut.putText("Program loaded with PID " + PID);
                 PID++;
             }
         };
-        ProcessManager.runnProcess = function () {
+        ProcessManager.prototype.runnProcess = function () {
             _ProcessManager.running = _ProcessManager.readyQueue.dequeue();
             _CPU.PC = _ProcessManager.running.PC;
             _CPU.Acc = _ProcessManager.running.Acc;
@@ -47,7 +47,7 @@ var TSOS;
             TSOS.Control.hUpdateDisplay();
             TSOS.Control.hostLog("Running process " + _ProcessManager.running.PID);
         };
-        ProcessManager.runAllP = function () {
+        ProcessManager.prototype.runAllP = function () {
             TSOS.Control.hostLog("Running all programs");
             while (!_ProcessManager.residentQueue.isEmpty()) {
                 _ProcessManager.readyQueue.enqueue(_ProcessManager.residentQueue.dequeue());
@@ -56,7 +56,7 @@ var TSOS;
         ProcessManager.runningProcess = function () {
             return _ProcessManager.running != null;
         };
-        ProcessManager.listAllP = function () {
+        ProcessManager.prototype.listAllP = function () {
             if (_ProcessManager.running != null) {
                 var processes = [];
                 for (var i = 0; i < _ProcessManager.readyQueue.getSize(); i++) {
@@ -70,14 +70,14 @@ var TSOS;
                 return [];
             }
         };
-        ProcessManager.exitProcesses = function (display) {
+        ProcessManager.prototype.exitProcesses = function (display) {
             _CPU.init();
-            TSOS.MMU.clearPartitions(_ProcessManager.running.Partition);
+            _MMU.clearPartitions(_ProcessManager.running.Partition);
             TSOS.Control.hostMemory();
             TSOS.Control.hostLog("Exiting process " + _ProcessManager.running.PID);
             if (display) {
                 _StdOut.advanceLine();
-                _StdOut.putText("Process ID: " + _ProcessManager.running.Pid);
+                _StdOut.putText("Process ID: " + _ProcessManager.running.PID);
                 _StdOut.advanceLine();
                 _StdOut.putText("Turnaround time: " + _ProcessManager.running.turnAroundTime + " cycles.");
                 _StdOut.advanceLine();
@@ -87,7 +87,7 @@ var TSOS;
             }
             _ProcessManager.running = null;
         };
-        ProcessManager.updatePCB = function () {
+        ProcessManager.prototype.updatePCB = function () {
             _ProcessManager.running.PC = _CPU.PC;
             _ProcessManager.running.Acc = _CPU.Acc;
             _ProcessManager.running.Xreg = _CPU.Xreg;
@@ -96,7 +96,7 @@ var TSOS;
             _ProcessManager.running.State = "Waiting";
             _ProcessManager.running.IR = _MemoryAccessor.readMem(_CPU.PC).toUpperCase();
         };
-        ProcessManager.times = function () {
+        ProcessManager.prototype.times = function () {
             _ProcessManager.running.turnAroundTime++;
             for (var i = 0; i < _ProcessManager.readyQueue.getSize(); i++) {
                 var pcb = _ProcessManager.readyQueue.dequeue();

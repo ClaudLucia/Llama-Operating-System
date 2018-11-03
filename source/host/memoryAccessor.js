@@ -30,7 +30,7 @@ var TSOS;
             }
         };
         MemoryAccessor.prototype.withinBounds = function (addr) {
-            var partition = _ProcessManager.running.Partitions;
+            var partition = _ProcessManager.running.Partition;
             if (addr + _MMU.partitions[partition].base <
                 _MMU.partitions[partition].base +
                     _MMU.partitions[partition].limit && addr +

@@ -1,6 +1,11 @@
 ///<reference path="../globals.ts" />
 ///<reference path="queue.ts" />
-
+///<reference path="../host/control.ts" />
+///<reference path="../host/devices.ts" />
+///<reference path="deviceDriverKeyboard.ts" />
+///<reference path="MMU.ts" />
+///<reference path="processManager.ts" />
+///<reference path="shell.ts" />
 /* ------------
      Kernel.ts
 
@@ -44,8 +49,8 @@ module TSOS {
             //
             // ... more?
             //
-            _MMU = new TSOS.MMU();
-            _ProcessManager = new TSOS.ProcessManager();
+            _MMU = new MMU();
+            _ProcessManager = new ProcessManager();
 
 
             // Enable the OS Interrupts.  (Not the CPU clock interrupt, as that is done in the hardware sim.)

@@ -413,7 +413,7 @@ var TSOS;
                         return;
                     }
                 }
-                TSOS.ProcessManager.createProcesses(programArr, args);
+                _ProcessManager.createProcesses(programArr, args);
             }
         };
         Shell.prototype.shellRun = function (args) {
@@ -438,7 +438,7 @@ var TSOS;
             }
         };
         Shell.prototype.shellRunAll = function () {
-            TSOS.ProcessManager.runAllP();
+            _ProcessManager.runAllP();
         };
         ;
         return Shell;

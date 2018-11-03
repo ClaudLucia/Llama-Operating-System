@@ -9,9 +9,8 @@
 module TSOS {
 
     export class Memory {
-        bytes: any[];
-        zeroBytes: any;
-        //public static memArr: any;
+        public bytes: any[];
+        public zeroBytes: any;
         public memArr: Array<String>;
         constructor(bytes = new Array(_MemorySegmentSize * _MemorySegmentCount)) {
             this.bytes = bytes;
@@ -20,14 +19,14 @@ module TSOS {
 
 
 
-        public init() {
+        public init(): void {
             this.memArr = new Array<String>(768);
             for (var i = 0; i < this.memArr.length; i++) {
                 this.memArr[i] = "00";
             }
         }
 
-
+        //For display purposes
         public getBytes(loc, size: number = 1) {
             if (size < 0) {
                 return [];

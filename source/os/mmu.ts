@@ -25,7 +25,7 @@ module TSOS {
         }
 
 
-        public static loadMemory(opCodes, partition): void {
+        public loadMemory(opCodes, partition): void {
             var loadCount = this.partitions[partition].base;
             for (var opCode of opCodes) {
                 _Memory.memArr[loadCount] = opCode;
@@ -38,7 +38,7 @@ module TSOS {
         }
 
 
-        public static checkMemory(opCodesLength): boolean {
+        public checkMemory(opCodesLength): boolean {
             for (var i = 0; i < this.partitions.length; i++) {
                 if (this.partitions[i].isEmpty &&
                     this.partitions[i].limit > opCodesLength) {
@@ -48,7 +48,7 @@ module TSOS {
             return false;
         }
 
-        public static getPartitions(opCodesLength): any {
+        public getPartitions(opCodesLength): any {
             for (var i = 0; i < this.partitions.length; i++) {
                 if (this.partitions[i].isEmpty && this.partitions[i].limit > opCodesLength) {
                     return i;
@@ -57,7 +57,7 @@ module TSOS {
             return null;
         }
 
-        public static clearPartitions(partition): any {
+        public clearPartitions(partition): any {
             var base = this.partitions[partition].base;
             var limit = this.partitions[partition].limit + this.partitions[partition].base;
             for (var i = base; i < limit; i++) {
@@ -67,7 +67,7 @@ module TSOS {
         }
 
 
-        public static clearAll(): any {
+        public clearAll(): any {
             if (_CPU.isExecuting) {
                 return false;
             }

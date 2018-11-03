@@ -13,22 +13,22 @@
 module TSOS {
 
     export class ProcessManager {
-        residentQueue;
-        readyQueue;
-        public running: any;
+        public residentQueue: any;
+        public readyQueue: any;
+        public running: TSOS.PCB;
         constructor() {
-            this.residentQueue = new TSOS.Queue(),
-            this.readyQueue = new TSOS.Queue()
+            this.residentQueue = new Queue(),
+            this.readyQueue = new Queue()
         }
 
-        public static createProcesses(opCodes, args): any {
+        public createProcesses(opCodes, args): any {
             if (opCodes.length > _MMU.totalLimit) {
                 _StdOut.putTest("Loading Failed! Program is over 256 bytes");
                 return;
             }
-            if (MMU.checkMemory(opCodes.length)) {
+            if (_MMU.checkMemory(opCodes.length)) {
                 var pcb = new PCB(PID);
-                var partition = MMU.getPartitions(opCodes.length);
+                var partition = _MMU.getPartitions(opCodes.length);
                 pcb.init(partition);
                 if (args.length > 0) {
                     pcb.Priority = parseInt(args[0]);
@@ -39,7 +39,7 @@ module TSOS {
                 }
 
                 _ProcessManager.residentQueue.enqueue(pcb);
-                MMU.loadMemory(opCodes, partition);
+                _MMU.loadMemory(opCodes, partition);
                 Control.hostMemory();
                 _StdOut.putText("Program loaded with PID " + PID)
                 PID++;
@@ -47,7 +47,7 @@ module TSOS {
         }
 
 
-        public static runnProcess() {
+        public runnProcess() {
             _ProcessManager.running = _ProcessManager.readyQueue.dequeue();
 
             _CPU.PC = _ProcessManager.running.PC;
@@ -66,7 +66,7 @@ module TSOS {
             Control.hostLog("Running process " + _ProcessManager.running.PID);
         }
 
-        public static runAllP() {
+        public runAllP() {
             Control.hostLog("Running all programs");
             while (!_ProcessManager.residentQueue.isEmpty()) {
                 _ProcessManager.readyQueue.enqueue(_ProcessManager.residentQueue.dequeue());
@@ -77,7 +77,7 @@ module TSOS {
             return _ProcessManager.running != null;
         }
 
-        public static listAllP() {
+        public listAllP() {
             if (_ProcessManager.running != null) {
                 var processes = [];
                 for (var i = 0; i < _ProcessManager.readyQueue.getSize(); i++) {
@@ -93,14 +93,14 @@ module TSOS {
         }
 
 
-        public static exitProcesses(display) {
+        public exitProcesses(display) {
             _CPU.init();
-            MMU.clearPartitions(_ProcessManager.running.Partition);
+            _MMU.clearPartitions(_ProcessManager.running.Partition);
             Control.hostMemory();
             Control.hostLog("Exiting process " + _ProcessManager.running.PID);
             if (display) {
                 _StdOut.advanceLine();
-                _StdOut.putText("Process ID: " + _ProcessManager.running.Pid);
+                _StdOut.putText("Process ID: " + _ProcessManager.running.PID);
                 _StdOut.advanceLine();
                 _StdOut.putText("Turnaround time: " + _ProcessManager.running.turnAroundTime + " cycles.");
                 _StdOut.advanceLine();
@@ -112,7 +112,7 @@ module TSOS {
             _ProcessManager.running = null;
         }
 
-        public static updatePCB() {
+        public updatePCB() {
             _ProcessManager.running.PC = _CPU.PC;
             _ProcessManager.running.Acc = _CPU.Acc;
             _ProcessManager.running.Xreg = _CPU.Xreg;
@@ -123,7 +123,7 @@ module TSOS {
 
         }
 
-        public static times() {
+        public times() {
             _ProcessManager.running.turnAroundTime++;
             for (var i = 0; i < _ProcessManager.readyQueue.getSize(); i++) {
                 var pcb = _ProcessManager.readyQueue.dequeue();

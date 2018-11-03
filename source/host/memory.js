@@ -19,6 +19,7 @@ var TSOS;
                 this.memArr[i] = "00";
             }
         };
+        //For display purposes
         Memory.prototype.getBytes = function (loc, size) {
             if (size === void 0) { size = 1; }
             if (size < 0) {

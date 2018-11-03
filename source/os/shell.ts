@@ -503,7 +503,7 @@ module TSOS {
                         return;
                     }
                 }
-                ProcessManager.createProcesses(programArr, args);
+                _ProcessManager.createProcesses(programArr, args);
             }
 
         }
@@ -530,7 +530,7 @@ module TSOS {
         }
 
         public shellRunAll() {
-            ProcessManager.runAllP();
+            _ProcessManager.runAllP();
         };
 
     }

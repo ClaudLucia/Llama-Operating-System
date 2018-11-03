@@ -1,8 +1,3 @@
-//
-// Memory Management Unit
-///<reference path="../globals.ts" />
-///<reference path="kernel.ts" />
-///<reference path="interrupt.ts" />
 /* ------------
  *
  * The Memory Management Unit
@@ -16,13 +11,13 @@ var TSOS;
     var MMU = /** @class */ (function () {
         function MMU() {
             this.totalLimit = 256;
-            MMU.partitions = [
+            this.partitions = [
                 { "base": 0, "limit": this.totalLimit, "isEmpty": true },
                 { "base": 256, "limit": this.totalLimit, "isEmpty": true },
                 { "base": 512, "limit": this.totalLimit, "isEmpty": true }
             ];
         }
-        MMU.loadMemory = function (opCodes, partition) {
+        MMU.prototype.loadMemory = function (opCodes, partition) {
             var loadCount = this.partitions[partition].base;
             for (var _i = 0, opCodes_1 = opCodes; _i < opCodes_1.length; _i++) {
                 var opCode = opCodes_1[_i];
@@ -34,15 +29,16 @@ var TSOS;
             }
             this.partitions[partition].isEmpty = false;
         };
-        MMU.checkMemory = function (opCodesLength) {
+        MMU.prototype.checkMemory = function (opCodesLength) {
             for (var i = 0; i < this.partitions.length; i++) {
-                if (this.partitions[i].isEmpty && this.partitions[i].limit > opCodesLength) {
+                if (this.partitions[i].isEmpty &&
+                    this.partitions[i].limit > opCodesLength) {
                     return true;
                 }
             }
             return false;
         };
-        MMU.getPartitions = function (opCodesLength) {
+        MMU.prototype.getPartitions = function (opCodesLength) {
             for (var i = 0; i < this.partitions.length; i++) {
                 if (this.partitions[i].isEmpty && this.partitions[i].limit > opCodesLength) {
                     return i;
@@ -50,7 +46,7 @@ var TSOS;
             }
             return null;
         };
-        MMU.clearPartitions = function (partition) {
+        MMU.prototype.clearPartitions = function (partition) {
             var base = this.partitions[partition].base;
             var limit = this.partitions[partition].limit + this.partitions[partition].base;
             for (var i = base; i < limit; i++) {
@@ -58,7 +54,7 @@ var TSOS;
             }
             this.partitions[partition].isEmpty = true;
         };
-        MMU.clearAll = function () {
+        MMU.prototype.clearAll = function () {
             if (_CPU.isExecuting) {
                 return false;
             }

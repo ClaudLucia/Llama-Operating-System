@@ -39,7 +39,7 @@ module TSOS{
         }
 
         public withinBounds(addr): any {
-            var partition = _ProcessManager.running.Partitions;
+            var partition = _ProcessManager.running.Partition;
             if (addr + _MMU.partitions[partition].base <
                        _MMU.partitions[partition].base +
                        _MMU.partitions[partition].limit && addr +
