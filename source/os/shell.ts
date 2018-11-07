@@ -157,7 +157,7 @@ module TSOS {
 
             // kill <id> - kills the specified process id.
             sc = new ShellCommand(this.shellKill,
-                                   "ps",
+                                   "kill",
                                    " <id> - Kills the specified process id");
             this.commandList[this.commandList.length] = sc;
 
@@ -539,12 +539,12 @@ module TSOS {
             }
             if (!errorHandling) {
                 if (args.length > 1) {
-                    _StdOut.putText("Usage: load <?priority>  Please supply a valid priority number.");
+                    _StdOut.putText("Please supply a valid priority number.");
                     return;
                 }
                 if (args.length == 1) {
                     if (!args[0].match(/^[0-9]\d*$/)) {
-                        _StdOut.putText("Usage: load <?priority>  Please supply a valid priority number.");
+                        _StdOut.putText("Please supply a valid priority number.");
                         return;
                     }
                 }
@@ -566,11 +566,11 @@ module TSOS {
                     }
                 }
                 if (!ifPid) {
-                    _StdOut.putText("Usage: run <pid>  Please input a valid process ID.");
+                    _StdOut.putText("Please input a valid process ID.");
                 }
             }
             else {
-                _StdOut.putText("Usage: run <pid>  Please input a valid process ID.");
+                _StdOut.putText("Please input a valid process ID.");
             }
         }
 
@@ -598,17 +598,16 @@ module TSOS {
 
         public shellKill(args) {
             if (args.length == 1) {
-                // Find the process with the correct pid in the ready queue
                 var foundPid = _ProcessManager.exitAProcess(args[0]);
                 if (!foundPid) {
-                    _StdOut.putText("Usage: kill <pid>  Please supply a valid process ID.");
+                    _StdOut.putText("Please supply a valid process ID.");
                 }
                 else {
-                    _StdOut.putText("Process " + args[0] + " successfully murdered. You horrible person.");
+                    _StdOut.putText("Process " + args[0] + " killed.");
                 }
             }
             else {
-                _StdOut.putText("Usage: kill <pid>  Please supply a process ID.");
+                _StdOut.putText("Please supply a process ID.");
             }
         }
 
@@ -627,7 +626,7 @@ module TSOS {
                 }
             }
             else {
-                _StdOut.putText("Usage: quantum <int>  Please supply an integer");
+                _StdOut.putText("Please supply an integer");
             }
         }
 

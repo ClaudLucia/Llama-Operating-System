@@ -136,6 +136,37 @@ module TSOS {
             _ProcessManager.running.IR = _MemoryAccessor.readMem(_CPU.PC).toUpperCase();
         }
 
+
+        public exitAProcess(pid): boolean {
+            var pcbToDel;
+            for (var i = 0; i < this.readyQueue.getSize(); i++) {
+                var pcb = this.readyQueue.dequeue();
+                if (pcb.Pid == pid) {
+                    pcbToDel = pcb;
+                }
+                else {
+                    this.readyQueue.enqueue(pcb);
+                }
+            }
+            if (this.running != null) {
+                if (this.running.PID == pid) {
+                    pcbToDel = this.running;
+                    _KernelInterruptQueue.enqueue(new Interrupt(EXIT, false));
+                }
+            }
+            if (pcbToDel == null) {
+                return false;
+            }
+            else {
+                Control.hostLog("Exiting process " + pid, "os");
+                _MMU.clearMemoryPartition(pcbToDel.Partition);
+                Control.hostProcess();
+                Control.hostCPU();
+                return true;
+            }
+        }
+
+
         //Calculate the turnaround and wait times
         public times() {
             _ProcessManager.running.turnAroundTime++;
