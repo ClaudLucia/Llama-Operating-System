@@ -35,6 +35,8 @@
     <script type="text/javascript" src="distrib/os/pcb.js"></script>
     <script type="text/javascript" src="distrib/os/mmu.js"></script>
     <script type="text/javascript" src="distrib/os/processManager.js"></script>
+    <script type="text/javascript" src="distrib/os/scheduler.js"></script>
+
     <script type="text/javascript" src="distrib/os/kernel.js"></script>
 
     <!-- Other Routines -->
@@ -150,31 +152,27 @@
                 </div>
             </div>
         </div>
+
         <div id="middlePage">
             <div id="divPCB" class="col-lg-8">
                 <h2>Process Control Block</h2>
                 <br>
-                <div id="displayPCB">
-                    <table class="PCB" id="processControlBlock">
-
-                        <tbody>
-                            <tr>
-                                <th>PID</th>
-                                <th>State</th>
-                                <th>Priority</th>
-                                <th>PC</th>
-                                <th>IR</th>
-                                <th>ACC</th>
-                                <th>X</th>
-                                <th>Y</th>
-                                <th>Z</th>
-                            </tr>
-                            <tr>
-                                <td colspan='10'>No Programs Running</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <table name="displayPCB"
+                       id="displayPCB"
+                       class="table">
+                    <thead>
+                        <tr>
+                            <td>PID</td>
+                            <td style="text-align: center; width: 100px">State</td>
+                            <td style="text-align: center; width: 40px">PC</td>
+                            <td style="text-align: center; width: 40px">IR</td>
+                            <td style="text-align: center; width: 40px">Acc</td>
+                            <td style="text-align: center; width: 40px">X</td>
+                            <td style="text-align: center; width: 40px">Y</td>
+                            <td style="text-align: center; width: 40px">Z</td>
+                        </tr>
+                    </thead>
+                </table>
             </div>
 
             <div id="divCPU">
@@ -182,22 +180,24 @@
                 <br>
                 <div id="displayCPU">
                     <table class="CPU" id="CPU">
+                        <thead>
+                            <tr>
+                                <td>PC</td>
+                                <td>IR</td>
+                                <td>Acc</td>
+                                <td>X</td>
+                                <td>Y</td>
+                                <td>Z</td>
+                            </tr>
+                        </thead>
                         <tbody>
                             <tr>
-                                <th>PC</th>
-                                <th>IR</th>
-                                <th>ACC</th>
-                                <th>X</th>
-                                <th>Y</th>
-                                <th>Z</th>
-                            </tr>
-                            <tr>
-                                <td>00</td>
-                                <td>00</td>
-                                <td>00</td>
-                                <td>00</td>
-                                <td>00</td>
-                                <td>00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
                             </tr>
                         </tbody>
                     </table>
@@ -206,11 +206,15 @@
 
             <div id="divMemory">
                 <label class="center-align">
-                    <h2 class="label-header">Memory</h2>
+                    <h2> Memory</h2>
                     <table name="Memory" id="Memory"
-                           style=" height: 150px;
-                               overflow-y: scroll;"
-                           class="table striped"></table>
+                           style ="color: black; 
+                                   height: 150px; 
+                                   overflow-y: scroll; 
+                                   display: block;"
+                           class="table striped">
+
+                    </table>
                     <tbody align="center"></tbody>
                 </label>
             </div>
@@ -240,7 +244,7 @@
                               rows="8"
                               cols="48"
                              >A9 03 8D 41 00 A9 01 8D 40 00 AC 40 00 A2 01 FF EE 40 00 AE 40 00 EC 41 00 D0 EF A9 44 8D 42 00 A9 4F 8D 43 00 A9 4E 8D 44 00 A9 45 8D 45 00 A9 00 8D 46 00 A2 02 A0 42 FF 00</textarea>
-                             ></textarea>
+                             </textarea>
                 </label>
             </div>
         </div>

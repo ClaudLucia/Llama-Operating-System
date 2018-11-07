@@ -47,13 +47,6 @@ var TSOS;
             }
             return retVal;
         };
-        Utils.tHex = function (num, dig) {
-            if (dig === void 0) { dig = 2; }
-            return ("0".repeat(dig) + num.toString(16).toUpperCase()).slice(-dig);
-        };
-        Utils.fHex = function (nString) {
-            return parseInt(nString, 16);
-        };
         return Utils;
     }());
     TSOS.Utils = Utils;

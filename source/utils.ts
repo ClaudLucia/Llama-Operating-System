@@ -48,15 +48,5 @@ module TSOS {
             }
             return retVal;
         }
-
-        public static tHex(num: number, dig: number = 2): any {
-            return ("0".repeat(dig) + num.toString(16).toUpperCase()).slice(-dig);
-        }
-
-
-
-        public static fHex(nString): number {
-            return parseInt(nString, 16);
-        }
     }
 }

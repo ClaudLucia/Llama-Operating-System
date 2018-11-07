@@ -166,20 +166,16 @@ var TSOS;
         };
         Control.initMemDisplay = function () {
             var table = document.getElementById('Memory');
-            // We assume each row will hold 8 memory values
             for (var i = 0; i < _Memory.memArr.length / 8; i++) {
                 var row = table.insertRow(i);
                 var Memcell = row.insertCell(0);
                 var addr = i * 8;
-                // Display addr in proper memory hex notation
-                // Adds leading 0s if necessary
                 var showAddr = "0x";
                 for (var k = 0; k < 3 - addr.toString(16).length; k++) {
                     showAddr += "0";
                 }
                 showAddr += addr.toString(16).toUpperCase();
                 Memcell.innerHTML = showAddr;
-                // Fill all the cells with 00s
                 for (var j = 1; j < 9; j++) {
                     var cell = row.insertCell(j);
                     cell.innerHTML = "00";
@@ -195,9 +191,6 @@ var TSOS;
                     table.rows[i].cells.item(j).innerHTML = _Memory.memArr[memoryPtr].toString().toUpperCase();
                     table.rows[i].cells.item(j).style.color = "black";
                     table.rows[i].cells.item(j).style['font-weight'] = "normal";
-                    // Check to see if the hex needs a leading zero.
-                    // If it does, then convert the hex to decimal, then back to hex, and add a leading zero.
-                    // We do that seemingly dumb step because if the value stored in memory already has a leading 0, will make display look gross.
                     var dec = parseInt(_Memory.memArr[memoryPtr].toString(), 16);
                     if (dec < 16 && dec > 0) {
                         table.rows[i].cells.item(j).innerHTML = "0" + dec.toString(16).toUpperCase();

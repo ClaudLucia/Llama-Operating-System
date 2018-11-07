@@ -92,16 +92,18 @@ module TSOS {
             // ... Create and initialize the CPU (because it's part of the hardware)  ...
             _CPU = new CPU();  // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
             _CPU.init();       //       There's more to do, like dealing with scheduling and such, but this would be a start. Pretty cool.
+            Control.hostCPU();
             _Memory = new Memory();
             _Memory.init();
             _MemoryAccessor = new MemoryAccessor();
+            Control.initMemDisplay();
+
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.
             _Kernel = new Kernel();
             _Kernel.krnBootstrap();  // _GLaDOS.afterStartup() will get called in there, if configured.
 
-            Control.hostCPU();
         }
 
         public static hostBtnHaltOS_click(btn): void {
@@ -153,7 +155,7 @@ module TSOS {
 
 
         public static hostProcess(): void {
-            var table = (<HTMLTableElement>document.getElementById('processControlBlock'));
+            var table = (<HTMLTableElement>document.getElementById('display'));
             let readyQueue: Array<PCB> = [];
             
             for (var i = 0; i < _ProcessManager.readyQueue.getSize(); i++) {
@@ -169,43 +171,46 @@ module TSOS {
             }
             
             while (readyQueue.length > 0) {
-                var displayPcb = readyQueue.pop();
+                var display = readyQueue.pop();
                 var row = table.insertRow(-1); 
                 var cell = row.insertCell();
-                cell.innerHTML = displayPcb.PID.toString(16).toUpperCase();
+                cell.innerHTML = display.PID.toString(16).toUpperCase();
+
                 cell = row.insertCell();
-                cell.innerHTML = displayPcb.State;
+                cell.innerHTML = display.State;
+
                 cell = row.insertCell();
-                cell.innerHTML = displayPcb.PC.toString(16).toUpperCase();
+                cell.innerHTML = display.PC.toString(16).toUpperCase();
+
                 cell = row.insertCell();
-                cell.innerHTML = displayPcb.IR.toString();
+                cell.innerHTML = display.IR.toString();
+
                 cell = row.insertCell();
-                cell.innerHTML = displayPcb.Acc.toString(16).toUpperCase();
+                cell.innerHTML = display.Acc.toString(16).toUpperCase();
+
                 cell = row.insertCell();
-                cell.innerHTML = displayPcb.Xreg.toString(16).toUpperCase();
+                cell.innerHTML = display.Xreg.toString(16).toUpperCase();
+
                 cell = row.insertCell();
-                cell.innerHTML = displayPcb.Yreg.toString(16).toUpperCase();
+                cell.innerHTML = display.Yreg.toString(16).toUpperCase();
+
                 cell = row.insertCell();
-                cell.innerHTML = displayPcb.Zflag.toString(16).toUpperCase();
+                cell.innerHTML = display.Zflag.toString(16).toUpperCase();
             }
         }
 
         public static initMemDisplay(): void {
             var table = (<HTMLTableElement>document.getElementById('Memory'));
-            // We assume each row will hold 8 memory values
-            for (var i = 0; i < _Memory.memArr.length / 8; i++) {
+            for (var i = 0; i < (_Memory.memArr.length / 8); i++) {
                 var row = table.insertRow(i);
                 var Memcell = row.insertCell(0);
                 var addr = i * 8;
-                // Display addr in proper memory hex notation
-                // Adds leading 0s if necessary
                 var showAddr = "0x";
                 for (var k = 0; k < 3 - addr.toString(16).length; k++) {
                     showAddr += "0";
                 }
                 showAddr += addr.toString(16).toUpperCase();
                 Memcell.innerHTML = showAddr;
-                // Fill all the cells with 00s
                 for (var j = 1; j < 9; j++) {
                     var cell = row.insertCell(j);
                     cell.innerHTML = "00";
@@ -222,9 +227,6 @@ module TSOS {
                     table.rows[i].cells.item(j).innerHTML = _Memory.memArr[memoryPtr].toString().toUpperCase();
                     table.rows[i].cells.item(j).style.color = "black";
                     table.rows[i].cells.item(j).style['font-weight'] = "normal";
-                    // Check to see if the hex needs a leading zero.
-                    // If it does, then convert the hex to decimal, then back to hex, and add a leading zero.
-                    // We do that seemingly dumb step because if the value stored in memory already has a leading 0, will make display look gross.
                     var dec = parseInt(_Memory.memArr[memoryPtr].toString(), 16);
                     if (dec < 16 && dec > 0) {
                         table.rows[i].cells.item(j).innerHTML = "0" + dec.toString(16).toUpperCase();

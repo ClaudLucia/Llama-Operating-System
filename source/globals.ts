@@ -88,9 +88,9 @@ var FILESYS_IRQ: number = 3;
 
 //Process Manager
 var _ProcessManager: any = null;
-var PID: number = 0;
+var _PID: number = 0;
 
-var _Scheduler: TSOS.Scheduler;
+var _Scheduler: any = null;
 
 var _SingleStepMode: boolean = false;
 

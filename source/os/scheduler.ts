@@ -30,7 +30,8 @@ module TSOS {
                 }
             }
         }
-        
+
+       
         public unwatch() {
             this.count = 0;
         }
@@ -44,27 +45,6 @@ module TSOS {
                     return false;
             }
             return true;
-        }
-       
-        public findHighPrior() {
-            let res;
-            let size = _ProcessManager.readyQueue.getSize();
-            for (var i = 0; i < size; i++) {
-                var pcb = _ProcessManager.readyQueue.dequeue();
-                if (res == null) {
-                    res = pcb;
-                }
-                else {
-                    if (pcb.Priority < res.Priority) {
-                        _ProcessManager.readyQueue.enqueue(res);
-                        res = pcb;
-                    }
-                    else {
-                        _ProcessManager.readyQueue.enqueue(pcb);
-                    }
-                }
-            }
-            return res;
         }
 
         public setQuantum(num) {

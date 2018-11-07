@@ -73,7 +73,6 @@ var TSOS;
                 }
                 this.partitions[j].isEmpty = true;
             }
-            // Also, clear out the resident queue, for we don't have any programs in memory anymore
             while (_ProcessManager.residentQueue.getSize() > 0) {
                 _ProcessManager.residentQueue.dequeue();
             }

@@ -29,7 +29,7 @@ module TSOS {
                 return;
             }
             if (_MMU.checkMemory(opCodes.length)) {
-                var pcb = new PCB(PID);
+                var pcb = new PCB(_PID);
                 var partition = _MMU.getPartitions(opCodes.length);
                 pcb.init(partition);
                 if (args.length > 0) {
@@ -43,8 +43,8 @@ module TSOS {
                 this.residentQueue.enqueue(pcb);
                 _MMU.loadMemory(opCodes, partition);
                 Control.hostMemory();
-                _StdOut.putText("Program loaded with PID " + PID)
-                PID++;
+                _StdOut.putText("Program loaded with PID " + _PID)
+                _PID++;
             }
             else {
                 _StdOut.putText("Loading failed! Not enough memory available.");
@@ -98,7 +98,7 @@ module TSOS {
         }
 
 
-        public exitProcesses(display: boolean): void {
+        public exitProcess(display: boolean): void {
             _Scheduler.unwatch();
             _CPU.init();
             _MMU.clearPartitions(_ProcessManager.running.Partition);

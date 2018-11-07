@@ -15,45 +15,37 @@
 module TSOS {
 
     export class PCB{
-        processID;
-        PID;
-        State: string;
-        PC: number;
-        IR: string;
-        Acc: number;
-        Xreg: number;
-        Yreg: number;
-        Zflag: number;
-        Partition;
-        turnAroundTime: number;
-        waitTime: number;
-        Priority:number;
 
-        constructor(processID) {
-            this.processID = processID,
-            this.PID = processID
+        public State: string;
+        public PID: number;
+        public PC: number;
+        public IR: String;
+        public Acc: number;
+        public Xreg: number;
+        public Yreg: number;
+        public Zflag: number;
+        public Partition: number;
+        public Priority: number; 
+        public waitTime: number; 
+        public turnAroundTime: number;
+
+        constructor(public processId) {
+            this.PID = processId;
         }
-        //public PCB(processID) {
-        //    let PCB = (processID) => {
-        //        processID = processID;
-        //        var PID = processID;
-        //    }
-        
-        //Properties
-        
 
-        public init(partition): any {
-            var State = "Ready";
-            var PC = 0;
-            var IR = "00";
-            var Acc = 0;
-            var Xreg = 0;
-            var Yreg = 0;
-            var Zflag = 0;
-            var Partition = partition;
-            var turnAroundTime = 0;
-            var waitTime = 0;
-            var Priority = 1;
+
+        public init(partition): void {
+            this.State = "Ready";
+            this.PC = 0;
+            this.IR = "00";
+            this.Acc = 0;
+            this.Xreg = 0;
+            this.Yreg = 0;
+            this.Zflag = 0;
+            this.Partition = partition;
+            this.turnAroundTime = 0;
+            this.waitTime = 0;
+            this.Priority = 1;
         }
 
     }

@@ -30,6 +30,7 @@ module TSOS {
         public statusStr = "";
         public cmdHistory = [];
         public hisInd = 0;
+        public helpList = [];
         //public conceal = false;
 
         constructor() {
@@ -40,6 +41,11 @@ module TSOS {
             //
             // Load the command list.
 
+            //Clear Memory
+            sc = new ShellCommand(this.shellClearMem,
+                "clearmem",
+                "< - CCLears all the memory partitions");
+            this.commandList[this.commandList.length] = sc;
 
             //Load
             sc = new ShellCommand(this.shellLoad,
@@ -144,9 +150,24 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
 
             // ps  - list the running processes and their IDs
-            // kill <id> - kills the specified process id.
+            sc = new ShellCommand(this.shellPS,
+                                   "ps",
+                                   "- List the running processes and their IDs");
+            this.commandList[this.commandList.length] = sc;
 
-            //
+            // kill <id> - kills the specified process id.
+            sc = new ShellCommand(this.shellKill,
+                                   "ps",
+                                   " <id> - Kills the specified process id");
+            this.commandList[this.commandList.length] = sc;
+
+            //quantum - Sets the Round Robin quantum
+            sc = new ShellCommand(this.shellQuantum,
+                                    "quantum",
+                                    "<int> - Sets the Round Robin quantum");
+            this.commandList[this.commandList.length] = sc;
+            this.helpList[this.helpList.length] = sc;
+
             // Display the initial prompt.
             this.putPrompt();
         }
@@ -376,9 +397,23 @@ module TSOS {
                     case "runall":
                         _StdOut.putText("runs all programs from memory");
                         break;
+                    case "clearmem":
+                        _StdOut.putText("Clears all the memory partitions");
+                        break;
+                    case "ps":
+                        _StdOut.putText("List the running processes and their IDs");
+                        break;
+                    case "kill":
+                        _StdOut.putText("<id> - Kills the specified process id");
+                        break;
+                    case "quantum":
+                        _StdOut.putText("<int> - Sets the Round Robin quantum");
+                        break;
                     case "boo":
                         _StdOut.putText("Try it and see what happens");
                         break;
+                    
+
 
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -388,9 +423,17 @@ module TSOS {
             }
         }
 
+        public shellClearMem() {
+            if (_MMU.clearAll()) {
+                _StdOut.putText("All memory partitions cleared!");
+            }
+            else {
+                _StdOut.putText("Can't clear all memory partitions: program in memory is being run!");
+            }
+        }
+
         public shellBoo(args) {
             _Kernel.krnTrapError("OS Error");
-            //_OsShell.conceal = true;
         }
 
         public shellTrace(args) {
@@ -533,7 +576,60 @@ module TSOS {
 
         public shellRunAll() {
             _ProcessManager.runAllP();
-        };
+        }
+
+        public shellPS() {
+            let arr: Array<String> = _ProcessManager.listAllP();
+            if (arr.length == 0) {
+                _StdOut.putText("No active processes");
+                return;
+            }
+            _StdOut.putText("Active processes' PIDs: ");
+            while (arr.length > 0) {
+                _StdOut.putText(arr.pop());
+                if (arr.length != 0) {
+                    _StdOut.putText(", ");
+                }
+                else {
+                    _StdOut.putText(".");
+                }
+            }
+        }
+
+        public shellKill(args) {
+            if (args.length == 1) {
+                // Find the process with the correct pid in the ready queue
+                var foundPid = _ProcessManager.exitAProcess(args[0]);
+                if (!foundPid) {
+                    _StdOut.putText("Usage: kill <pid>  Please supply a valid process ID.");
+                }
+                else {
+                    _StdOut.putText("Process " + args[0] + " successfully murdered. You horrible person.");
+                }
+            }
+            else {
+                _StdOut.putText("Usage: kill <pid>  Please supply a process ID.");
+            }
+        }
+
+
+        public shellQuantum(args) {
+            if (args.length == 1) {
+                var num = parseInt(args[0]);
+                if (isNaN(num)) {
+                    _StdOut.putText("Please supply a valid integer");
+                }
+                else {
+                    if (typeof num === "number") {
+                        _Scheduler.setQuantum(args[0]);
+                        _StdOut.putText("Round robin quantum set to " + num);
+                    }
+                }
+            }
+            else {
+                _StdOut.putText("Usage: quantum <int>  Please supply an integer");
+            }
+        }
 
     }
 }
