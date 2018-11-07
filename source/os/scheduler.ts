@@ -7,6 +7,7 @@
 
 module TSOS {
     export class Scheduler {
+
         public schedulingMethod: string;
         public count: number;
         public quantum: number;

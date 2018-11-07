@@ -32,7 +32,7 @@ var ERR_BOUND: number = 5;
 var EXIT: number = 2;
 var WRITECONSOLE: number = 4;
 var OPINV: number = 6;
-var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
+var _CPU: TSOS.CPU;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
 
 //Software(OS)
 //Memory manager

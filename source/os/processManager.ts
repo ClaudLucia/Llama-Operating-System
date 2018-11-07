@@ -1,4 +1,5 @@
 ﻿///<reference path="../globals.ts" />
+///<reference path="../host/memory.ts" />
 
 
 
@@ -13,6 +14,7 @@
 module TSOS {
 
     export class ProcessManager {
+
         public residentQueue: any;
         public readyQueue: any;
         public running: TSOS.PCB;

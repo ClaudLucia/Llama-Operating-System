@@ -26,9 +26,6 @@
 module TSOS {
 
     export class Control {
-        static hostMemory(): any {
-            throw new Error("Method not implemented.");
-        }
 
         public static hostInit(): void {
             // This is called from index.html's onLoad event via the onDocumentLoad function pointer.
@@ -93,9 +90,11 @@ module TSOS {
             document.getElementById("display").focus();
 
             // ... Create and initialize the CPU (because it's part of the hardware)  ...
-            _CPU = new Cpu();  // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
+            _CPU = new CPU();  // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
             _CPU.init();       //       There's more to do, like dealing with scheduling and such, but this would be a start. Pretty cool.
-
+            _Memory = new Memory();
+            _Memory.init();
+            _MemoryAccessor = new MemoryAccessor();
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.
@@ -192,20 +191,20 @@ module TSOS {
         }
 
         public static initMemDisplay(): void {
-            var table = (<HTMLTableElement>document.getElementById('tableMemory'));
+            var table = (<HTMLTableElement>document.getElementById('Memory'));
             // We assume each row will hold 8 memory values
             for (var i = 0; i < _Memory.memArr.length / 8; i++) {
                 var row = table.insertRow(i);
-                var memoryAddrCell = row.insertCell(0);
-                var address = i * 8;
-                // Display address in proper memory hex notation
+                var Memcell = row.insertCell(0);
+                var addr = i * 8;
+                // Display addr in proper memory hex notation
                 // Adds leading 0s if necessary
-                var displayAddress = "0x";
-                for (var k = 0; k < 3 - address.toString(16).length; k++) {
-                    displayAddress += "0";
+                var showAddr = "0x";
+                for (var k = 0; k < 3 - addr.toString(16).length; k++) {
+                    showAddr += "0";
                 }
-                displayAddress += address.toString(16).toUpperCase();
-                memoryAddrCell.innerHTML = displayAddress;
+                showAddr += addr.toString(16).toUpperCase();
+                Memcell.innerHTML = showAddr;
                 // Fill all the cells with 00s
                 for (var j = 1; j < 9; j++) {
                     var cell = row.insertCell(j);
@@ -215,91 +214,25 @@ module TSOS {
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //Dsiplay the Processes in the CPU Display
-        //public static hUpdateDisplay(): void {
-        //    Control.hostUpdateDisplayCPU();
-        //    Control.hostUpdateDisplayMemory();
-        //    Control.hostUpdateDisplayProcesses();
-        //}
-
-        //public static hostUpdateDisplayCPU() {
-        //    var IR = _CPU.IR === -1 ? "00" : TSOS.Utils.tHex(_CPU.IR);
-        //    var CPUElement = document.getElementById("displayCPU");
-        //    var CPUData = (<HTMLInputElement>document.getElementById('CPU')) +
-        //        "<thead>< th > PC < /th>< th > IR < /th>< th > ACC < /th>< th > X < /th>< th > Y < /th>< th > Z < /th>< th > MNE < /th></thead>" +
-        //        "<tr><td>" + TSOS.Utils.tHex(_CPU.PC) + "</td><td>" + IR + "</td><td>" + TSOS.Utils.tHex(_CPU.Acc) +
-        //        "</td><td>" + TSOS.Utils.tHex(_CPU.Xreg) + "</td><td>" + TSOS.Utils.tHex(_CPU.Yreg) +
-        //        "</td><td>" + _CPU.Zflag + "</td></tr></tbody>" +
-        //        "</table>";
-        //    CPUElement.innerHTML = CPUData;
-        //}
-
-        //public static hostUpdateDisplayMemory() {
-        //    var memory = _Memory.getBytes(0, _MemorySegmentSize * _MemorySegmentCount);
-        //    for (var i = 0; i < memory.length; i++) {
-        //        var cell = document.getElementById("th" + i);
-        //        cell.innerHTML = TSOS.Utils.tHex(memory[i]);
-        //    }
-        //}
-
-        //public static hostUpdateDisplayProcesses() {
-        //    var processData = "<th>PID</th>< th > State < /th>< th > Priority < /th>< th > PC < /th>< th > IR < /th>< th > ACC < /th>< th > X < /th>< th > Y < /th>< th > Z </th>";
-        //    var processes = _Scheduler.residentList;
-        //    if (processes.length == 0) {
-        //        processData += "<tr><td colspan='10'>No Programs Running</td></tr>";
-        //    }
-        //    else {
-        //        for (var i = 0; i < processes.length; i++) {
-        //            var process = processes[i];
-        //            var IR = process.IR === -1 ? "00" : TSOS.Utils.tHex(process.IR);
-        //            var state = _Scheduler.readyQueue.peek() == process.pid ? "Executing" : "Ready";
-        //            processData += `<tr><th>${process.pid}< /th>< th >${state}< /th > <th>${process.priority}< /th>< th >${TSOS.Utils.tHex(process.PC)}< /th > <th>${IR}< /th>< th >${TSOS.Utils.tHex(process.Acc)}< /th > <th>${TSOS.Utils.tHex(process.Xreg)}< /th>< th >${TSOS.Utils.tHex(process.Yreg)}< /th > <th>${process.Zflag}< /th></tr>`
-        //        }
-        //    }
-        //    var processesElement = document.getElementById("processControlBlock");
-        //    processesElement.innerHTML = processData;
-        //}
-
-
-
+        static hostMemory(): any {
+            var table = (<HTMLTableElement>document.getElementById('Memory'));
+            var memoryPtr = 0;
+            for (var i = 0; i < table.rows.length; i++) {
+                for (var j = 1; j < 9; j++) {
+                    table.rows[i].cells.item(j).innerHTML = _Memory.memArr[memoryPtr].toString().toUpperCase();
+                    table.rows[i].cells.item(j).style.color = "black";
+                    table.rows[i].cells.item(j).style['font-weight'] = "normal";
+                    // Check to see if the hex needs a leading zero.
+                    // If it does, then convert the hex to decimal, then back to hex, and add a leading zero.
+                    // We do that seemingly dumb step because if the value stored in memory already has a leading 0, will make display look gross.
+                    var dec = parseInt(_Memory.memArr[memoryPtr].toString(), 16);
+                    if (dec < 16 && dec > 0) {
+                        table.rows[i].cells.item(j).innerHTML = "0" + dec.toString(16).toUpperCase();
+                    }
+                    memoryPtr++;
+                }
+            }
+        }
+        
     }
 }

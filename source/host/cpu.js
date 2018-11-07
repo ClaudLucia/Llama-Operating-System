@@ -16,8 +16,8 @@
      ------------ */
 var TSOS;
 (function (TSOS) {
-    var Cpu = /** @class */ (function () {
-        function Cpu(PC, Acc, Xreg, Yreg, Zflag, isExecuting, IR, pid, base, limit, opCode) {
+    var CPU = /** @class */ (function () {
+        function CPU(PC, Acc, Xreg, Yreg, Zflag, isExecuting, IR, pid, base, limit, opCode) {
             if (PC === void 0) { PC = 0; }
             if (Acc === void 0) { Acc = 0; }
             if (Xreg === void 0) { Xreg = 0; }
@@ -41,7 +41,7 @@ var TSOS;
             this.limit = limit;
             this.opCode = opCode;
         }
-        Cpu.prototype.init = function () {
+        CPU.prototype.init = function () {
             this.pid = 0;
             this.PC = 0;
             this.Acc = 0;
@@ -51,7 +51,7 @@ var TSOS;
             this.isExecuting = false;
             this.IR = null;
         };
-        Cpu.prototype.cycle = function () {
+        CPU.prototype.cycle = function () {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
@@ -194,8 +194,8 @@ var TSOS;
                 this.isExecuting = false;
             }
         };
-        return Cpu;
+        return CPU;
     }());
-    TSOS.Cpu = Cpu;
+    TSOS.CPU = CPU;
 })(TSOS || (TSOS = {}));
 //# sourceMappingURL=cpu.js.map

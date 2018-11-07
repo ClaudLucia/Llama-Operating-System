@@ -48,10 +48,14 @@ h3 {
 }
 
 .footerText {
-  color: black;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 8pt;
-  text-align: center;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8pt;
+    text-align: center;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
 
 #taskBar{
@@ -225,6 +229,15 @@ th{
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
+.Memory {
+    height:150px;
+    width:100px;
+    background: white;
+    opacity: 0.5;
+    color: black;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
 #middlePage {
     padding: 3px;
     color: black;
@@ -247,8 +260,14 @@ th{
     top: 50%;
 }
 
+#leftPage {
+    position: absolute;
+    left: 1%;
+    top: 50%;
+}
+
 #bottomPage {
-    position:center;
-    float: initial;
-    top:70%;
+    /*position: absolute;
+    left:0;
+    bottom: 0;*/
 }

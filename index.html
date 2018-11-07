@@ -109,8 +109,8 @@
 
             </div>
         </div>
-        
-        
+
+
         <div id="divButtonBar">
             <button id="btnStartOS"
                     name="brnStartOS"
@@ -203,8 +203,21 @@
                     </table>
                 </div>
             </div>
+
+            <div id="divMemory">
+                <label class="center-align">
+                    <h2 class="label-header">Memory</h2>
+                    <table name="Memory" id="Memory"
+                           style=" height: 150px;
+                               overflow-y: scroll;"
+                           class="table striped"></table>
+                    <tbody align="center"></tbody>
+                </label>
+            </div>
+
         </div>
 
+        
 
         <div id="rightPage">
             <div id="divLog">
@@ -225,12 +238,14 @@
                     <textarea name="taProgramInput"
                               id="taProgramInput"
                               rows="8"
-                              cols="48"></textarea>
+                              cols="48"
+                             >A9 03 8D 41 00 A9 01 8D 40 00 AC 40 00 A2 01 FF EE 40 00 AE 40 00 EC 41 00 D0 EF A9 44 8D 42 00 A9 4F 8D 43 00 A9 4E 8D 44 00 A9 45 8D 45 00 A9 00 8D 46 00 A2 02 A0 42 FF 00</textarea>
+                             ></textarea>
                 </label>
             </div>
         </div>
 
-        
+        <footer id="bottomPage">
             <p class="footerText" style="clear:both;">
                 <br>
                 Copyright &copy; 2008 - 2016 No Rights Reserved.
@@ -238,6 +253,8 @@
                 Reproduction is inhibited without the express written consent of
                 Ted Codd, Stevie Ray Vaughan, and Ian Fleming.
             </p>
+        </footer>
+
     </div>
 
 </body>

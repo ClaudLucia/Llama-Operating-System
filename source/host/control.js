@@ -26,9 +26,6 @@ var TSOS;
     var Control = /** @class */ (function () {
         function Control() {
         }
-        Control.hostMemory = function () {
-            throw new Error("Method not implemented.");
-        };
         Control.hostInit = function () {
             // This is called from index.html's onLoad event via the onDocumentLoad function pointer.
             // Get a global reference to the canvas.  TODO: Should we move this stuff into a Display Device Driver?
@@ -77,8 +74,11 @@ var TSOS;
             // .. set focus on the OS console display ...
             document.getElementById("display").focus();
             // ... Create and initialize the CPU (because it's part of the hardware)  ...
-            _CPU = new TSOS.Cpu(); // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
+            _CPU = new TSOS.CPU(); // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
             _CPU.init(); //       There's more to do, like dealing with scheduling and such, but this would be a start. Pretty cool.
+            _Memory = new TSOS.Memory();
+            _Memory.init();
+            _MemoryAccessor = new TSOS.MemoryAccessor();
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(TSOS.Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.
@@ -165,25 +165,44 @@ var TSOS;
             }
         };
         Control.initMemDisplay = function () {
-            var table = document.getElementById('tableMemory');
+            var table = document.getElementById('Memory');
             // We assume each row will hold 8 memory values
             for (var i = 0; i < _Memory.memArr.length / 8; i++) {
                 var row = table.insertRow(i);
-                var memoryAddrCell = row.insertCell(0);
-                var address = i * 8;
-                // Display address in proper memory hex notation
+                var Memcell = row.insertCell(0);
+                var addr = i * 8;
+                // Display addr in proper memory hex notation
                 // Adds leading 0s if necessary
-                var displayAddress = "0x";
-                for (var k = 0; k < 3 - address.toString(16).length; k++) {
-                    displayAddress += "0";
+                var showAddr = "0x";
+                for (var k = 0; k < 3 - addr.toString(16).length; k++) {
+                    showAddr += "0";
                 }
-                displayAddress += address.toString(16).toUpperCase();
-                memoryAddrCell.innerHTML = displayAddress;
+                showAddr += addr.toString(16).toUpperCase();
+                Memcell.innerHTML = showAddr;
                 // Fill all the cells with 00s
                 for (var j = 1; j < 9; j++) {
                     var cell = row.insertCell(j);
                     cell.innerHTML = "00";
                     cell.classList.add("memoryCell");
+                }
+            }
+        };
+        Control.hostMemory = function () {
+            var table = document.getElementById('Memory');
+            var memoryPtr = 0;
+            for (var i = 0; i < table.rows.length; i++) {
+                for (var j = 1; j < 9; j++) {
+                    table.rows[i].cells.item(j).innerHTML = _Memory.memArr[memoryPtr].toString().toUpperCase();
+                    table.rows[i].cells.item(j).style.color = "black";
+                    table.rows[i].cells.item(j).style['font-weight'] = "normal";
+                    // Check to see if the hex needs a leading zero.
+                    // If it does, then convert the hex to decimal, then back to hex, and add a leading zero.
+                    // We do that seemingly dumb step because if the value stored in memory already has a leading 0, will make display look gross.
+                    var dec = parseInt(_Memory.memArr[memoryPtr].toString(), 16);
+                    if (dec < 16 && dec > 0) {
+                        table.rows[i].cells.item(j).innerHTML = "0" + dec.toString(16).toUpperCase();
+                    }
+                    memoryPtr++;
                 }
             }
         };

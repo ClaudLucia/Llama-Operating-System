@@ -1,9 +1,9 @@
+///<reference path="../globals.ts" />
 /* ------------
   mmu.ts
   
   The Memory Management Unit
   manages the memory for the OS
- 
  
  
  ------------ */

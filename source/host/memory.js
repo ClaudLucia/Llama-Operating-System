@@ -1,10 +1,10 @@
-///<reference path="../globals.ts" />
+///<reference path = "../globals.ts" />
 /* ------------
      memory.ts
 
-     Requires global.ts.
 
-     ------------ */
+     Requires global.ts.
+------------ */
 var TSOS;
 (function (TSOS) {
     var Memory = /** @class */ (function () {
