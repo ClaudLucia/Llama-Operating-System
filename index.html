@@ -1,51 +1,50 @@
 ﻿<!DOCTYPE HTML>
 <html>
 <head>
-   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-   <meta name="author"             content="Alan G. Labouseur" />
-   <link rel="stylesheet" href="tsos.css" type="text/css" media="screen" />
-   
-   <!-- Splash screen CSS -->
-   <!--<link rel="stylesheet" href="splash.css" type="text/css" media="screen" />-->
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="author" content="Alan G. Labouseur" />
+    <link rel="stylesheet" href="tsos.css" type="text/css" media="screen" />
 
-   <title>
-      LlamaOS - a browser-based virtual Operating System in TypeScript featuring Llamas
-   </title>
+    <!-- Splash screen CSS -->
+    <!--<link rel="stylesheet" href="splash.css" type="text/css" media="screen" />-->
 
-   <!-- Globals CONSTANTS and _Variables. Must included be first. -->
-   <script type="text/javascript" src="distrib/globals.js"></script>
+    <title>
+        LlamaOS - a browser-based virtual Operating System in TypeScript featuring Llamas
+    </title>
 
-   <!-- Host (Virtual Machine / Hardware Simulation) Routines -->
-   <script type="text/javascript" src="distrib/host/control.js"></script>
-   <script type="text/javascript" src="distrib/host/devices.js"></script>
-   <script type="text/javascript" src="distrib/host/cpu.js"></script>
-   <script type="text/javascript" src="distrib/host/memory.js"></script>
-   <script type="text/javascript" src="distrib/host/memoryAccessor.js"></script>
+    <!-- Globals CONSTANTS and _Variables. Must included be first. -->
+    <script type="text/javascript" src="distrib/globals.js"></script>
 
-   <!-- Virtual OS Routines: Make sure Kernel code is last, since it needs those above it. -->
-   <script type="text/javascript" src="distrib/os/interrupt.js"></script>
-   <script type="text/javascript" src="distrib/os/canvastext.js"></script>
-   <script type="text/javascript" src="distrib/os/console.js"></script>
-   <script type="text/javascript" src="distrib/os/deviceDriver.js"></script>
-   <script type="text/javascript" src="distrib/os/deviceDriverKeyboard.js"></script>
-   <script type="text/javascript" src="distrib/os/queue.js"></script>
-   <script type="text/javascript" src="distrib/os/shell.js"></script>
-   <script type="text/javascript" src="distrib/os/shellCommand.js"></script>
-   <script type="text/javascript" src="distrib/os/userCommand.js"></script>
-   <script type="text/javascript" src="distrib/os/mmu.js"></script>
-   <script type="text/javascript" src="distrib/os/pcb.js"></script>
-   <script type="text/javascript" src="distrib/os/processManager.js"></script>
-   <script type="text/javascript" src="distrib/os/kernel.js"></script>
+    <!-- Host (Virtual Machine / Hardware Simulation) Routines -->
+    <script type="text/javascript" src="distrib/host/control.js"></script>
+    <script type="text/javascript" src="distrib/host/devices.js"></script>
+    <script type="text/javascript" src="distrib/host/cpu.js"></script>
+    <script type="text/javascript" src="distrib/host/memory.js"></script>
+    <script type="text/javascript" src="distrib/host/memoryAccessor.js"></script>
 
-   <!-- Other Routines -->
-   <script type="text/javascript" src="distrib/utils.js"></script>
-   <!-- Uncomment the line below to enable GLaDOS testing. -->
+    <!-- Virtual OS Routines: Make sure Kernel code is last, since it needs those above it. -->
+    <script type="text/javascript" src="distrib/os/interrupt.js"></script>
+    <script type="text/javascript" src="distrib/os/canvastext.js"></script>
+    <script type="text/javascript" src="distrib/os/console.js"></script>
+    <script type="text/javascript" src="distrib/os/deviceDriver.js"></script>
+    <script type="text/javascript" src="distrib/os/deviceDriverKeyboard.js"></script>
+    <script type="text/javascript" src="distrib/os/queue.js"></script>
+    <script type="text/javascript" src="distrib/os/shell.js"></script>
+    <script type="text/javascript" src="distrib/os/shellCommand.js"></script>
+    <script type="text/javascript" src="distrib/os/userCommand.js"></script>
+    <script type="text/javascript" src="distrib/os/pcb.js"></script>
+    <script type="text/javascript" src="distrib/os/mmu.js"></script>
+    <script type="text/javascript" src="distrib/os/processManager.js"></script>
+    <script type="text/javascript" src="distrib/os/kernel.js"></script>
+
+    <!-- Other Routines -->
+    <script type="text/javascript" src="distrib/utils.js"></script>
+    <!-- Uncomment the line below to enable GLaDOS testing. -->
     <script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip0.js"></script>
-    
-   <!-- Script for the clock -->
-   <!-- <script type="text/javascript" src="distrib/os/clock.js"></script> -->
-   
-   <!-- <script type="text/javascript" src="fade.js"></script> -->
+
+    <!-- Script for the clock -->
+    <!-- <script type="text/javascript" src="distrib/os/clock.js"></script> -->
+    <!-- <script type="text/javascript" src="fade.js"></script> -->
 
 </head>
 
@@ -182,7 +181,7 @@
                 <h2>CPU</h2>
                 <br>
                 <div id="displayCPU">
-                    <table class="CPU">
+                    <table class="CPU" id="CPU">
                         <tbody>
                             <tr>
                                 <th>PC</th>

@@ -20,7 +20,17 @@ var KEYBOARD_IRQ = 1;
 // Global Variables
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.
 //
+//Hardware(host)
+var _Memory;
+var _MemoryAccessor;
+var ERR_BOUND = 5;
+var EXIT = 2;
+var WRITECONSOLE = 4;
+var OPINV = 6;
 var _CPU; // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
+//Software(OS)
+//Memory manager
+var _MMU = null;
 var _OSclock = 0; // Page 23.
 var _Mode = 0; // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.
 var _Canvas; // Initialized in Control.hostInit().
@@ -52,21 +62,15 @@ var _MemorySegmentCount = 3;
 var _MemorySegmentSize = 256;
 var SYSCALL_IRQ = 2;
 var FILESYS_IRQ = 3;
-//Hardware(host)
-var _Memory;
-var _MemoryAccessor;
-var ERR_BOUND = 5;
-var EXIT = 2;
-//Software(OS)
-var _MMU;
-;
 //Scheduler
 //var _Scheduler: TSOS.Scheduler;
 //Process Manager
-var _ProcessManager;
+var _ProcessManager = null;
 var PID = 0;
 var _Scheduler;
 var _SingleStepMode = false;
+var ROUNDROBIN = "rr";
+var CNTXTSWITCH = 3;
 // For testing (and enrichment)...
 var Glados = null; // This is the function Glados() in glados.js on Labouseur.com.
 var _GLaDOS = null; // If the above is linked in, this is the instantiated instance of Glados.

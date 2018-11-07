@@ -21,9 +21,9 @@ module TSOS {
             this.readyQueue = new Queue()
         }
 
-        public createProcesses(opCodes, args): any {
+        public createProcesses(opCodes, args): void {
             if (opCodes.length > _MMU.totalLimit) {
-                _StdOut.putTest("Loading Failed! Program is over 256 bytes");
+                _StdOut.putText("Loading Failed! Program is over 256 bytes");
                 return;
             }
             if (_MMU.checkMemory(opCodes.length)) {
@@ -38,11 +38,14 @@ module TSOS {
                     pcb.Priority = 1;
                 }
 
-                _ProcessManager.residentQueue.enqueue(pcb);
+                this.residentQueue.enqueue(pcb);
                 _MMU.loadMemory(opCodes, partition);
                 Control.hostMemory();
                 _StdOut.putText("Program loaded with PID " + PID)
                 PID++;
+            }
+            else {
+                _StdOut.putText("Loading failed! Not enough memory available.");
             }
         }
 
@@ -58,16 +61,15 @@ module TSOS {
             _CPU.isExecuting = true;
 
             _ProcessManager.running.State = "Running";
-
-            //TSOS.Control.hostUpdateDisplayProcesses();
-            //TSOS.Control.hostUpdateDisplayCPU();
-            //Update All displays
-            Control.hUpdateDisplay();
-            Control.hostLog("Running process " + _ProcessManager.running.PID);
+            Control.hostProcess();
+            Control.hostCPU();
+            Control.hostMemory();
+            Control.hostLog("Running process " + this.running.PID, "os");
+            
         }
 
         public runAllP() {
-            Control.hostLog("Running all programs");
+            Control.hostLog("Running all programs", "os");
             while (!_ProcessManager.residentQueue.isEmpty()) {
                 _ProcessManager.readyQueue.enqueue(_ProcessManager.residentQueue.dequeue());
             }
@@ -76,6 +78,7 @@ module TSOS {
         public static runningProcess() {
             return _ProcessManager.running != null;
         }
+        
 
         public listAllP() {
             if (_ProcessManager.running != null) {
@@ -93,7 +96,8 @@ module TSOS {
         }
 
 
-        public exitProcesses(display) {
+        public exitProcesses(display: boolean): void {
+            _Scheduler.unwatch();
             _CPU.init();
             _MMU.clearPartitions(_ProcessManager.running.Partition);
             Control.hostMemory();
@@ -108,8 +112,16 @@ module TSOS {
                 _StdOut.advanceLine();
                 _OsShell.putPrompt();
             }
-            
             _ProcessManager.running = null;
+        }
+
+        public checkReadyQ(): void {
+            if (!_ProcessManager.readyQueue.isEmpty()) {
+                this.runnProcess();
+            }
+            else {
+                _CPU.isExecuting = false;
+            }
         }
 
         public updatePCB() {
@@ -120,9 +132,9 @@ module TSOS {
             _ProcessManager.running.Zflag = _CPU.Zflag;
             _ProcessManager.running.State = "Waiting";
             _ProcessManager.running.IR = _MemoryAccessor.readMem(_CPU.PC).toUpperCase();
-
         }
 
+        //Calculate the turnaround and wait times
         public times() {
             _ProcessManager.running.turnAroundTime++;
             for (var i = 0; i < _ProcessManager.readyQueue.getSize(); i++) {
@@ -132,7 +144,6 @@ module TSOS {
                 _ProcessManager.readyQueue.enqueue(pcb);
             }
         }
-
 
     }
 }

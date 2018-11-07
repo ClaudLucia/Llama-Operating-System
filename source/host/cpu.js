@@ -193,7 +193,6 @@ var TSOS;
             if (_SingleStepMode === true) {
                 this.isExecuting = false;
             }
-            TSOS.Control.hUpdateDisplay();
         };
         return Cpu;
     }());

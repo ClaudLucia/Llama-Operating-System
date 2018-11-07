@@ -5,6 +5,8 @@ Works like src in html
 ///<reference path="../utils.ts" />
 ///<reference path="shellCommand.ts" />
 ///<reference path="userCommand.ts" />
+///<reference path="pcb.ts" />
+///<reference path="mmu.ts" />
 
 
 /* ------------

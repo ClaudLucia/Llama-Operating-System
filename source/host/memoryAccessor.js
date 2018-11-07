@@ -1,11 +1,10 @@
 ///<reference path="../globals.ts" />
-///<reference path="../os/interrupt.ts" />
 /* ------------
      memoryAccessor.ts
 
      Requires global.ts.
 
-     ------------ */
+ ------------ */
 var TSOS;
 (function (TSOS) {
     var MemoryAccessor = /** @class */ (function () {

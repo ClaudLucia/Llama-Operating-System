@@ -3,7 +3,7 @@
 ///<reference path="../host/control.ts" />
 ///<reference path="../host/devices.ts" />
 ///<reference path="deviceDriverKeyboard.ts" />
-///<reference path="MMU.ts" />
+///<reference path="mmu.ts" />
 ///<reference path="processManager.ts" />
 ///<reference path="shell.ts" />
 /* ------------

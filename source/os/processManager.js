@@ -12,7 +12,7 @@ var TSOS;
         }
         ProcessManager.prototype.createProcesses = function (opCodes, args) {
             if (opCodes.length > _MMU.totalLimit) {
-                _StdOut.putTest("Loading Failed! Program is over 256 bytes");
+                _StdOut.putText("Loading Failed! Program is over 256 bytes");
                 return;
             }
             if (_MMU.checkMemory(opCodes.length)) {
@@ -25,11 +25,14 @@ var TSOS;
                 else {
                     pcb.Priority = 1;
                 }
-                _ProcessManager.residentQueue.enqueue(pcb);
+                this.residentQueue.enqueue(pcb);
                 _MMU.loadMemory(opCodes, partition);
                 TSOS.Control.hostMemory();
                 _StdOut.putText("Program loaded with PID " + PID);
                 PID++;
+            }
+            else {
+                _StdOut.putText("Loading failed! Not enough memory available.");
             }
         };
         ProcessManager.prototype.runnProcess = function () {
@@ -41,14 +44,13 @@ var TSOS;
             _CPU.Zflag = _ProcessManager.running.Zflag;
             _CPU.isExecuting = true;
             _ProcessManager.running.State = "Running";
-            //TSOS.Control.hostUpdateDisplayProcesses();
-            //TSOS.Control.hostUpdateDisplayCPU();
-            //Update All displays
-            TSOS.Control.hUpdateDisplay();
-            TSOS.Control.hostLog("Running process " + _ProcessManager.running.PID);
+            TSOS.Control.hostProcess();
+            TSOS.Control.hostCPU();
+            TSOS.Control.hostMemory();
+            TSOS.Control.hostLog("Running process " + this.running.PID, "os");
         };
         ProcessManager.prototype.runAllP = function () {
-            TSOS.Control.hostLog("Running all programs");
+            TSOS.Control.hostLog("Running all programs", "os");
             while (!_ProcessManager.residentQueue.isEmpty()) {
                 _ProcessManager.readyQueue.enqueue(_ProcessManager.residentQueue.dequeue());
             }
@@ -71,6 +73,7 @@ var TSOS;
             }
         };
         ProcessManager.prototype.exitProcesses = function (display) {
+            _Scheduler.unwatch();
             _CPU.init();
             _MMU.clearPartitions(_ProcessManager.running.Partition);
             TSOS.Control.hostMemory();
@@ -87,6 +90,14 @@ var TSOS;
             }
             _ProcessManager.running = null;
         };
+        ProcessManager.prototype.checkReadyQ = function () {
+            if (!_ProcessManager.readyQueue.isEmpty()) {
+                this.runnProcess();
+            }
+            else {
+                _CPU.isExecuting = false;
+            }
+        };
         ProcessManager.prototype.updatePCB = function () {
             _ProcessManager.running.PC = _CPU.PC;
             _ProcessManager.running.Acc = _CPU.Acc;
@@ -96,6 +107,7 @@ var TSOS;
             _ProcessManager.running.State = "Waiting";
             _ProcessManager.running.IR = _MemoryAccessor.readMem(_CPU.PC).toUpperCase();
         };
+        //Calculate the turnaround and wait times
         ProcessManager.prototype.times = function () {
             _ProcessManager.running.turnAroundTime++;
             for (var i = 0; i < _ProcessManager.readyQueue.getSize(); i++) {

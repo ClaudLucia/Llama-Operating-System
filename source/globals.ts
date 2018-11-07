@@ -87,12 +87,15 @@ var FILESYS_IRQ: number = 3;
 //var _Scheduler: TSOS.Scheduler;
 
 //Process Manager
-var _ProcessManager: TSOS.ProcessManager;
+var _ProcessManager: any = null;
 var PID: number = 0;
 
 var _Scheduler: TSOS.Scheduler;
 
 var _SingleStepMode: boolean = false;
+
+const ROUNDROBIN: string = "rr"
+const CNTXTSWITCH: number = 3;
 
 // For testing (and enrichment)...
 var Glados: any = null;  // This is the function Glados() in glados.js on Labouseur.com.

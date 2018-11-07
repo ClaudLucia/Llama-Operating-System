@@ -208,7 +208,6 @@ module TSOS {
             if (_SingleStepMode === true) {
                 this.isExecuting = false;
             }
-            TSOS.Control.hUpdateDisplay();
             
         }
     }

@@ -84,6 +84,7 @@ var TSOS;
             // .. and call the OS Kernel Bootstrap routine.
             _Kernel = new TSOS.Kernel();
             _Kernel.krnBootstrap(); // _GLaDOS.afterStartup() will get called in there, if configured.
+            Control.hostCPU();
         };
         Control.hostBtnHaltOS_click = function (btn) {
             Control.hostLog("Emergency halt", "host");
@@ -106,46 +107,85 @@ var TSOS;
             var msgSta = document.getElementById('statusMsg');
             msgSta.textContent = status;
         };
-        //Dsiplay the Processes in the CPU Display
-        Control.hUpdateDisplay = function () {
-            Control.hostUpdateDisplayCPU();
-            Control.hostUpdateDisplayMemory();
-            Control.hostUpdateDisplayProcesses();
-        };
-        Control.hostUpdateDisplayCPU = function () {
-            var IR = _CPU.IR === -1 ? "00" : TSOS.Utils.tHex(_CPU.IR);
-            var CPUElement = document.getElementById("displayCPU");
-            var CPUData = document.getElementById('CPU') +
-                "<thead>< th > PC < /th>< th > IR < /th>< th > ACC < /th>< th > X < /th>< th > Y < /th>< th > Z < /th>< th > MNE < /th></thead>" +
-                "<tr><td>" + TSOS.Utils.tHex(_CPU.PC) + "</td><td>" + IR + "</td><td>" + TSOS.Utils.tHex(_CPU.Acc) +
-                "</td><td>" + TSOS.Utils.tHex(_CPU.Xreg) + "</td><td>" + TSOS.Utils.tHex(_CPU.Yreg) +
-                "</td><td>" + _CPU.Zflag + "</td></tr></tbody>" +
-                "</table>";
-            CPUElement.innerHTML = CPUData;
-        };
-        Control.hostUpdateDisplayMemory = function () {
-            var memory = _Memory.getBytes(0, _MemorySegmentSize * _MemorySegmentCount);
-            for (var i = 0; i < memory.length; i++) {
-                var cell = document.getElementById("th" + i);
-                cell.innerHTML = TSOS.Utils.tHex(memory[i]);
-            }
-        };
-        Control.hostUpdateDisplayProcesses = function () {
-            var processData = "<th>PID</th>< th > State < /th>< th > Priority < /th>< th > PC < /th>< th > IR < /th>< th > ACC < /th>< th > X < /th>< th > Y < /th>< th > Z </th>";
-            var processes = _Scheduler.residentList;
-            if (processes.length == 0) {
-                processData += "<tr><td colspan='10'>No Programs Running</td></tr>";
+        Control.hostCPU = function () {
+            var table = document.getElementById('CPU');
+            table.deleteRow(-1);
+            var row = table.insertRow(-1);
+            var cell = row.insertCell();
+            cell.innerHTML = _CPU.PC.toString(16).toUpperCase();
+            cell = row.insertCell();
+            if (_CPU.isExecuting) {
+                cell.innerHTML = _Memory.memArr[_CPU.PC].toString();
             }
             else {
-                for (var i = 0; i < processes.length; i++) {
-                    var process = processes[i];
-                    var IR = process.IR === -1 ? "00" : TSOS.Utils.tHex(process.IR);
-                    var state = _Scheduler.readyQueue.peek() == process.pid ? "Executing" : "Ready";
-                    processData += "<tr><th>" + process.pid + "< /th>< th >" + state + "< /th > <th>" + process.priority + "< /th>< th >" + TSOS.Utils.tHex(process.PC) + "< /th > <th>" + IR + "< /th>< th >" + TSOS.Utils.tHex(process.Acc) + "< /th > <th>" + TSOS.Utils.tHex(process.Xreg) + "< /th>< th >" + TSOS.Utils.tHex(process.Yreg) + "< /th > <th>" + process.Zflag + "< /th></tr>";
+                cell.innerHTML = "00";
+            }
+            cell = row.insertCell();
+            cell.innerHTML = _CPU.Acc.toString(16).toUpperCase();
+            cell = row.insertCell();
+            cell.innerHTML = _CPU.Xreg.toString(16).toUpperCase();
+            cell = row.insertCell();
+            cell.innerHTML = _CPU.Yreg.toString(16).toUpperCase();
+            cell = row.insertCell();
+            cell.innerHTML = _CPU.Zflag.toString(16).toUpperCase();
+        };
+        Control.hostProcess = function () {
+            var table = document.getElementById('processControlBlock');
+            var readyQueue = [];
+            for (var i = 0; i < _ProcessManager.readyQueue.getSize(); i++) {
+                var pcb = _ProcessManager.readyQueue.dequeue();
+                _ProcessManager.readyQueue.enqueue(pcb);
+                readyQueue.push(pcb);
+            }
+            if (_ProcessManager.running != null) {
+                readyQueue.push(_ProcessManager.running);
+            }
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+            while (readyQueue.length > 0) {
+                var displayPcb = readyQueue.pop();
+                var row = table.insertRow(-1);
+                var cell = row.insertCell();
+                cell.innerHTML = displayPcb.PID.toString(16).toUpperCase();
+                cell = row.insertCell();
+                cell.innerHTML = displayPcb.State;
+                cell = row.insertCell();
+                cell.innerHTML = displayPcb.PC.toString(16).toUpperCase();
+                cell = row.insertCell();
+                cell.innerHTML = displayPcb.IR.toString();
+                cell = row.insertCell();
+                cell.innerHTML = displayPcb.Acc.toString(16).toUpperCase();
+                cell = row.insertCell();
+                cell.innerHTML = displayPcb.Xreg.toString(16).toUpperCase();
+                cell = row.insertCell();
+                cell.innerHTML = displayPcb.Yreg.toString(16).toUpperCase();
+                cell = row.insertCell();
+                cell.innerHTML = displayPcb.Zflag.toString(16).toUpperCase();
+            }
+        };
+        Control.initMemDisplay = function () {
+            var table = document.getElementById('tableMemory');
+            // We assume each row will hold 8 memory values
+            for (var i = 0; i < _Memory.memArr.length / 8; i++) {
+                var row = table.insertRow(i);
+                var memoryAddrCell = row.insertCell(0);
+                var address = i * 8;
+                // Display address in proper memory hex notation
+                // Adds leading 0s if necessary
+                var displayAddress = "0x";
+                for (var k = 0; k < 3 - address.toString(16).length; k++) {
+                    displayAddress += "0";
+                }
+                displayAddress += address.toString(16).toUpperCase();
+                memoryAddrCell.innerHTML = displayAddress;
+                // Fill all the cells with 00s
+                for (var j = 1; j < 9; j++) {
+                    var cell = row.insertCell(j);
+                    cell.innerHTML = "00";
+                    cell.classList.add("memoryCell");
                 }
             }
-            var processesElement = document.getElementById("processControlBlock");
-            processesElement.innerHTML = processData;
         };
         return Control;
     }());
