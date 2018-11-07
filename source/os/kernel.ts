@@ -5,14 +5,21 @@
 ///<reference path="deviceDriverKeyboard.ts" />
 ///<reference path="mmu.ts" />
 ///<reference path="processManager.ts" />
-///<reference path="shell.ts" />
 ///<reference path="scheduler.ts" />
+///<reference path="shell.ts" />
 
 /* ------------
      Kernel.ts
 
      Requires globals.ts
               queue.ts
+              mmu.ts
+              cheduler.ts
+              shell.ts
+              processManager.ts
+              devices.ts
+              control.ts
+
 
      Routines for the Operating System, NOT the host.
 
@@ -51,6 +58,7 @@ module TSOS {
             //
             // ... more?
             //
+
             _MMU = new MMU();
             _ProcessManager = new ProcessManager();
 
@@ -98,7 +106,9 @@ module TSOS {
                 // TODO: Implement a priority queue based on the IRQ number/id to enforce interrupt priority.
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
-            } else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed. {
+            }
+            else if (_CPU.isExecuting) {
+                // If there are no interrupts then run one CPU cycle if there is anything being processed.
                 _CPU.cycle();
                 Control.hostCPU();
                 _Scheduler.watch();
@@ -106,9 +116,10 @@ module TSOS {
                 Control.hostMemory();
                 Control.hostProcess();
 
-            } else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
+            }
+            else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
                 this.krnTrace("Idle");
-                _ProcessManager.checkReadyQ
+                _ProcessManager.checkReadyQ;
                 _Scheduler.unwatch();
 
             }

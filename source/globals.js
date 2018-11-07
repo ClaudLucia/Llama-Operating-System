@@ -66,8 +66,8 @@ var FILESYS_IRQ = 3;
 //var _Scheduler: TSOS.Scheduler;
 //Process Manager
 var _ProcessManager = null;
-var PID = 0;
-var _Scheduler;
+var _PID = 0;
+var _Scheduler = null;
 var _SingleStepMode = false;
 var ROUNDROBIN = "rr";
 var CNTXTSWITCH = 3;

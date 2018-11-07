@@ -1,5 +1,8 @@
 ///<reference path="../globals.ts" />
 ///<reference path="../os/canvastext.ts" />
+///<reference path="./memory.ts" />
+///<reference path="./memoryAccessor.ts" />
+///<reference path="./cpu.ts" />
 /* ------------
      Control.ts
 
@@ -65,6 +68,122 @@ var TSOS;
         //
         // Host Events
         //
+        Control.hostCPU = function () {
+            var table = document.getElementById('showCPU');
+            table.deleteRow(-1);
+            var row = table.insertRow(-1);
+            var cell = row.insertCell();
+            cell.innerHTML = _CPU.PC.toString(16).toUpperCase();
+            cell = row.insertCell();
+            if (_CPU.isExecuting) {
+                cell.innerHTML = _Memory.memArr[_CPU.PC].toString();
+            }
+            else {
+                cell.innerHTML = "00";
+            }
+            cell = row.insertCell();
+            cell.innerHTML = _CPU.Acc.toString(16).toUpperCase();
+            cell = row.insertCell();
+            cell.innerHTML = _CPU.Xreg.toString(16).toUpperCase();
+            cell = row.insertCell();
+            cell.innerHTML = _CPU.Yreg.toString(16).toUpperCase();
+            cell = row.insertCell();
+            cell.innerHTML = _CPU.Zflag.toString(16).toUpperCase();
+        };
+        Control.hostProcess = function () {
+            var table = document.getElementById('displayPCB');
+            var readyQueue = [];
+            for (var i = 0; i < _ProcessManager.readyQueue.getSize(); i++) {
+                var pcb = _ProcessManager.readyQueue.dequeue();
+                _ProcessManager.readyQueue.enqueue(pcb);
+                readyQueue.push(pcb);
+            }
+            if (_ProcessManager.running != null) {
+                readyQueue.push(_ProcessManager.running);
+            }
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+            while (readyQueue.length > 0) {
+                var display = readyQueue.pop();
+                var row = table.insertRow(-1);
+                var cell = row.insertCell();
+                cell.innerHTML = display.PID.toString(16).toUpperCase();
+                cell = row.insertCell();
+                cell.innerHTML = display.State;
+                cell = row.insertCell();
+                cell.innerHTML = display.PC.toString(16).toUpperCase();
+                cell = row.insertCell();
+                cell.innerHTML = display.IR.toString();
+                cell = row.insertCell();
+                cell.innerHTML = display.Acc.toString(16).toUpperCase();
+                cell = row.insertCell();
+                cell.innerHTML = display.Xreg.toString(16).toUpperCase();
+                cell = row.insertCell();
+                cell.innerHTML = display.Yreg.toString(16).toUpperCase();
+                cell = row.insertCell();
+                cell.innerHTML = display.Zflag.toString(16).toUpperCase();
+            }
+        };
+        Control.initMemDisplay = function () {
+            var table = document.getElementById('Memory');
+            for (var i = 0; i < (_Memory.memArr.length / 8); i++) {
+                var row = table.insertRow(i);
+                var Memcell = row.insertCell(0);
+                var addr = i * 8;
+                var showAddr = "0x";
+                for (var k = 0; k < 3 - addr.toString(16).length; k++) {
+                    showAddr += "0";
+                }
+                showAddr += addr.toString(16).toUpperCase();
+                Memcell.innerHTML = showAddr;
+                for (var j = 1; j < 9; j++) {
+                    var cell = row.insertCell(j);
+                    cell.innerHTML = "00";
+                    cell.classList.add("memoryCell");
+                }
+            }
+        };
+        Control.hostMemory = function () {
+            var table = document.getElementById('Memory');
+            var thisMemory = 0;
+            for (var i = 0; i < table.rows.length; i++) {
+                for (var j = 1; j < 9; j++) {
+                    table.rows[i].cells.item(j).innerHTML = _Memory.memArr[thisMemory].toString().toUpperCase();
+                    table.rows[i].cells.item(j).style.color = "black";
+                    table.rows[i].cells.item(j).style['font-weight'] = "normal";
+                    var dec = parseInt(_Memory.memArr[thisMemory].toString(), 16);
+                    if (dec < 16 && dec > 0) {
+                        table.rows[i].cells.item(j).innerHTML = "0" + dec.toString(16).toUpperCase();
+                    }
+                    thisMemory++;
+                }
+            }
+            if (_CPU.isExecuting) {
+                var index = _CPU.PC + _MMU.partitions[_ProcessManager.running.Partition].base;
+                this.highlight(table, index, "bold");
+                var instructionMem = {
+                    "A9": 1,
+                    "AD": 2,
+                    "8D": 2,
+                    "6D": 2,
+                    "A2": 1,
+                    "AE": 2,
+                    "A0": 1,
+                    "AC": 2,
+                    "EA": 0,
+                    "00": 0,
+                    "EC": 2,
+                    "D0": 1,
+                    "EE": 2,
+                    "FF": 0
+                };
+                var opCode = _Memory.memArr[_CPU.PC].toString();
+                for (var i = 1; i <= instructionMem[opCode]; i++) {
+                    this.highlight(table, index + i, "normal");
+                }
+            }
+        };
         Control.hostBtnStartOS_click = function (btn) {
             // Disable the (passed-in) start button...
             btn.disabled = true;
@@ -76,15 +195,16 @@ var TSOS;
             // ... Create and initialize the CPU (because it's part of the hardware)  ...
             _CPU = new TSOS.CPU(); // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
             _CPU.init(); //       There's more to do, like dealing with scheduling and such, but this would be a start. Pretty cool.
+            Control.hostCPU();
             _Memory = new TSOS.Memory();
             _Memory.init();
+            Control.initMemDisplay();
             _MemoryAccessor = new TSOS.MemoryAccessor();
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(TSOS.Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.
             _Kernel = new TSOS.Kernel();
             _Kernel.krnBootstrap(); // _GLaDOS.afterStartup() will get called in there, if configured.
-            Control.hostCPU();
         };
         Control.hostBtnHaltOS_click = function (btn) {
             Control.hostLog("Emergency halt", "host");
@@ -107,97 +227,17 @@ var TSOS;
             var msgSta = document.getElementById('statusMsg');
             msgSta.textContent = status;
         };
-        Control.hostCPU = function () {
-            var table = document.getElementById('CPU');
-            table.deleteRow(-1);
-            var row = table.insertRow(-1);
-            var cell = row.insertCell();
-            cell.innerHTML = _CPU.PC.toString(16).toUpperCase();
-            cell = row.insertCell();
-            if (_CPU.isExecuting) {
-                cell.innerHTML = _Memory.memArr[_CPU.PC].toString();
+        Control.highlight = function (table, index, weight) {
+            var row = Math.floor(index / (table.rows[0].cells.length - 1)); // Gets the row the address is in
+            var col = (index % (table.rows[0].cells.length - 1)) + 1; // Gets the column the address is in
+            if (weight == "bold") {
+                table.rows[row].cells.item(col).style = "color: blue; font-weight: bold";
             }
             else {
-                cell.innerHTML = "00";
+                table.rows[row].cells.item(col).style = "color: blue;";
             }
-            cell = row.insertCell();
-            cell.innerHTML = _CPU.Acc.toString(16).toUpperCase();
-            cell = row.insertCell();
-            cell.innerHTML = _CPU.Xreg.toString(16).toUpperCase();
-            cell = row.insertCell();
-            cell.innerHTML = _CPU.Yreg.toString(16).toUpperCase();
-            cell = row.insertCell();
-            cell.innerHTML = _CPU.Zflag.toString(16).toUpperCase();
-        };
-        Control.hostProcess = function () {
-            var table = document.getElementById('processControlBlock');
-            var readyQueue = [];
-            for (var i = 0; i < _ProcessManager.readyQueue.getSize(); i++) {
-                var pcb = _ProcessManager.readyQueue.dequeue();
-                _ProcessManager.readyQueue.enqueue(pcb);
-                readyQueue.push(pcb);
-            }
-            if (_ProcessManager.running != null) {
-                readyQueue.push(_ProcessManager.running);
-            }
-            while (table.rows.length > 1) {
-                table.deleteRow(1);
-            }
-            while (readyQueue.length > 0) {
-                var displayPcb = readyQueue.pop();
-                var row = table.insertRow(-1);
-                var cell = row.insertCell();
-                cell.innerHTML = displayPcb.PID.toString(16).toUpperCase();
-                cell = row.insertCell();
-                cell.innerHTML = displayPcb.State;
-                cell = row.insertCell();
-                cell.innerHTML = displayPcb.PC.toString(16).toUpperCase();
-                cell = row.insertCell();
-                cell.innerHTML = displayPcb.IR.toString();
-                cell = row.insertCell();
-                cell.innerHTML = displayPcb.Acc.toString(16).toUpperCase();
-                cell = row.insertCell();
-                cell.innerHTML = displayPcb.Xreg.toString(16).toUpperCase();
-                cell = row.insertCell();
-                cell.innerHTML = displayPcb.Yreg.toString(16).toUpperCase();
-                cell = row.insertCell();
-                cell.innerHTML = displayPcb.Zflag.toString(16).toUpperCase();
-            }
-        };
-        Control.initMemDisplay = function () {
-            var table = document.getElementById('Memory');
-            for (var i = 0; i < _Memory.memArr.length / 8; i++) {
-                var row = table.insertRow(i);
-                var Memcell = row.insertCell(0);
-                var addr = i * 8;
-                var showAddr = "0x";
-                for (var k = 0; k < 3 - addr.toString(16).length; k++) {
-                    showAddr += "0";
-                }
-                showAddr += addr.toString(16).toUpperCase();
-                Memcell.innerHTML = showAddr;
-                for (var j = 1; j < 9; j++) {
-                    var cell = row.insertCell(j);
-                    cell.innerHTML = "00";
-                    cell.classList.add("memoryCell");
-                }
-            }
-        };
-        Control.hostMemory = function () {
-            var table = document.getElementById('Memory');
-            var memoryPtr = 0;
-            for (var i = 0; i < table.rows.length; i++) {
-                for (var j = 1; j < 9; j++) {
-                    table.rows[i].cells.item(j).innerHTML = _Memory.memArr[memoryPtr].toString().toUpperCase();
-                    table.rows[i].cells.item(j).style.color = "black";
-                    table.rows[i].cells.item(j).style['font-weight'] = "normal";
-                    var dec = parseInt(_Memory.memArr[memoryPtr].toString(), 16);
-                    if (dec < 16 && dec > 0) {
-                        table.rows[i].cells.item(j).innerHTML = "0" + dec.toString(16).toUpperCase();
-                    }
-                    memoryPtr++;
-                }
-            }
+            // Scroll to that part of the table
+            table.rows[row].cells.item(col).scrollIntoView(false);
         };
         return Control;
     }());

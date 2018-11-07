@@ -52,17 +52,17 @@ module TSOS {
         }
 
 
-        public runnProcess() {
-            _ProcessManager.running = _ProcessManager.readyQueue.dequeue();
+        public runnProcess(): void {
+            //this.running = this.readyQueue.dequeue();
 
-            _CPU.PC = _ProcessManager.running.PC;
-            _CPU.Acc = _ProcessManager.running.Acc;
-            _CPU.Xreg = _ProcessManager.running.Xreg;
-            _CPU.Yreg = _ProcessManager.running.Yreg;
-            _CPU.Zflag = _ProcessManager.running.Zflag;
+            _CPU.PC = this.running.PC;
+            _CPU.Acc = this.running.Acc;
+            _CPU.Xreg = this.running.Xreg;
+            _CPU.Yreg = this.running.Yreg;
+            _CPU.Zflag = this.running.Zflag;
             _CPU.isExecuting = true;
 
-            _ProcessManager.running.State = "Running";
+            this.running.State = "Running";
             Control.hostProcess();
             Control.hostCPU();
             Control.hostMemory();
@@ -70,25 +70,25 @@ module TSOS {
             
         }
 
-        public runAllP() {
+        public runAllP(): void {
             Control.hostLog("Running all programs", "os");
-            while (!_ProcessManager.residentQueue.isEmpty()) {
-                _ProcessManager.readyQueue.enqueue(_ProcessManager.residentQueue.dequeue());
+            while (!this.residentQueue.isEmpty()) {
+                this.readyQueue.enqueue(this.residentQueue.dequeue());
             }
         }
 
-        public static runningProcess() {
+        public static runningProcess(): boolean {
             return _ProcessManager.running != null;
         }
         
 
         public listAllP() {
-            if (_ProcessManager.running != null) {
+            if (this.running != null) {
                 var processes = [];
-                for (var i = 0; i < _ProcessManager.readyQueue.getSize(); i++) {
-                    var pcb = _ProcessManager.readyQueue.dequeue();
+                for (var i = 0; i < this.readyQueue.getSize(); i++) {
+                    var pcb = this.readyQueue.dequeue();
                     processes.push(new String(pcb.PID));
-                    _ProcessManager.readyQueue.enqueue(pcb);
+                    this.readyQueue.enqueue(pcb);
                 }
                 return processes;
             }
@@ -101,24 +101,24 @@ module TSOS {
         public exitProcess(display: boolean): void {
             _Scheduler.unwatch();
             _CPU.init();
-            _MMU.clearPartitions(_ProcessManager.running.Partition);
+            _MMU.clearPartitions(this.running.Partition);
             Control.hostMemory();
-            Control.hostLog("Exiting process " + _ProcessManager.running.PID);
+            Control.hostLog("Exiting process " + this.running.PID);
             if (display) {
                 _StdOut.advanceLine();
-                _StdOut.putText("Process ID: " + _ProcessManager.running.PID);
+                _StdOut.putText("Process ID: " + this.running.PID);
                 _StdOut.advanceLine();
-                _StdOut.putText("Turnaround time: " + _ProcessManager.running.turnAroundTime + " cycles.");
+                _StdOut.putText("Turnaround time: " + this.running.turnAroundTime + " cycles.");
                 _StdOut.advanceLine();
-                _StdOut.putText("Wait time: " + _ProcessManager.running.waitTime + " cycles.");
+                _StdOut.putText("Wait time: " + this.running.waitTime + " cycles.");
                 _StdOut.advanceLine();
                 _OsShell.putPrompt();
             }
-            _ProcessManager.running = null;
+            this.running = null;
         }
 
         public checkReadyQ(): void {
-            if (!_ProcessManager.readyQueue.isEmpty()) {
+            if (!this.readyQueue.isEmpty()) {
                 this.runnProcess();
             }
             else {
@@ -127,13 +127,13 @@ module TSOS {
         }
 
         public updatePCB() {
-            _ProcessManager.running.PC = _CPU.PC;
-            _ProcessManager.running.Acc = _CPU.Acc;
-            _ProcessManager.running.Xreg = _CPU.Xreg;
-            _ProcessManager.running.Yreg = _CPU.Yreg;
-            _ProcessManager.running.Zflag = _CPU.Zflag;
-            _ProcessManager.running.State = "Waiting";
-            _ProcessManager.running.IR = _MemoryAccessor.readMem(_CPU.PC).toUpperCase();
+            this.running.PC = _CPU.PC;
+            this.running.Acc = _CPU.Acc;
+            this.running.Xreg = _CPU.Xreg;
+            this.running.Yreg = _CPU.Yreg;
+            this.running.Zflag = _CPU.Zflag;
+            this.running.State = "Waiting";
+            this.running.IR = _MemoryAccessor.readMem(_CPU.PC).toUpperCase();
         }
 
 
@@ -169,12 +169,12 @@ module TSOS {
 
         //Calculate the turnaround and wait times
         public times() {
-            _ProcessManager.running.turnAroundTime++;
-            for (var i = 0; i < _ProcessManager.readyQueue.getSize(); i++) {
-                var pcb = _ProcessManager.readyQueue.dequeue();
+            this.running.turnAroundTime++;
+            for (var i = 0; i < this.readyQueue.getSize(); i++) {
+                var pcb = this.readyQueue.dequeue();
                 pcb.turnAroundTime++;
                 pcb.waitTime++;
-                _ProcessManager.readyQueue.enqueue(pcb);
+                this.readyQueue.enqueue(pcb);
             }
         }
 

@@ -31,7 +31,6 @@ module TSOS {
         public cmdHistory = [];
         public hisInd = 0;
         public helpList = [];
-        //public conceal = false;
 
         constructor() {
         }
@@ -41,38 +40,39 @@ module TSOS {
             //
             // Load the command list.
 
-            //Clear Memory
-            sc = new ShellCommand(this.shellClearMem,
-                "clearmem",
-                "< - CCLears all the memory partitions");
-            this.commandList[this.commandList.length] = sc;
+            
 
             //Load
             sc = new ShellCommand(this.shellLoad,
                                   "load",
-                                  "<[empty] | [int]> - Load a program from user input");
+                                  " - Load a program from user input");
             this.commandList[this.commandList.length] = sc;
 
             //Run
             sc = new ShellCommand(this.shellRun,
                                   "run",
-                                  "<[empty] | [int]> - Run a program from memory");
+                                  "<[int]> - Run a program from memory");
             this.commandList[this.commandList.length] = sc;
+            this.helpList[this.helpList.length] = sc;
 
             //RunAll
             sc = new ShellCommand(this.shellRunAll,
                                   "runall",
-                                  "<[empty] | [int]> - Runs all programs from memory");
+                                  " - Runs all programs from memory");
             this.commandList[this.commandList.length] = sc;
+            this.helpList[this.helpList.length] = sc;
 
-
+            //Clear Memory
+            sc = new ShellCommand(this.shellClearMem,
+                "clearmem",
+                " - Clears all the memory partitions");
+            this.commandList[this.commandList.length] = sc;
 
             //Status Bar
             sc = new ShellCommand(this.shellStatus,
                                   "status",
                                   "- changes the text of the status bar");
             this.commandList[this.commandList.length] = sc;
-
 
 
             //date

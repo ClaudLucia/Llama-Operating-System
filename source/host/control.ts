@@ -1,5 +1,8 @@
 ///<reference path="../globals.ts" />
 ///<reference path="../os/canvastext.ts" />
+///<reference path="./memory.ts" />
+///<reference path="./memoryAccessor.ts" />
+///<reference path="./cpu.ts" />
 
 /* ------------
      Control.ts
@@ -78,64 +81,14 @@ module TSOS {
         //
         // Host Events
         //
-        public static hostBtnStartOS_click(btn): void {
-            // Disable the (passed-in) start button...
-            btn.disabled = true;
-
-            // .. enable the Halt and Reset buttons ...
-            (<HTMLButtonElement>document.getElementById("btnHaltOS")).disabled = false;
-            (<HTMLButtonElement>document.getElementById("btnReset")).disabled = false;
-
-            // .. set focus on the OS console display ...
-            document.getElementById("display").focus();
-
-            // ... Create and initialize the CPU (because it's part of the hardware)  ...
-            _CPU = new CPU();  // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
-            _CPU.init();       //       There's more to do, like dealing with scheduling and such, but this would be a start. Pretty cool.
-            Control.hostCPU();
-            _Memory = new Memory();
-            _Memory.init();
-            _MemoryAccessor = new MemoryAccessor();
-            Control.initMemDisplay();
-
-            // ... then set the host clock pulse ...
-            _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
-            // .. and call the OS Kernel Bootstrap routine.
-            _Kernel = new Kernel();
-            _Kernel.krnBootstrap();  // _GLaDOS.afterStartup() will get called in there, if configured.
-
-        }
-
-        public static hostBtnHaltOS_click(btn): void {
-            Control.hostLog("Emergency halt", "host");
-            Control.hostLog("Attempting Kernel shutdown.", "host");
-            // Call the OS shutdown routine.
-            _Kernel.krnShutdown();
-            // Stop the interval that's simulating our clock pulse.
-            clearInterval(_hardwareClockID);
-            // TODO: Is there anything else we need to do here?
-        }
-
-        public static hostBtnReset_click(btn): void {
-            // The easiest and most thorough way to do this is to reload (not refresh) the document.
-            location.reload(true);
-            // That boolean parameter is the 'forceget' flag. When it is true it causes the page to always
-            // be reloaded from the server. If it is false or not specified the browser may reload the
-            // page from its cache, which is not what we want.
-        }
-
-        //Status Bar
-        public static hostStatus(status): void {
-            var msgSta = <HTMLInputElement>document.getElementById('statusMsg');
-            msgSta.textContent = status;
-        }
 
         public static hostCPU(): void {
-            var table = (<HTMLTableElement>document.getElementById('CPU'));
+            var table = (<HTMLTableElement>document.getElementById('showCPU'));
             table.deleteRow(-1);
-            var row = table.insertRow(-1); 
+            var row = table.insertRow(-1);
             var cell = row.insertCell();
             cell.innerHTML = _CPU.PC.toString(16).toUpperCase();
+
             cell = row.insertCell();
             if (_CPU.isExecuting) {
                 cell.innerHTML = _Memory.memArr[_CPU.PC].toString();
@@ -145,19 +98,22 @@ module TSOS {
             }
             cell = row.insertCell();
             cell.innerHTML = _CPU.Acc.toString(16).toUpperCase();
+
             cell = row.insertCell();
             cell.innerHTML = _CPU.Xreg.toString(16).toUpperCase();
+
             cell = row.insertCell();
             cell.innerHTML = _CPU.Yreg.toString(16).toUpperCase();
+
             cell = row.insertCell();
             cell.innerHTML = _CPU.Zflag.toString(16).toUpperCase();
         }
 
 
         public static hostProcess(): void {
-            var table = (<HTMLTableElement>document.getElementById('display'));
+            var table = (<HTMLTableElement>document.getElementById('displayPCB'));
             let readyQueue: Array<PCB> = [];
-            
+
             for (var i = 0; i < _ProcessManager.readyQueue.getSize(); i++) {
                 var pcb = _ProcessManager.readyQueue.dequeue();
                 _ProcessManager.readyQueue.enqueue(pcb);
@@ -169,10 +125,10 @@ module TSOS {
             while (table.rows.length > 1) {
                 table.deleteRow(1);
             }
-            
+
             while (readyQueue.length > 0) {
                 var display = readyQueue.pop();
-                var row = table.insertRow(-1); 
+                var row = table.insertRow(-1);
                 var cell = row.insertCell();
                 cell.innerHTML = display.PID.toString(16).toUpperCase();
 
@@ -219,21 +175,115 @@ module TSOS {
             }
         }
 
-        static hostMemory(): any {
+        static hostMemory(): void {
             var table = (<HTMLTableElement>document.getElementById('Memory'));
-            var memoryPtr = 0;
+            var thisMemory = 0;
             for (var i = 0; i < table.rows.length; i++) {
                 for (var j = 1; j < 9; j++) {
-                    table.rows[i].cells.item(j).innerHTML = _Memory.memArr[memoryPtr].toString().toUpperCase();
+                    table.rows[i].cells.item(j).innerHTML = _Memory.memArr[thisMemory].toString().toUpperCase();
                     table.rows[i].cells.item(j).style.color = "black";
                     table.rows[i].cells.item(j).style['font-weight'] = "normal";
-                    var dec = parseInt(_Memory.memArr[memoryPtr].toString(), 16);
+                    var dec = parseInt(_Memory.memArr[thisMemory].toString(), 16);
                     if (dec < 16 && dec > 0) {
                         table.rows[i].cells.item(j).innerHTML = "0" + dec.toString(16).toUpperCase();
                     }
-                    memoryPtr++;
+                    thisMemory++;
                 }
             }
+
+            if (_CPU.isExecuting) {
+                var index = _CPU.PC + _MMU.partitions[_ProcessManager.running.Partition].base;
+                this.highlight(table, index, "bold");
+                var instructionMem = {
+                    "A9": 1,
+                    "AD": 2,
+                    "8D": 2,
+                    "6D": 2,
+                    "A2": 1,
+                    "AE": 2,
+                    "A0": 1,
+                    "AC": 2,
+                    "EA": 0,
+                    "00": 0,
+                    "EC": 2,
+                    "D0": 1,
+                    "EE": 2,
+                    "FF": 0
+                }
+                var opCode = _Memory.memArr[_CPU.PC].toString();
+                for (var i = 1; i <= instructionMem[opCode]; i++) {
+                    this.highlight(table, index + i, "normal");
+                }
+            }
+
+        }
+
+
+        public static hostBtnStartOS_click(btn): void {
+            // Disable the (passed-in) start button...
+            btn.disabled = true;
+
+            // .. enable the Halt and Reset buttons ...
+            (<HTMLButtonElement>document.getElementById("btnHaltOS")).disabled = false;
+            (<HTMLButtonElement>document.getElementById("btnReset")).disabled = false;
+
+            // .. set focus on the OS console display ...
+            document.getElementById("display").focus();
+
+            // ... Create and initialize the CPU (because it's part of the hardware)  ...
+            _CPU = new CPU();  // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
+            _CPU.init();       //       There's more to do, like dealing with scheduling and such, but this would be a start. Pretty cool.
+            Control.hostCPU();
+            _Memory = new Memory();
+            _Memory.init();
+
+            Control.initMemDisplay();
+
+            _MemoryAccessor = new MemoryAccessor();
+
+            // ... then set the host clock pulse ...
+            _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
+            // .. and call the OS Kernel Bootstrap routine.
+            _Kernel = new Kernel();
+            _Kernel.krnBootstrap();  // _GLaDOS.afterStartup() will get called in there, if configured.
+
+        }
+
+        public static hostBtnHaltOS_click(btn): void {
+            Control.hostLog("Emergency halt", "host");
+            Control.hostLog("Attempting Kernel shutdown.", "host");
+            // Call the OS shutdown routine.
+            _Kernel.krnShutdown();
+            // Stop the interval that's simulating our clock pulse.
+            clearInterval(_hardwareClockID);
+            // TODO: Is there anything else we need to do here?
+        }
+
+        public static hostBtnReset_click(btn): void {
+            // The easiest and most thorough way to do this is to reload (not refresh) the document.
+            location.reload(true);
+            // That boolean parameter is the 'forceget' flag. When it is true it causes the page to always
+            // be reloaded from the server. If it is false or not specified the browser may reload the
+            // page from its cache, which is not what we want.
+        }
+
+        //Status Bar
+        public static hostStatus(status): void {
+            var msgSta = <HTMLInputElement>document.getElementById('statusMsg');
+            msgSta.textContent = status;
+        }
+
+        private static highlight(table, index, weight): void {
+            var row = Math.floor(index / (table.rows[0].cells.length - 1));   // Gets the row the address is in
+            var col = (index % (table.rows[0].cells.length - 1)) + 1;           // Gets the column the address is in
+            if (weight == "bold") {
+                table.rows[row].cells.item(col).style = "color: blue; font-weight: bold";
+            }
+            else {
+                table.rows[row].cells.item(col).style = "color: blue;";
+            }
+            // Scroll to that part of the table
+            table.rows[row].cells.item(col).scrollIntoView(false);
         }
         
     }

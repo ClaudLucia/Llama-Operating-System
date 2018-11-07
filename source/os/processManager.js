@@ -17,7 +17,7 @@ var TSOS;
                 return;
             }
             if (_MMU.checkMemory(opCodes.length)) {
-                var pcb = new TSOS.PCB(PID);
+                var pcb = new TSOS.PCB(_PID);
                 var partition = _MMU.getPartitions(opCodes.length);
                 pcb.init(partition);
                 if (args.length > 0) {
@@ -29,22 +29,22 @@ var TSOS;
                 this.residentQueue.enqueue(pcb);
                 _MMU.loadMemory(opCodes, partition);
                 TSOS.Control.hostMemory();
-                _StdOut.putText("Program loaded with PID " + PID);
-                PID++;
+                _StdOut.putText("Program loaded with PID " + _PID);
+                _PID++;
             }
             else {
                 _StdOut.putText("Loading failed! Not enough memory available.");
             }
         };
         ProcessManager.prototype.runnProcess = function () {
-            _ProcessManager.running = _ProcessManager.readyQueue.dequeue();
-            _CPU.PC = _ProcessManager.running.PC;
-            _CPU.Acc = _ProcessManager.running.Acc;
-            _CPU.Xreg = _ProcessManager.running.Xreg;
-            _CPU.Yreg = _ProcessManager.running.Yreg;
-            _CPU.Zflag = _ProcessManager.running.Zflag;
+            //this.running = this.readyQueue.dequeue();
+            _CPU.PC = this.running.PC;
+            _CPU.Acc = this.running.Acc;
+            _CPU.Xreg = this.running.Xreg;
+            _CPU.Yreg = this.running.Yreg;
+            _CPU.Zflag = this.running.Zflag;
             _CPU.isExecuting = true;
-            _ProcessManager.running.State = "Running";
+            this.running.State = "Running";
             TSOS.Control.hostProcess();
             TSOS.Control.hostCPU();
             TSOS.Control.hostMemory();
@@ -52,20 +52,20 @@ var TSOS;
         };
         ProcessManager.prototype.runAllP = function () {
             TSOS.Control.hostLog("Running all programs", "os");
-            while (!_ProcessManager.residentQueue.isEmpty()) {
-                _ProcessManager.readyQueue.enqueue(_ProcessManager.residentQueue.dequeue());
+            while (!this.residentQueue.isEmpty()) {
+                this.readyQueue.enqueue(this.residentQueue.dequeue());
             }
         };
         ProcessManager.runningProcess = function () {
             return _ProcessManager.running != null;
         };
         ProcessManager.prototype.listAllP = function () {
-            if (_ProcessManager.running != null) {
+            if (this.running != null) {
                 var processes = [];
-                for (var i = 0; i < _ProcessManager.readyQueue.getSize(); i++) {
-                    var pcb = _ProcessManager.readyQueue.dequeue();
+                for (var i = 0; i < this.readyQueue.getSize(); i++) {
+                    var pcb = this.readyQueue.dequeue();
                     processes.push(new String(pcb.PID));
-                    _ProcessManager.readyQueue.enqueue(pcb);
+                    this.readyQueue.enqueue(pcb);
                 }
                 return processes;
             }
@@ -73,26 +73,26 @@ var TSOS;
                 return [];
             }
         };
-        ProcessManager.prototype.exitProcesses = function (display) {
+        ProcessManager.prototype.exitProcess = function (display) {
             _Scheduler.unwatch();
             _CPU.init();
-            _MMU.clearPartitions(_ProcessManager.running.Partition);
+            _MMU.clearPartitions(this.running.Partition);
             TSOS.Control.hostMemory();
-            TSOS.Control.hostLog("Exiting process " + _ProcessManager.running.PID);
+            TSOS.Control.hostLog("Exiting process " + this.running.PID);
             if (display) {
                 _StdOut.advanceLine();
-                _StdOut.putText("Process ID: " + _ProcessManager.running.PID);
+                _StdOut.putText("Process ID: " + this.running.PID);
                 _StdOut.advanceLine();
-                _StdOut.putText("Turnaround time: " + _ProcessManager.running.turnAroundTime + " cycles.");
+                _StdOut.putText("Turnaround time: " + this.running.turnAroundTime + " cycles.");
                 _StdOut.advanceLine();
-                _StdOut.putText("Wait time: " + _ProcessManager.running.waitTime + " cycles.");
+                _StdOut.putText("Wait time: " + this.running.waitTime + " cycles.");
                 _StdOut.advanceLine();
                 _OsShell.putPrompt();
             }
-            _ProcessManager.running = null;
+            this.running = null;
         };
         ProcessManager.prototype.checkReadyQ = function () {
-            if (!_ProcessManager.readyQueue.isEmpty()) {
+            if (!this.readyQueue.isEmpty()) {
                 this.runnProcess();
             }
             else {
@@ -100,22 +100,50 @@ var TSOS;
             }
         };
         ProcessManager.prototype.updatePCB = function () {
-            _ProcessManager.running.PC = _CPU.PC;
-            _ProcessManager.running.Acc = _CPU.Acc;
-            _ProcessManager.running.Xreg = _CPU.Xreg;
-            _ProcessManager.running.Yreg = _CPU.Yreg;
-            _ProcessManager.running.Zflag = _CPU.Zflag;
-            _ProcessManager.running.State = "Waiting";
-            _ProcessManager.running.IR = _MemoryAccessor.readMem(_CPU.PC).toUpperCase();
+            this.running.PC = _CPU.PC;
+            this.running.Acc = _CPU.Acc;
+            this.running.Xreg = _CPU.Xreg;
+            this.running.Yreg = _CPU.Yreg;
+            this.running.Zflag = _CPU.Zflag;
+            this.running.State = "Waiting";
+            this.running.IR = _MemoryAccessor.readMem(_CPU.PC).toUpperCase();
+        };
+        ProcessManager.prototype.exitAProcess = function (pid) {
+            var pcbToDel;
+            for (var i = 0; i < this.readyQueue.getSize(); i++) {
+                var pcb = this.readyQueue.dequeue();
+                if (pcb.Pid == pid) {
+                    pcbToDel = pcb;
+                }
+                else {
+                    this.readyQueue.enqueue(pcb);
+                }
+            }
+            if (this.running != null) {
+                if (this.running.PID == pid) {
+                    pcbToDel = this.running;
+                    _KernelInterruptQueue.enqueue(new TSOS.Interrupt(EXIT, false));
+                }
+            }
+            if (pcbToDel == null) {
+                return false;
+            }
+            else {
+                TSOS.Control.hostLog("Exiting process " + pid, "os");
+                _MMU.clearMemoryPartition(pcbToDel.Partition);
+                TSOS.Control.hostProcess();
+                TSOS.Control.hostCPU();
+                return true;
+            }
         };
         //Calculate the turnaround and wait times
         ProcessManager.prototype.times = function () {
-            _ProcessManager.running.turnAroundTime++;
-            for (var i = 0; i < _ProcessManager.readyQueue.getSize(); i++) {
-                var pcb = _ProcessManager.readyQueue.dequeue();
+            this.running.turnAroundTime++;
+            for (var i = 0; i < this.readyQueue.getSize(); i++) {
+                var pcb = this.readyQueue.dequeue();
                 pcb.turnAroundTime++;
                 pcb.waitTime++;
-                _ProcessManager.readyQueue.enqueue(pcb);
+                this.readyQueue.enqueue(pcb);
             }
         };
         return ProcessManager;
