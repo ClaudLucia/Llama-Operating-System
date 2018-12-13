@@ -48,13 +48,17 @@ h3 {
 }
 
 .footerText {
-  color: black;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 8pt;
-  text-align: center;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8pt;
+    text-align: center;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
 
-#taskBar {
+#taskBar{
     font-size: 16px;
     margin: 5px;
     color: #000000;
@@ -65,9 +69,38 @@ h3 {
 }
 
 #divConsole {
-    margin: 50px;
+    padding-top:40px;
+    margin: 15px;
     float: left;
     /*border-radius: 25px;*/
+}
+
+#displayPCB {
+    background: white;
+    opacity: 0.5;
+    color: black;
+    background-size: 20px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+#showCPU {
+    background: white;
+    opacity: 0.5;
+    color: black;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+#Memory {
+    background: white;
+    opacity: 0.5;
+    color: black;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+#HP {
+    font-size: 16px;
+    float: right;
+    padding-top: 40px;
 }
 
 #canvas {
@@ -125,8 +158,8 @@ h3 {
     background-color: blue;
 }
 
-#divLog {
-    margin-left: 950px;
+/*#divLog {
+    margin-left: 900px;
     float:initial;
     font-size: 16px;
     position: relative;
@@ -134,11 +167,12 @@ h3 {
 }
 
 #divUserProgramInput {
-    margin-left: 950px;
+    margin-left: 900px;
     float: initial;
     font-size: 16px;
     position:relative;
-}
+}*/
+
 
 textarea {
     background: white;
@@ -147,17 +181,7 @@ textarea {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
-/*#btnStartOS, #btnHaltOS, #btnReset {
-    background-color: coral;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-}*/
+
 button {
     display: inline-block;
     border: none;
@@ -202,3 +226,47 @@ button:active {
     width: 5%;
 }
 
+
+th{
+    /*border: 1px solid black;*/
+    padding:3px;
+}
+
+
+
+.speech-bubble {
+    position: relative;
+    background: #45affe;
+    border-radius: .4em;
+}
+
+.speech-bubble::after {
+    border-left: 20px solid transparent;
+    border-top: 20px solid #efefef;
+    bottom: -20px;
+    content: "";
+    position: absolute;
+    right: 20px;
+}
+
+.speech-bubble {
+    background: #efefef;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    line-height: 1.3;
+    margin: 0 auto 40px;
+    max-width: 400px;
+    padding: 15px;
+    position: relative;
+}
+
+.speech-bubble p {
+    margin: 0 0 10px;
+}
+
+    .speech-bubble p:last-of-type {
+        margin-bottom: 0;
+    }
+
+    
