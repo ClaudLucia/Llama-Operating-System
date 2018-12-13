@@ -27,23 +27,22 @@ module TSOS {
             public Yreg: number = 0,
             public Zflag: number = 0,
             public eXecute: boolean = false,
-            public IR: number = -1,
+            /* public IR: number = -1,
             public pid: number = -1,
             public base: number = -1,
-            public limit: number = -1,
-            public opCode: string = "") {
+            public limit: number = -1 */) {
 
         }
 
         public init(): void {
-            this.pid = 0;
+            ///this.pid = 0;
             this.PC = 0;
             this.Acc = 0;
             this.Xreg = 0;
             this.Yreg = 0;
             this.Zflag = 0;
             this.eXecute = false;
-            this.IR = null;
+            ///this.IR = null;
 
         }
 
@@ -148,7 +147,6 @@ module TSOS {
                         if (this.Zflag == 0) {
                             var branch = parseInt(_MemoryAccessor.readMem(this.PC + 1), 16);
                             var partition = _MMU.getPartitions();
-                            //this.PC = _MemoryAccessor.Loop(this.PC, branch);
                         }
                         else {
                             this.PC += 2;

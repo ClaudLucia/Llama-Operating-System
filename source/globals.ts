@@ -33,7 +33,7 @@ var EXIT: number = 2;
 var WRITECONSOLE: number = 4;
 var OPINV: number = 6;
 var _CPU: TSOS.CPU;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
-//var _Disk: TSOS.Disk;
+var _Disk: TSOS.Disk;
 
 var DISK_SPACE: number = 999;
 var DISK_FULL: number = 1;

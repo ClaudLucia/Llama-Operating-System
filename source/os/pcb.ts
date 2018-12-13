@@ -25,18 +25,18 @@ module TSOS {
         public Yreg: number;
         public Zflag: number;
         public Partition: number;
-        public Priority: number; 
+        public Priority: number;
         public waitTime: number; 
-        public turnAroundTime: number;
+        public turnaroundTime: number;
         public ifSwapped: boolean;
         public swapBlock: String;
-
+       
         constructor(public processId) {
             this.PID = processId;
         }
 
 
-        public init(partition): void {
+        public init(partition: number): void {
             this.State = "Ready";
             this.PC = 0;
             this.IR = "00";
@@ -45,9 +45,11 @@ module TSOS {
             this.Yreg = 0;
             this.Zflag = 0;
             this.Partition = partition;
-            this.turnAroundTime = 0;
+            this.turnaroundTime = 0;
             this.waitTime = 0;
             this.Priority = 1;
+            this.swapBlock = "0:0:0"
+            this.ifSwapped = false;
         }
 
     }

@@ -17,39 +17,29 @@
 var TSOS;
 (function (TSOS) {
     var CPU = /** @class */ (function () {
-        function CPU(PC, Acc, Xreg, Yreg, Zflag, eXecute, IR, pid, base, limit, opCode) {
+        function CPU(PC, Acc, Xreg, Yreg, Zflag, eXecute) {
             if (PC === void 0) { PC = 0; }
             if (Acc === void 0) { Acc = 0; }
             if (Xreg === void 0) { Xreg = 0; }
             if (Yreg === void 0) { Yreg = 0; }
             if (Zflag === void 0) { Zflag = 0; }
             if (eXecute === void 0) { eXecute = false; }
-            if (IR === void 0) { IR = -1; }
-            if (pid === void 0) { pid = -1; }
-            if (base === void 0) { base = -1; }
-            if (limit === void 0) { limit = -1; }
-            if (opCode === void 0) { opCode = ""; }
             this.PC = PC;
             this.Acc = Acc;
             this.Xreg = Xreg;
             this.Yreg = Yreg;
             this.Zflag = Zflag;
             this.eXecute = eXecute;
-            this.IR = IR;
-            this.pid = pid;
-            this.base = base;
-            this.limit = limit;
-            this.opCode = opCode;
         }
         CPU.prototype.init = function () {
-            this.pid = 0;
+            ///this.pid = 0;
             this.PC = 0;
             this.Acc = 0;
             this.Xreg = 0;
             this.Yreg = 0;
             this.Zflag = 0;
             this.eXecute = false;
-            this.IR = null;
+            ///this.IR = null;
         };
         CPU.prototype.cycle = function () {
             _Kernel.krnTrace('CPU cycle');
@@ -140,7 +130,6 @@ var TSOS;
                         if (this.Zflag == 0) {
                             var branch = parseInt(_MemoryAccessor.readMem(this.PC + 1), 16);
                             var partition = _MMU.getPartitions();
-                            //this.PC = _MemoryAccessor.Loop(this.PC, branch);
                         }
                         else {
                             this.PC += 2;

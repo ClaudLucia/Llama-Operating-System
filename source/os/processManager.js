@@ -152,7 +152,7 @@ var TSOS;
                 _StdOut.advanceLine();
                 _StdOut.putText("Process ID: " + this.running.PID);
                 _StdOut.advanceLine();
-                _StdOut.putText("Turnaround time: " + this.running.turnAroundTime + " cycles.");
+                _StdOut.putText("Turnaround time: " + this.running.turnaroundTime + " cycles.");
                 _StdOut.advanceLine();
                 _StdOut.putText("Wait time: " + this.running.waitTime + " cycles.");
                 _StdOut.advanceLine();
@@ -182,10 +182,10 @@ var TSOS;
         };
         //Calculate the turnaround and wait times
         ProcessManager.prototype.processTimes = function () {
-            this.running.turnAroundTime++;
+            this.running.turnaroundTime++;
             for (var i = 0; i < this.readyQueue.getSize(); i++) {
                 var pcb = this.readyQueue.dequeue();
-                pcb.turnAroundTime++;
+                pcb.turnaroundTime++;
                 pcb.waitTime++;
                 this.readyQueue.enqueue(pcb);
             }

@@ -19,7 +19,7 @@ module TSOS {
         }
         
         public watch() {
-            if (_ProcessManager.readyQueue.getSize() > 0) {
+            if (_ProcessManager.readyQueue.getsz() > 0) {
                 // Round Robin scheduling
                 if (this.schedulingMethod == ROUNDROBIN) {
                     this.count++;
@@ -27,6 +27,37 @@ module TSOS {
                         _KernelInterruptQueue.enqueue(new Interrupt(CNTXTSWITCH, 0));
                         this.count = 0;
                     }
+                }
+
+                //First Come First Served scheduling
+                else if (this.schedulingMethod == FCFS) {
+                    this.count++;
+                    if (this.count == this.quantum) {
+                        _KernelInterruptQueue.enqueue(new Interrupt(CNTXTSWITCH, 0));
+                        this.count = 0;
+                    }
+                }
+
+                //Priority scheduling
+                else if (this.schedulingMethod == PRIORITY) {
+                    let result;
+                    let sz = _ProcessManager.readyQueue.getsz();
+                    for (var i = 0; i < sz; i++) {
+                        var pcb = _ProcessManager.readyQueue.dequeue();
+                        if (result == null) {
+                            result = pcb;
+                        }
+                        else {
+                            if (pcb.Priority < result.Priority) {
+                                _ProcessManager.readyQueue.enqueue(result);
+                                result = pcb;
+                            }
+                            else {
+                                _ProcessManager.readyQueue.enqueue(pcb);
+                            }
+                        }
+                    }
+                    return result;
                 }
             }
         }
@@ -40,6 +71,13 @@ module TSOS {
             switch (schedulingMethod) {
                 case ROUNDROBIN:
                     this.schedulingMethod = ROUNDROBIN;
+                    break;
+                case FCFS:
+                    this.schedulingMethod = FCFS;
+                    this.quantum = 999999;
+                    break;
+                case PRIORITY:
+                    this.schedulingMethod = PRIORITY;
                     break;
                 default:
                     return false;
