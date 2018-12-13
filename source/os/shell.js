@@ -607,7 +607,7 @@ var TSOS;
                     _StdOut.putText("fileNames may only be valid characters.");
                     return;
                 }
-                var status_1 = _krnDiskDrive.krnDiskCreate(args[0]);
+                var status_1 = _krnDiskDriveFile.krnDiskCreate(args[0]);
                 if (status_1 == FILE_CREATED) {
                     _StdOut.putText("File: " + args[0] + " successfully created");
                 }
@@ -642,7 +642,7 @@ var TSOS;
                     _StdOut.putText("Files may only have valid characters and spaces written to them.");
                     return;
                 }
-                var status_2 = _krnDiskDrive.krnDiskWrite(args[0], string);
+                var status_2 = _krnDiskDriveFile.krnDiskWrite(args[0], string);
                 if (status_2 == FILE_CREATED) {
                     _StdOut.putText("Your file: " + args[0] + " has been successfully written to.");
                 }
@@ -664,7 +664,7 @@ var TSOS;
                     _StdOut.putText("Error: " + args[0] + " is invalid. Only valid characters allowed");
                     return;
                 }
-                var status_3 = _krnDiskDrive.krnDiskRead(args[0]);
+                var status_3 = _krnDiskDriveFile.krnDiskRead(args[0]);
                 if (status_3 == FILE_NAME_AVAILABLE) {
                     _StdOut.putText("The file: " + args[0] + " does not exist.");
                 }
@@ -681,7 +681,7 @@ var TSOS;
                     _StdOut.putText("Error: " + args[0] + " is invalid");
                     return;
                 }
-                var status_4 = _krnDiskDrive.krnDiskDelete(args[0]);
+                var status_4 = _krnDiskDriveFile.krnDiskDelete(args[0]);
                 if (status_4 == FILE_CREATED) {
                     _StdOut.putText("You have succesffuly deleted file: " + args[0]);
                 }
@@ -695,7 +695,7 @@ var TSOS;
         };
         // Recver the deleted files (you fool)
         Shell.prototype.shellCheckDisk = function () {
-            _krnDiskDrive.krnChkDsk();
+            _krnDiskDriveFile.krnChkDsk();
             _StdOut.putText("Deleted files have been recovered");
         };
         //Format the disk or else...
@@ -703,7 +703,7 @@ var TSOS;
             //Qucik format
             if (args.length == 1) {
                 if (args[0] == "-quick") {
-                    if (_krnDiskDrive.krnFormat(QUICK_FORMAT)) {
+                    if (_krnDiskDriveFile.krnFormat(QUICK_FORMAT)) {
                         _StdOut.putText("Success!");
                     }
                     else {
@@ -712,7 +712,7 @@ var TSOS;
                 }
                 //Full format
                 else if (args[0] == "-full") {
-                    if (_krnDiskDrive.krnFormat(FULL_FORMAT)) {
+                    if (_krnDiskDriveFile.krnFormat(FULL_FORMAT)) {
                         _StdOut.putText("Success!");
                     }
                     else {
@@ -724,7 +724,7 @@ var TSOS;
                 }
             }
             else {
-                if (_krnDiskDrive.krnFormat(FULL_FORMAT)) {
+                if (_krnDiskDriveFile.krnFormat(FULL_FORMAT)) {
                     _StdOut.putText("Success");
                 }
                 else {
@@ -734,7 +734,7 @@ var TSOS;
         };
         // List the files on disk
         Shell.prototype.shellList = function (args) {
-            var fileNames = _krnDiskDrive.krnLs();
+            var fileNames = _krnDiskDriveFile.krnLs();
             if (fileNames.length != 0) {
                 _StdOut.putText("Files in the filesystem:");
                 _StdOut.advanceLine();

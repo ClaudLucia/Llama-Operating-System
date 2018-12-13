@@ -7,6 +7,8 @@
 ///<reference path="processManager.ts" />
 ///<reference path="scheduler.ts" />
 ///<reference path="shell.ts" />
+///<reference path="deviceDriverFS.ts" />
+
 
 /* ------------
      Kernel.ts
@@ -14,11 +16,15 @@
      Requires globals.ts
               queue.ts
               mmu.ts
-              cheduler.ts
+              scheduler.ts
               shell.ts
               processManager.ts
               devices.ts
               control.ts
+              devicedriverkeyboard
+              devicedriverfs
+
+
 
 
      Routines for the Operating System, NOT the host.
@@ -55,14 +61,24 @@ module TSOS {
             _krnKeyboardDriver.driverEntry();                    // Call the driverEntry() initialization routine.
             this.krnTrace(_krnKeyboardDriver.status);
 
+            this.krnTrace("Loading the disk device driver");
+            _krnDiskDriveFile = new DeviceDriverFS();
+            _krnDiskDriveFile.driverEntry();
+            this.krnTrace(_krnDiskDriveFile.status);
+
             //
             // ... more?
             //
-
+            
             _MMU = new MMU();
             _ProcessManager = new ProcessManager();
 
             _Scheduler = new Scheduler();
+
+            _Swapper = new Swapper();
+
+
+            
 
             // Enable the OS Interrupts.  (Not the CPU clock interrupt, as that is done in the hardware sim.)
             this.krnTrace("Enabling the interrupts.");
@@ -109,19 +125,32 @@ module TSOS {
             }
             else if (_CPU.eXecute) {
                 // If there are no interrupts then run one CPU cycle if there is anything being processed.
-                _CPU.cycle();
-                Control.hostCPU();
-                _Scheduler.watch();
-                _ProcessManager.times();
-                Control.hostMemory();
-                Control.hostProcess();
-
+                if (_stepModeON) {
+                    if (_trackStep) {
+                        _CPU.cycle();
+                        Control.hostCPU();
+                        _trackStep = false;
+                        _Scheduler.watch();
+                        _ProcessManager.times();
+                        Control.hostMemory();
+                        Control.hostProcess();
+                    }
+                    this.krnTrace("Idle");
+                }
+                else {
+                    _CPU.cycle();
+                    Control.hostCPU();
+                    _Scheduler.watch();
+                    _ProcessManager.times();
+                    Control.hostMemory();
+                    Control.hostProcess();
+                }
             }
             else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
+                _trackStep = false;
                 this.krnTrace("Idle");
-                _ProcessManager.checkReadyQ;
-                _Scheduler.unwatch();
-
+                _ProcessManager.checkReadyQ();
+                _Scheduler.unwatch()
             }
         }
 
@@ -162,12 +191,12 @@ module TSOS {
                     _StdOut.putText(params);
                     break;
                 case ERR_BOUND:
-                    _StdOut.putText("Out of bounds error in process " + _ProcessManager.running.Pid + ". Exiting that process...");
+                    _StdOut.putText("Out of bounds error in process " + _ProcessManager.running.Pid + ". Exiting...");
                     _StdOut.advanceLine();
                     _OsShell.putPrompt();
                     break;
                 case OPINV:
-                    _StdOut.putText("Invalid op code in process " + _ProcessManager.running.Pid + ". Exiting that process...");
+                    _StdOut.putText("Invalid op code in process " + _ProcessManager.running.Pid + ". Exiting...");
                     _StdOut.advanceLine();
                     _OsShell.putPrompt();
                     break;

@@ -1,5 +1,4 @@
 ///<reference path="../globals.ts" />
-///<reference path="../host/memory.ts" />
 /* ------------
      ProcessManager.ts
 
@@ -19,7 +18,7 @@ var TSOS;
             }
             if (_MMU.checkMemory(opCodes.length)) {
                 var pcb = new TSOS.PCB(_PID);
-                var partition = _MMU.getAPartition(opCodes.length);
+                var partition = _MMU.getPartitions(opCodes.length);
                 pcb.init(partition);
                 if (args.length > 0) {
                     pcb.Priority = parseInt(args[0]);
@@ -53,6 +52,14 @@ var TSOS;
                 else {
                     _StdOut.putText("Loading Failed! Program is over 256 bytes");
                 }
+            }
+        };
+        ProcessManager.prototype.checkReadyQ = function () {
+            if (!this.readyQueue.isEmpty()) {
+                this.runnProcess();
+            }
+            else {
+                _CPU.eXecute = false;
             }
         };
         //runs a process from memory
@@ -116,7 +123,7 @@ var TSOS;
                     if (exitPCB.ifSwapped) {
                         TSOS.Control.hostLog("Exiting process " + pid, ", os");
                         var filename = "$SWAP" + exitPCB.Pid;
-                        _krnDiskDrive.krnDiskDelete(filename);
+                        _krnDiskDriveFile.krnDiskDelete(filename);
                         return true;
                     }
                 }
@@ -159,16 +166,8 @@ var TSOS;
                 _OsShell.putPrompt();
             }
             var filename = "$SWAP" + this.running.PID;
-            _krnDiskDrive.krnDiskDelete(filename);
+            _krnDiskDriveFile.krnDiskDelete(filename);
             this.running = null;
-        };
-        ProcessManager.prototype.checkReadyQ = function () {
-            if (!this.readyQueue.isEmpty()) {
-                this.runnProcess();
-            }
-            else {
-                _CPU.eXecute = false;
-            }
         };
         //Update the PCB
         ProcessManager.prototype.updatePCB = function () {

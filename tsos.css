@@ -1,4 +1,8 @@
-/* TSOS.css */
+/* TSOS.css 
+
+    Everything you need to make the OS look pretty
+    Including bootsrap of course
+*/
 
 body {
   background: #909193 url(distrib/images/llamascarf.jpg)no-repeat center center fixed;
@@ -28,7 +32,6 @@ h1 {
   font-size: 24pt;
   font-weight: normal;
   font-style: normal;
-  border-bottom: 1px solid black;
 }
 
 h2 {
@@ -69,10 +72,8 @@ h3 {
 }
 
 #divConsole {
-    padding-top:40px;
     margin: 15px;
     float: left;
-    /*border-radius: 25px;*/
 }
 
 #displayPCB {
@@ -98,9 +99,8 @@ h3 {
 }
 
 #HP {
-    font-size: 16px;
     float: right;
-    padding-top: 40px;
+
 }
 
 #canvas {
@@ -109,9 +109,6 @@ h3 {
 }
 
 #canvas.ohno {
-    /*border-style: solid;
-    border-color: red;
-    border-width: 10px;*/
     width: 500px;
     height: 500px;
     box-shadow: 0 0 0 rgb(255, 0, 0);
@@ -157,22 +154,6 @@ h3 {
 #display.ohno {
     background-color: blue;
 }
-
-/*#divLog {
-    margin-left: 900px;
-    float:initial;
-    font-size: 16px;
-    position: relative;
-    font-size: 16px;
-}
-
-#divUserProgramInput {
-    margin-left: 900px;
-    float: initial;
-    font-size: 16px;
-    position:relative;
-}*/
-
 
 textarea {
     background: white;
@@ -232,41 +213,30 @@ th{
     padding:3px;
 }
 
-
-
 .speech-bubble {
     position: relative;
-    background: #45affe;
+    background: rgb(82, 190, 125);
     border-radius: .4em;
-}
-
-.speech-bubble::after {
-    border-left: 20px solid transparent;
-    border-top: 20px solid #efefef;
-    bottom: -20px;
-    content: "";
-    position: absolute;
-    right: 20px;
-}
-
-.speech-bubble {
-    background: #efefef;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
-    font-size: 1.2rem;
     line-height: 1.3;
-    margin: 0 auto 40px;
-    max-width: 400px;
+    width: 150px;
+    height: 100px;
     padding: 15px;
-    position: relative;
+    border:inherit;
 }
 
-.speech-bubble p {
-    margin: 0 0 10px;
+.speech-bubble:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-left-color: rgb(82, 190, 125);
+    border-right: 0;
+    border-bottom: 0;
+    margin-top: -10px;
+    margin-right: -20px;
 }
-
-    .speech-bubble p:last-of-type {
-        margin-bottom: 0;
-    }
 
     

@@ -203,7 +203,7 @@ module TSOS {
                 }
             }
 
-            if (_SingleStepMode === true) {
+            if (_stepModeON === true) {
                 this.eXecute = false;
             }
             

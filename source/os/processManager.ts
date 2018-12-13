@@ -1,6 +1,4 @@
 ﻿///<reference path="../globals.ts" />
-///<reference path="../host/memory.ts" />
-
 
 
 /* ------------
@@ -31,7 +29,7 @@ module TSOS {
             }
             if (_MMU.checkMemory(opCodes.length)) {
                 let pcb = new PCB(_PID);
-                var partition = _MMU.getAPartition(opCodes.length);
+                var partition = _MMU.getPartitions(opCodes.length);
                 pcb.init(partition);
                 if (args.length > 0) {
                     pcb.Priority = parseInt(args[0]);
@@ -67,6 +65,15 @@ module TSOS {
                 else {
                     _StdOut.putText("Loading Failed! Program is over 256 bytes");
                 }
+            }
+        }
+
+        public checkReadyQ(): void {
+            if (!this.readyQueue.isEmpty()) {
+                this.runnProcess();
+            }
+            else {
+                _CPU.eXecute = false;
             }
         }
 
@@ -138,7 +145,7 @@ module TSOS {
                     if (exitPCB.ifSwapped) {
                         Control.hostLog("Exiting process " + pid, ", os");
                         let filename = "$SWAP" + exitPCB.Pid;
-                        _krnDiskDrive.krnDiskDelete(filename);
+                        _krnDiskDriveFile.krnDiskDelete(filename);
                         return true;
                     }
                 }
@@ -182,18 +189,11 @@ module TSOS {
                 _OsShell.putPrompt();
             }
             let filename = "$SWAP" + this.running.PID;
-            _krnDiskDrive.krnDiskDelete(filename);
+            _krnDiskDriveFile.krnDiskDelete(filename);
             this.running = null;
         }
 
-        public checkReadyQ(): void {
-            if (!this.readyQueue.isEmpty()) {
-                this.runnProcess();
-            }
-            else {
-                _CPU.eXecute = false;
-            }
-        }
+       
 
         //Update the PCB
         public updatePCB(): void {

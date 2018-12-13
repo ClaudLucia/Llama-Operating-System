@@ -741,7 +741,7 @@ module TSOS {
                     _StdOut.putText("fileNames may only be valid characters.");
                     return;
                 }
-                let status = _krnDiskDrive.krnDiskCreate(args[0]);
+                let status = _krnDiskDriveFile.krnDiskCreate(args[0]);
                 if (status == FILE_CREATED) {
                     _StdOut.putText("File: " + args[0] + " successfully created");
                 }
@@ -777,7 +777,7 @@ module TSOS {
                     _StdOut.putText("Files may only have valid characters and spaces written to them.");
                     return;
                 }
-                let status = _krnDiskDrive.krnDiskWrite(args[0], string);
+                let status = _krnDiskDriveFile.krnDiskWrite(args[0], string);
                 if (status == FILE_CREATED) {
                     _StdOut.putText("Your file: " + args[0] + " has been successfully written to.");
                 }
@@ -800,7 +800,7 @@ module TSOS {
                     _StdOut.putText("Error: " + args[0] + " is invalid. Only valid characters allowed");
                     return;
                 }
-                let status = _krnDiskDrive.krnDiskRead(args[0]);
+                let status = _krnDiskDriveFile.krnDiskRead(args[0]);
                 if (status == FILE_NAME_AVAILABLE) {
                     _StdOut.putText("The file: " + args[0] + " does not exist.");
                 }
@@ -818,7 +818,7 @@ module TSOS {
                     _StdOut.putText("Error: " + args[0] + " is invalid");
                     return;
                 }
-                let status = _krnDiskDrive.krnDiskDelete(args[0]);
+                let status = _krnDiskDriveFile.krnDiskDelete(args[0]);
                 if (status == FILE_CREATED) {
                     _StdOut.putText("You have succesffuly deleted file: " + args[0]);
                 }
@@ -833,7 +833,7 @@ module TSOS {
         
         // Recver the deleted files (you fool)
         public shellCheckDisk() {
-            _krnDiskDrive.krnChkDsk();
+            _krnDiskDriveFile.krnChkDsk();
             _StdOut.putText("Deleted files have been recovered");
         }
 
@@ -842,7 +842,7 @@ module TSOS {
             //Qucik format
             if (args.length == 1) {
                 if (args[0] == "-quick") {
-                    if (_krnDiskDrive.krnFormat(QUICK_FORMAT)) {
+                    if (_krnDiskDriveFile.krnFormat(QUICK_FORMAT)) {
                         _StdOut.putText("Success!");
                     }
                     else {
@@ -851,7 +851,7 @@ module TSOS {
                 }
                 //Full format
                 else if (args[0] == "-full") {
-                    if (_krnDiskDrive.krnFormat(FULL_FORMAT)) {
+                    if (_krnDiskDriveFile.krnFormat(FULL_FORMAT)) {
                         _StdOut.putText("Success!");
                     }
                     else {
@@ -863,7 +863,7 @@ module TSOS {
                 }
             }
             else {
-                if (_krnDiskDrive.krnFormat(FULL_FORMAT)) {
+                if (_krnDiskDriveFile.krnFormat(FULL_FORMAT)) {
                     _StdOut.putText("Success");
                 }
                 else {
@@ -874,7 +874,7 @@ module TSOS {
 
         // List the files on disk
         public shellList(args) {
-            let fileNames = _krnDiskDrive.krnLs();
+            let fileNames = _krnDiskDriveFile.krnLs();
             if (fileNames.length != 0) {
                 _StdOut.putText("Files in the filesystem:");
                 _StdOut.advanceLine();

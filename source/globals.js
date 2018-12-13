@@ -11,7 +11,7 @@
 // Global CONSTANTS (TypeScript 1.5 introduced const. Very cool.)
 //
 var APP_NAME = "TSOS"; // 'cause Bob and I were at a loss for a better name.
-var APP_VERSION = "1.1.5"; // What did you expect?
+var APP_VERSION = "2.1.0"; // What did you expect?
 var CPU_CLOCK_INTERVAL = 100; // This is in ms (milliseconds) so 1000 = 1 second.
 var TIMER_IRQ = 0; // Pages 23 (timer), 9 (interrupts), and 561 (interrupt priority).
 // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
@@ -28,7 +28,7 @@ var EXIT = 2;
 var WRITECONSOLE = 4;
 var OPINV = 6;
 var _CPU; // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
-//var _Disk: TSOS.Disk;
+var _Disk;
 var DISK_SPACE = 999;
 var DISK_FULL = 1;
 //Software(OS)
@@ -60,7 +60,7 @@ var _OsShell;
 var _SarcasticMode = false;
 // Global Device Driver Objects - page 12
 var _krnKeyboardDriver; //  = null;
-var _krnDiskDrive;
+var _krnDiskDriveFile;
 var _hardwareClockID = null;
 var FILE_NAME_LENGTH = 25;
 var FILE_NAME_EXISTS = 2;
@@ -77,7 +77,8 @@ var FILESYS_IRQ = 3;
 var _ProcessManager = null;
 var _PID = 0;
 var _Scheduler = null;
-var _SingleStepMode = false;
+var _stepModeON = false;
+var _trackStep = false;
 var ROUNDROBIN = "rr";
 var FCFS = "fcfs";
 var PRIORITY = "priority";

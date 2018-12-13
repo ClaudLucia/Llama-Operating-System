@@ -3,6 +3,9 @@
 ///<reference path="./memory.ts" />
 ///<reference path="./memoryAccessor.ts" />
 ///<reference path="./cpu.ts" />
+///<reference path="./devices.ts" />
+///<reference path="../os/kernel.ts" />
+///<reference path="./disk.ts" />
 /* ------------
      Control.ts
 
@@ -30,7 +33,7 @@ var TSOS;
         function Control() {
         }
         Control.hostInit = function () {
-            // This is called from index.html's onLoad event via the onDocumentLoad function pointer.
+            // This is called from index.html's onLoad event via the onDocumentLoad function location.
             // Get a global reference to the canvas.  TODO: Should we move this stuff into a Display Device Driver?
             _Canvas = document.getElementById('display');
             // Get a global reference to the drawing context.
@@ -159,28 +162,58 @@ var TSOS;
                     thisMemory++;
                 }
             }
-            if (_CPU.eXecute) {
-                var index = _CPU.PC + _MMU.partitions[_ProcessManager.running.Partition].base;
-                this.highlight(table, index, "bold");
-                var instructionMem = {
-                    "A9": 1,
-                    "AD": 2,
-                    "8D": 2,
-                    "6D": 2,
-                    "A2": 1,
-                    "AE": 2,
-                    "A0": 1,
-                    "AC": 2,
-                    "EA": 0,
-                    "00": 0,
-                    "EC": 2,
-                    "D0": 1,
-                    "EE": 2,
-                    "FF": 0
-                };
-                var opCode = _Memory.memArr[_CPU.PC].toString();
-                for (var i = 1; i <= instructionMem[opCode]; i++) {
-                    this.highlight(table, index + i, "normal");
+            //if (_CPU.eXecute) {
+            //    var index = _CPU.PC + _MMU.partitions[_ProcessManager.running.Partition].base;
+            //    var instructionMem = {
+            //        "A9": 1,
+            //        "AD": 2,
+            //        "8D": 2,
+            //        "6D": 2,
+            //        "A2": 1,
+            //        "AE": 2,
+            //        "A0": 1,
+            //        "AC": 2,
+            //        "EA": 0,
+            //        "00": 0,
+            //        "EC": 2,
+            //        "D0": 1,
+            //        "EE": 2,
+            //        "FF": 0
+            //    }
+            //    var OP = _Memory.memoryArray[_CPU.PC].toString();
+            //    for (var i = 1; i <= instructionMem[opCode]; i++) {
+            //        this.colorMemory(table, index + i, "normal");
+            //    }
+            //}
+        };
+        Control.hostDisk = function () {
+            var table = document.getElementById('OSdisk');
+            var rows = table.rows.length;
+            for (var i = 0; i < rows; i++) {
+                table.deleteRow(0);
+            }
+            var rowNum = 0;
+            for (var track = 0; track < _Disk.tracks; track++) {
+                for (var sector = 0; sector < _Disk.sectors; sector++) {
+                    for (var block = 0; block < _Disk.blocks; block++) {
+                        var swapID = track + ":" + sector + ":" + block;
+                        var row = table.insertRow(rowNum);
+                        rowNum++;
+                        row.style.backgroundColor = "white";
+                        var swapper = row.insertCell(0);
+                        swapper.innerHTML = swapID;
+                        swapper.style.color = "red";
+                        var bit = row.insertCell(1);
+                        bit.innerHTML = JSON.parse(sessionStorage.getItem(swapID)).bit;
+                        bit.style.color = "blue";
+                        var location = row.insertCell(2);
+                        var locVal = JSON.parse(sessionStorage.getItem(swapID)).location;
+                        location.innerHTML = locVal;
+                        location.style.color = "green";
+                        var data = row.insertCell(3);
+                        data.innerHTML = JSON.parse(sessionStorage.getItem(swapID)).data.join("").toString();
+                        data.style.color = "blue";
+                    }
                 }
             }
         };
@@ -227,17 +260,8 @@ var TSOS;
             var msgSta = document.getElementById('statusMsg');
             msgSta.textContent = status;
         };
-        Control.highlight = function (table, index, weight) {
-            var row = Math.floor(index / (table.rows[0].cells.length - 1)); // Gets the row the address is in
-            var col = (index % (table.rows[0].cells.length - 1)) + 1; // Gets the column the address is in
-            if (weight == "bold") {
-                table.rows[row].cells.item(col).style = "color: blue; font-weight: bold";
-            }
-            else {
-                table.rows[row].cells.item(col).style = "color: blue;";
-            }
-            // Scroll to that part of the table
-            table.rows[row].cells.item(col).scrollIntoView(false);
+        Control.initDisplay = function () {
+            this.hostDisk();
         };
         return Control;
     }());

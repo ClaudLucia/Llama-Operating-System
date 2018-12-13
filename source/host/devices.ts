@@ -62,10 +62,5 @@ module TSOS {
                 _KernelInterruptQueue.enqueue(new Interrupt(KEYBOARD_IRQ, params));
             }
         }
-
-        public static storeProgram(pid, porgram): any {
-            //var params = [TSOS.DeviceDriverD]
-
-        }
     }
 }

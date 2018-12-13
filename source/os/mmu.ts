@@ -49,7 +49,7 @@ module TSOS {
             return false;
         }
 
-        public getPartitions(opCodesLength): any {
+        public getPartitions(opCodesLength): number {
             for (var i = 0; i < this.partitions.length; i++) {
                 if (this.partitions[i].isEmpty && this.partitions[i].limit > opCodesLength) {
                     return i;
