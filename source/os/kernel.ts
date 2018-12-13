@@ -1,11 +1,25 @@
 ///<reference path="../globals.ts" />
 ///<reference path="queue.ts" />
+///<reference path="../host/control.ts" />
+///<reference path="../host/devices.ts" />
+///<reference path="deviceDriverKeyboard.ts" />
+///<reference path="mmu.ts" />
+///<reference path="processManager.ts" />
+///<reference path="scheduler.ts" />
+///<reference path="shell.ts" />
 
 /* ------------
      Kernel.ts
 
      Requires globals.ts
               queue.ts
+              mmu.ts
+              cheduler.ts
+              shell.ts
+              processManager.ts
+              devices.ts
+              control.ts
+
 
      Routines for the Operating System, NOT the host.
 
@@ -44,6 +58,11 @@ module TSOS {
             //
             // ... more?
             //
+
+            _MMU = new MMU();
+            _ProcessManager = new ProcessManager();
+
+            _Scheduler = new Scheduler();
 
             // Enable the OS Interrupts.  (Not the CPU clock interrupt, as that is done in the hardware sim.)
             this.krnTrace("Enabling the interrupts.");
@@ -87,10 +106,22 @@ module TSOS {
                 // TODO: Implement a priority queue based on the IRQ number/id to enforce interrupt priority.
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
-            } else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed. {
+            }
+            else if (_CPU.eXecute) {
+                // If there are no interrupts then run one CPU cycle if there is anything being processed.
                 _CPU.cycle();
-            } else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
+                Control.hostCPU();
+                _Scheduler.watch();
+                _ProcessManager.times();
+                Control.hostMemory();
+                Control.hostProcess();
+
+            }
+            else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
                 this.krnTrace("Idle");
+                _ProcessManager.checkReadyQ;
+                _Scheduler.unwatch();
+
             }
         }
 
@@ -127,6 +158,29 @@ module TSOS {
                     _krnKeyboardDriver.isr(params);   // Kernel mode device driver
                     _StdIn.handleInput();
                     break;
+                case WRITECONSOLE:
+                    _StdOut.putText(params);
+                    break;
+                case ERR_BOUND:
+                    _StdOut.putText("Out of bounds error in process " + _ProcessManager.running.Pid + ". Exiting that process...");
+                    _StdOut.advanceLine();
+                    _OsShell.putPrompt();
+                    break;
+                case OPINV:
+                    _StdOut.putText("Invalid op code in process " + _ProcessManager.running.Pid + ". Exiting that process...");
+                    _StdOut.advanceLine();
+                    _OsShell.putPrompt();
+                    break;
+                case CNTXTSWITCH:
+                    _Scheduler.contextSwitches();
+                    break;
+                case EXIT:
+                    _Scheduler.unwatch();
+                    _ProcessManager.exitProcess(params);
+                    Control.hostProcess();
+                    Control.hostCPU();
+                    break;
+                
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
