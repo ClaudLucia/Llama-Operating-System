@@ -880,7 +880,7 @@ module TSOS {
                 _StdOut.advanceLine();
                 if (args.length == 1 && args[0] == "-l") {
                     for (var f of fileNames) {
-                        if (f['name'].includes("$SWAP")) {
+                        if (f['name'].includes("swapID")) {
                             continue;
                         }
                         _StdOut.putText("File Name: " + f['name'] + " - Created: " + f['month'] + "/" + f['day'] + "/" + f['year'] + ". Size: " + f['size']);
@@ -889,7 +889,7 @@ module TSOS {
                 }
                 else {
                     for (var f of fileNames) {
-                        if (f['name'].includes("$SWAP")) {
+                        if (f['name'].includes("swapID")) {
                             continue;
                         }
                         if (f['name'].charAt(0) != ".") {

@@ -31,6 +31,7 @@ var _CPU; // Utilize TypeScript's type annotation system to ensure that _CPU is 
 var _Disk;
 var DISK_SPACE = 999;
 var DISK_FULL = 1;
+var DISK_ITEM = 999;
 //Software(OS)
 //Memory manager
 var _MMU = null;

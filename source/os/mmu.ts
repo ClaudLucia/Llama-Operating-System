@@ -26,18 +26,17 @@ module TSOS {
             ];
         }
 
-        public loadMemory(opCodes, partition): void {
-            var loadCount = this.partitions[partition].base;
-            for (var opCode of opCodes) {
-                _Memory.memArr[loadCount] = opCode;
-                loadCount++;
-            }
-            for (var i = loadCount; i < this.partitions[partition].limit; i++) {
-                _Memory.memArr[i] = "00";
-            }
-            this.partitions[partition].isEmpty = false;
+        public getBase(partition): number {
+            return this.partitions[partition].base;
+        }
+        public getLimit(partition): number {
+            return this.partitions[partition].limit;
         }
 
+
+        public getMyPartition(): number {
+            return _ProcessManager.running.Partition;
+        }
 
         public checkMemory(opCodesLength): boolean {
             for (var i = 0; i < this.partitions.length; i++) {
@@ -48,6 +47,29 @@ module TSOS {
             }
             return false;
         }
+
+        public loadMemory(opCodes, partition): void {
+            var count = this.partitions[partition].base;
+            for (var opCode of opCodes) {
+                _Memory.memArr[count] = opCode;
+                count++;
+            }
+            for (var i = count; i < this.partitions[partition].limit; i++) {
+                _Memory.memArr[i] = "00";
+            }
+            this.partitions[partition].isEmpty = false;
+        }
+
+        public getMemPartition(partition) {
+            let data = [];
+            let base = this.partitions[partition].base;
+            let limit = this.partitions[partition].limit + this.partitions[partition].base;
+            for (var i = base; i < limit; i++) {
+                data.push(_Memory.memArr[i]);
+            }
+            return data;
+        }
+
 
         public getPartitions(opCodesLength): number {
             for (var i = 0; i < this.partitions.length; i++) {

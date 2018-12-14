@@ -18,17 +18,14 @@ var TSOS;
                 { "base": 512, "limit": this.totalLimit, "isEmpty": true }
             ];
         }
-        MMU.prototype.loadMemory = function (opCodes, partition) {
-            var loadCount = this.partitions[partition].base;
-            for (var _i = 0, opCodes_1 = opCodes; _i < opCodes_1.length; _i++) {
-                var opCode = opCodes_1[_i];
-                _Memory.memArr[loadCount] = opCode;
-                loadCount++;
-            }
-            for (var i = loadCount; i < this.partitions[partition].limit; i++) {
-                _Memory.memArr[i] = "00";
-            }
-            this.partitions[partition].isEmpty = false;
+        MMU.prototype.getBase = function (partition) {
+            return this.partitions[partition].base;
+        };
+        MMU.prototype.getLimit = function (partition) {
+            return this.partitions[partition].limit;
+        };
+        MMU.prototype.getMyPartition = function () {
+            return _ProcessManager.running.Partition;
         };
         MMU.prototype.checkMemory = function (opCodesLength) {
             for (var i = 0; i < this.partitions.length; i++) {
@@ -38,6 +35,27 @@ var TSOS;
                 }
             }
             return false;
+        };
+        MMU.prototype.loadMemory = function (opCodes, partition) {
+            var count = this.partitions[partition].base;
+            for (var _i = 0, opCodes_1 = opCodes; _i < opCodes_1.length; _i++) {
+                var opCode = opCodes_1[_i];
+                _Memory.memArr[count] = opCode;
+                count++;
+            }
+            for (var i = count; i < this.partitions[partition].limit; i++) {
+                _Memory.memArr[i] = "00";
+            }
+            this.partitions[partition].isEmpty = false;
+        };
+        MMU.prototype.getMemPartition = function (partition) {
+            var data = [];
+            var base = this.partitions[partition].base;
+            var limit = this.partitions[partition].limit + this.partitions[partition].base;
+            for (var i = base; i < limit; i++) {
+                data.push(_Memory.memArr[i]);
+            }
+            return data;
         };
         MMU.prototype.getPartitions = function (opCodesLength) {
             for (var i = 0; i < this.partitions.length; i++) {

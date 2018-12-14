@@ -67,7 +67,7 @@ module TSOS {
                         hex = _MemoryAccessor.readMem(this.PC + 2) + hex;
                         var addr = parseInt(hex, 16);
                         this.Acc = parseInt(_MemoryAccessor.readMem(addr), 16);
-                        this.PC += 3;
+                        this.PC = this.PC +  3;
                         break;
                     
                     /*STA*/
@@ -77,19 +77,19 @@ module TSOS {
                         var addr = parseInt(hex, 16);
                         var val = this.Acc.toString(16);
                         _MemoryAccessor.writeMem(addr, val);
-                        this.PC += 3
+                        this.PC = this.PC +  3
                         break;
 
                     /*LDA into Memory*/
                     case "A9":
                         this.Acc = parseInt(_MemoryAccessor.readMem(this.PC + 1), 16);
-                        this.PC += 2
+                        this.PC = this.PC +  2
                         break;
 
                     /*LDA X with constant*/
                     case "A2":
                         this.Xreg = parseInt(_MemoryAccessor.readMem(this.PC + 1), 16);
-                        this.PC += 2
+                        this.PC = this.PC +  2
                         break;
 
                     /*LDA X from Memory*/
@@ -98,13 +98,13 @@ module TSOS {
                         hex = _MemoryAccessor.readMem(this.PC + 2) + hex;
                         var addr = parseInt(hex, 16);
                         this.Xreg = parseInt(_MemoryAccessor.readMem(addr), 16);
-                        this.PC += 3
+                        this.PC = this.PC +  3
                         break;
 
                     /*LDA Y with constant*/
                     case "A0":
                         this.Yreg = parseInt(_MemoryAccessor.readMem(this.PC + 1), 16);
-                        this.PC += 2
+                        this.PC = this.PC +  2
                         break;
 
                     /*LDA Y from Memory*/
@@ -113,7 +113,7 @@ module TSOS {
                         hex = _MemoryAccessor.readMem(this.PC + 2) + hex;
                         var addr = parseInt(hex, 16);
                         this.Yreg = parseInt(_MemoryAccessor.readMem(addr), 16);
-                        this.PC += 3
+                        this.PC = this.PC +  3
                         break;
 
                     /*NO OPCODE*/
@@ -121,12 +121,6 @@ module TSOS {
                         this.PC++;
                         break;
                     
-                    /*BRK*/
-                    case "00":
-                        _KernelInterruptQueue.enqueue(new TSOS.Interrupt(EXIT, true));
-                        break;
-
-
                     /*COMPARE BYTES*/
                     case "EC":
                         var hex = _MemoryAccessor.readMem(this.PC + 1);
@@ -139,17 +133,18 @@ module TSOS {
                         else {
                             this.Zflag = 0;
                         }
-                        this.PC += 3
+                        this.PC = this.PC +  3
                         break;
 
                         /*BRN*/
                     case "D0":
                         if (this.Zflag == 0) {
                             var branch = parseInt(_MemoryAccessor.readMem(this.PC + 1), 16);
-                            var partition = _MMU.getPartitions();
+                            var partition = _MMU.getMyPartition();
+                            this.PC = _MemoryAccessor.BnLloop(this.PC, branch);
                         }
                         else {
-                            this.PC += 2;
+                            this.PC = this.PC +  2;
                         }
                         break;
 
@@ -163,7 +158,7 @@ module TSOS {
                         var hexIndvByte = indvByte.toString(16);
 
                         _MemoryAccessor.writeMem(addr, hexIndvByte);
-                        this.PC += 3;
+                        this.PC = this.PC +  3;
                         break;
 
                     /*SYS CALL*/
@@ -193,7 +188,12 @@ module TSOS {
                         var addr = parseInt(hex, 16);
                         var values = _MemoryAccessor.readMem(addr);
                         this.Acc += parseInt(values, 16);
-                        this.PC += 3;
+                        this.PC = this.PC +  3;
+                        break;
+
+                    /*BRK*/
+                    case "00":
+                        _KernelInterruptQueue.enqueue(new TSOS.Interrupt(EXIT, true));
                         break;
 
 

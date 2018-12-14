@@ -144,7 +144,7 @@ module TSOS {
                     exitPCB = pcb;
                     if (exitPCB.ifSwapped) {
                         Control.hostLog("Exiting process " + pid, ", os");
-                        let filename = "$SWAP" + exitPCB.Pid;
+                        let filename = "swapID" + exitPCB.Pid;
                         _krnDiskDriveFile.krnDiskDelete(filename);
                         return true;
                     }
@@ -188,7 +188,7 @@ module TSOS {
                 _StdOut.advanceLine();
                 _OsShell.putPrompt();
             }
-            let filename = "$SWAP" + this.running.PID;
+            let filename = "swapID" + this.running.PID;
             _krnDiskDriveFile.krnDiskDelete(filename);
             this.running = null;
         }

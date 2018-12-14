@@ -336,13 +336,13 @@ module TSOS {
                     sessionStorage.setItem(sessionStorage.key(i), JSON.stringify(block));
                 }
             }
-            let size = _ProcessManager.resultidentQueue.getSize();
+            let size = _ProcessManager.residentQueue.getSize();
             for (var i = 0; i < size; i++) {
-                var pcb = _ProcessManager.resultidentQueue.dequeue();
+                var pcb = _ProcessManager.residentQueue.dequeue();
                 if (pcb.Swapped) {
                 }
                 else {
-                    _ProcessManager.resultidentQueue.enqueue(pcb); 
+                    _ProcessManager.residentQueue.enqueue(pcb); 
                 }
             }
             Control.hostDisk();

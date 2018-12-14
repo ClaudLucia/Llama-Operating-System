@@ -741,7 +741,7 @@ var TSOS;
                 if (args.length == 1 && args[0] == "-l") {
                     for (var _i = 0, fileNames_1 = fileNames; _i < fileNames_1.length; _i++) {
                         var f = fileNames_1[_i];
-                        if (f['name'].includes("$SWAP")) {
+                        if (f['name'].includes("swapID")) {
                             continue;
                         }
                         _StdOut.putText("File Name: " + f['name'] + " - Created: " + f['month'] + "/" + f['day'] + "/" + f['year'] + ". Size: " + f['size']);
@@ -751,7 +751,7 @@ var TSOS;
                 else {
                     for (var _a = 0, fileNames_2 = fileNames; _a < fileNames_2.length; _a++) {
                         var f = fileNames_2[_a];
-                        if (f['name'].includes("$SWAP")) {
+                        if (f['name'].includes("swapID")) {
                             continue;
                         }
                         if (f['name'].charAt(0) != ".") {

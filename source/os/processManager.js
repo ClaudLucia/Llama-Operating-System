@@ -122,7 +122,7 @@ var TSOS;
                     exitPCB = pcb;
                     if (exitPCB.ifSwapped) {
                         TSOS.Control.hostLog("Exiting process " + pid, ", os");
-                        var filename = "$SWAP" + exitPCB.Pid;
+                        var filename = "swapID" + exitPCB.Pid;
                         _krnDiskDriveFile.krnDiskDelete(filename);
                         return true;
                     }
@@ -165,7 +165,7 @@ var TSOS;
                 _StdOut.advanceLine();
                 _OsShell.putPrompt();
             }
-            var filename = "$SWAP" + this.running.PID;
+            var filename = "swapID" + this.running.PID;
             _krnDiskDriveFile.krnDiskDelete(filename);
             this.running = null;
         };

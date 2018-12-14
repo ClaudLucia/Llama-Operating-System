@@ -9,12 +9,12 @@ var TSOS;
         function Scheduler() {
             this.count = 0;
             this.quantum = 6;
-            this.schedulingMethod = ROUNDROBIN;
+            this.algorithm = ROUNDROBIN;
         }
         Scheduler.prototype.watch = function () {
             if (_ProcessManager.readyQueue.getSize() > 0) {
                 // Round Robin scheduling
-                if (this.schedulingMethod == ROUNDROBIN) {
+                if (this.algorithm == ROUNDROBIN) {
                     this.count++;
                     if (this.count == this.quantum) {
                         _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CNTXTSWITCH, 0));
@@ -22,7 +22,7 @@ var TSOS;
                     }
                 }
                 //First Come First Served scheduling
-                else if (this.schedulingMethod == FCFS) {
+                else if (this.algorithm == FCFS) {
                     this.count++;
                     if (this.count == this.quantum) {
                         _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CNTXTSWITCH, 0));
@@ -30,7 +30,7 @@ var TSOS;
                     }
                 }
                 //Priority scheduling
-                else if (this.schedulingMethod == PRIORITY) {
+                else if (this.algorithm == PRIORITY) {
                     var result = void 0;
                     var sz = _ProcessManager.readyQueue.getsSize();
                     for (var i = 0; i < sz; i++) {
@@ -55,17 +55,17 @@ var TSOS;
         Scheduler.prototype.unwatch = function () {
             this.count = 0;
         };
-        Scheduler.prototype.setschedulingMethod = function (schedulingMethod) {
-            switch (schedulingMethod) {
+        Scheduler.prototype.setAlgorithm = function (algorithm) {
+            switch (algorithm) {
                 case ROUNDROBIN:
-                    this.schedulingMethod = ROUNDROBIN;
+                    this.algorithm = ROUNDROBIN;
                     break;
                 case FCFS:
-                    this.schedulingMethod = FCFS;
+                    this.algorithm = FCFS;
                     this.quantum = 999999;
                     break;
                 case PRIORITY:
-                    this.schedulingMethod = PRIORITY;
+                    this.algorithm = PRIORITY;
                     break;
                 default:
                     return false;

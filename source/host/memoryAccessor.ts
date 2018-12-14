@@ -1,5 +1,5 @@
 ﻿///<reference path="../globals.ts" />
-
+///<reference path="../os/interrupt.ts" />
 
 /* ------------
      memoryAccessor.ts
@@ -13,6 +13,10 @@ module TSOS{
     export class MemoryAccessor {
 
         constructor() {
+        }
+
+        public BnLloop(pc, branch): number {
+            return (pc + branch + 2) % _MMU.getLimit(_ProcessManager.running.Partition);
         }
 
         //reads Memory based on the memory address and returns a hex string
@@ -33,8 +37,15 @@ module TSOS{
                 if (parseInt(val, 16) < 16) {
                     val += "0";
                 }
+                var partition = _ProcessManager.running.Partition;
+                _Memory.memArr[_MMU.partitions[partition].base + addr] = val;
+            }
+            else {
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(ERR_BOUND, 0));
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(EXIT, false));
 
             }
+            
         }
 
         public withinBounds(addr): any {

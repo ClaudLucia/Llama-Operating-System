@@ -38,6 +38,7 @@ var _Disk: TSOS.Disk;
 
 var DISK_SPACE: number = 999;
 var DISK_FULL: number = 1;
+var DISK_ITEM: number = 999;
 
 
 //Software(OS)
