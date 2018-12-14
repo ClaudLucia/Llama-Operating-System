@@ -19,7 +19,7 @@ module TSOS {
         }
         
         public watch() {
-            if (_ProcessManager.readyQueue.getsz() > 0) {
+            if (_ProcessManager.readyQueue.getSize() > 0) {
                 // Round Robin scheduling
                 if (this.schedulingMethod == ROUNDROBIN) {
                     this.count++;
@@ -41,7 +41,7 @@ module TSOS {
                 //Priority scheduling
                 else if (this.schedulingMethod == PRIORITY) {
                     let result;
-                    let sz = _ProcessManager.readyQueue.getsz();
+                    let sz = _ProcessManager.readyQueue.getsSize();
                     for (var i = 0; i < sz; i++) {
                         var pcb = _ProcessManager.readyQueue.dequeue();
                         if (result == null) {

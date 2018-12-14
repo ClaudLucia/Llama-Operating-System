@@ -206,7 +206,7 @@ module TSOS {
             this.running.IR = _MemoryAccessor.readMem(_CPU.PC).toUpperCase();
         }
         
-        //Calculate the turnaround and wait times
+        //Calculate the turnaround and wait processTimes
         public processTimes() {
             this.running.turnaroundTime++;
             for (var i = 0; i < this.readyQueue.getSize(); i++) {

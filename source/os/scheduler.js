@@ -12,7 +12,7 @@ var TSOS;
             this.schedulingMethod = ROUNDROBIN;
         }
         Scheduler.prototype.watch = function () {
-            if (_ProcessManager.readyQueue.getsz() > 0) {
+            if (_ProcessManager.readyQueue.getSize() > 0) {
                 // Round Robin scheduling
                 if (this.schedulingMethod == ROUNDROBIN) {
                     this.count++;
@@ -32,7 +32,7 @@ var TSOS;
                 //Priority scheduling
                 else if (this.schedulingMethod == PRIORITY) {
                     var result = void 0;
-                    var sz = _ProcessManager.readyQueue.getsz();
+                    var sz = _ProcessManager.readyQueue.getsSize();
                     for (var i = 0; i < sz; i++) {
                         var pcb = _ProcessManager.readyQueue.dequeue();
                         if (result == null) {

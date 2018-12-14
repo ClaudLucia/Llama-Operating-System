@@ -517,7 +517,7 @@ module TSOS {
                 _StdOut.putText("All memory partitions cleared!");
             }
             else {
-                _StdOut.putText("Can't clear all memory partitions: program in memory is being run!");
+                _StdOut.putText("Oops! There are programs in memory being run!");
             }
         }
 

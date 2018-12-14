@@ -111,7 +111,7 @@ var TSOS;
                         TSOS.Control.hostCPU();
                         _trackStep = false;
                         _Scheduler.watch();
-                        _ProcessManager.times();
+                        _ProcessManager.processTimes();
                         TSOS.Control.hostMemory();
                         TSOS.Control.hostProcess();
                     }
@@ -121,7 +121,7 @@ var TSOS;
                     _CPU.cycle();
                     TSOS.Control.hostCPU();
                     _Scheduler.watch();
-                    _ProcessManager.times();
+                    _ProcessManager.processTimes();
                     TSOS.Control.hostMemory();
                     TSOS.Control.hostProcess();
                 }

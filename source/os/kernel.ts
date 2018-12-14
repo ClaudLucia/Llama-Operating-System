@@ -131,7 +131,7 @@ module TSOS {
                         Control.hostCPU();
                         _trackStep = false;
                         _Scheduler.watch();
-                        _ProcessManager.times();
+                        _ProcessManager.processTimes();
                         Control.hostMemory();
                         Control.hostProcess();
                     }
@@ -141,7 +141,7 @@ module TSOS {
                     _CPU.cycle();
                     Control.hostCPU();
                     _Scheduler.watch();
-                    _ProcessManager.times();
+                    _ProcessManager.processTimes();
                     Control.hostMemory();
                     Control.hostProcess();
                 }
