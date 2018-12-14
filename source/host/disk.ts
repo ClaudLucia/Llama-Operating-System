@@ -17,12 +17,12 @@ module TSOS {
         public storage = sessionStorage;
         
         constructor() {
-            if (this.storage.length > 0) {
-                this.formatted = true;
-            }
-            else {
-                this.formatted = false;
-            }
+            //if (this.storage.length > 0) {
+            //    this.formatted = true;
+            //}
+            //else {
+            //    this.formatted = false;
+            //}
         }
 
         public init() {
@@ -43,8 +43,8 @@ module TSOS {
                     }
                 }
             }
-            this.formatted = true;
-            Control.hostDisk();
+            //this.formatted = true;
+            //Control.hostDisk();
         }
     }
 }

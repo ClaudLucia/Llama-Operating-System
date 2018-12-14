@@ -13,12 +13,12 @@ var TSOS;
             this.blocks = 8;
             this.data = 60;
             this.storage = sessionStorage;
-            if (this.storage.length > 0) {
-                this.formatted = true;
-            }
-            else {
-                this.formatted = false;
-            }
+            //if (this.storage.length > 0) {
+            //    this.formatted = true;
+            //}
+            //else {
+            //    this.formatted = false;
+            //}
         }
         Disk.prototype.init = function () {
             for (var t = 0; t < this.tracks; t++) {
@@ -38,8 +38,8 @@ var TSOS;
                     }
                 }
             }
-            this.formatted = true;
-            TSOS.Control.hostDisk();
+            //this.formatted = true;
+            //Control.hostDisk();
         };
         return Disk;
     }());

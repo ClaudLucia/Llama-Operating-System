@@ -233,6 +233,9 @@ var TSOS;
             _Memory.init();
             Control.initMemDisplay();
             _MemoryAccessor = new TSOS.MemoryAccessor();
+            _Disk = new TSOS.Disk();
+            _Disk.init();
+            Control.initDiskDisplay();
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(TSOS.Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.
@@ -260,7 +263,7 @@ var TSOS;
             var msgSta = document.getElementById('statusMsg');
             msgSta.textContent = status;
         };
-        Control.initDisplay = function () {
+        Control.initDiskDisplay = function () {
             this.hostDisk();
         };
         return Control;

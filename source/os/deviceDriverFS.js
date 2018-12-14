@@ -41,38 +41,38 @@ var TSOS;
             this.status = "loaded";
             // More?
         };
-        DeviceDriverFS.prototype.krnFileActions = function (params) {
-            var OP = params[0];
-            if (OP == "format") {
-                _Disk.init();
-            }
-            else {
-                if (_Disk.formatted) {
-                    switch (OP) {
-                        case "create":
-                            this.krnDiskCreate;
-                            break;
-                        case "write":
-                            this.krnDiskWrite;
-                            break;
-                        case "delete":
-                            this.krnDiskDelete;
-                            break;
-                        case "read":
-                            this.krnDiskRead;
-                            break;
-                        case "ls":
-                            this.krnLs();
-                            break;
-                    }
-                }
-                else {
-                    _StdOut.putText("Please format the disk using the format command");
-                    _StdOut.advanceLine();
-                    _OsShell.putPrompt();
-                }
-            }
-        };
+        //public krnFileActions(params: Array<String>) {
+        //    var OP = params[0];
+        //    if (OP == "format") {
+        //        _Disk.init();
+        //    }
+        //    else {
+        //        if (_Disk.formatted) {
+        //            switch (OP) {
+        //                case "create":
+        //                    this.krnDiskCreate;
+        //                    break;
+        //                case "write":
+        //                    this.krnDiskWrite;
+        //                    break;
+        //                case "delete":
+        //                    this.krnDiskDelete;
+        //                    break;
+        //                case "read":
+        //                    this.krnDiskRead;
+        //                    break;
+        //                case "ls":
+        //                    this.krnLs();
+        //                    break;
+        //            }
+        //        }
+        //        else {
+        //            _StdOut.putText("Please format the disk using the format command");
+        //            _StdOut.advanceLine();
+        //            _OsShell.putPrompt();
+        //        }
+        //    }
+        //}
         DeviceDriverFS.prototype.clear = function (block) {
             for (var i = 0; i < _Disk.data; i++) {
                 block.data[i] = "00";
@@ -150,14 +150,14 @@ var TSOS;
                     }
                     var swapperID = "0" + ":" + sector + ":" + block;
                     var blockLoc = JSON.parse(sessionStorage.getItem(swapperID));
-                    var matchingFileName = true;
+                    var matchName = true;
                     if (blockLoc.bit == "1") {
                         for (var k = 4, j = 0; j < hexArr.length; k++, j++) {
                             if (hexArr[j] != blockLoc.data[k]) {
-                                matchingFileName = false;
+                                matchName = false;
                             }
                         }
-                        if (matchingFileName) {
+                        if (matchName) {
                             var textHexArr = this.convertStringASCII(text.slice(1, -1));
                             var enoughFreeSpace = this.allocateDiskSpace(textHexArr, blockLoc.pointer);
                             if (!enoughFreeSpace) {
@@ -181,14 +181,14 @@ var TSOS;
                     }
                     var swapperID = "0" + ":" + sector + ":" + block;
                     var blockLoc = JSON.parse(sessionStorage.getItem(swapperID));
-                    var matchingFileName = true;
+                    var matchName = true;
                     if (blockLoc.bit == "1") {
                         for (var k = 4, j = 0; j < hexArr.length; k++, j++) {
                             if (hexArr[j] != blockLoc.data[k]) {
-                                matchingFileName = false;
+                                matchName = false;
                             }
                         }
-                        if (matchingFileName) {
+                        if (matchName) {
                             var tsb = blockLoc.pointer;
                             var data = this.krnDiskReadData(tsb);
                             var dataPtr = 0;
@@ -219,14 +219,14 @@ var TSOS;
                     }
                     var swapperID = "0" + ":" + sector + ":" + block;
                     var blockLoc = JSON.parse(sessionStorage.getItem(swapperID));
-                    var matchingFileName = true;
+                    var matchName = true;
                     if (blockLoc.bit == "1") {
                         for (var k = 4, j = 0; j < hexArr.length; k++, j++) {
                             if (hexArr[j] != blockLoc.data[k]) {
-                                matchingFileName = false;
+                                matchName = false;
                             }
                         }
-                        if (matchingFileName) {
+                        if (matchName) {
                             this.krnDiskDeleteData(blockLoc.pointer);
                             blockLoc.bit = "0";
                             sessionStorage.setItem(swapperID, JSON.stringify(blockLoc));
@@ -247,14 +247,14 @@ var TSOS;
                     }
                     var swapperID = "0" + ":" + sector + ":" + block;
                     var blockLoc = JSON.parse(sessionStorage.getItem(swapperID));
-                    var matchingFileName = true;
+                    var matchName = true;
                     if (blockLoc.bit == "1") {
                         for (var k = 4, j = 0; j < hexArr.length; k++, j++) {
                             if (hexArr[j] != blockLoc.data[k]) {
-                                matchingFileName = false;
+                                matchName = false;
                             }
                         }
-                        if (matchingFileName) {
+                        if (matchName) {
                             return true;
                         }
                     }
@@ -437,10 +437,10 @@ var TSOS;
             }
         };
         DeviceDriverFS.prototype.findFreeDataBlock = function () {
-            for (var trackNum = 1; trackNum < _Disk.tracks; trackNum++) {
+            for (var track = 1; track < _Disk.tracks; track++) {
                 for (var sector = 0; sector < _Disk.sectors; sector++) {
                     for (var block = 0; block < _Disk.blocks; block++) {
-                        var swapperID = trackNum + ":" + sector + ":" + block;
+                        var swapperID = track + ":" + sector + ":" + block;
                         var datBlock = JSON.parse(sessionStorage.getItem(swapperID));
                         if (datBlock.availableBit == "0") {
                             return swapperID;
@@ -452,10 +452,10 @@ var TSOS;
         };
         DeviceDriverFS.prototype.findFreeDataBlocks = function (numBlocks) {
             var blocks = [];
-            for (var trackNum = 1; trackNum < _Disk.tracks; trackNum++) {
+            for (var track = 1; track < _Disk.tracks; track++) {
                 for (var sector = 0; sector < _Disk.sectors; sector++) {
                     for (var block = 0; block < _Disk.blocks; block++) {
-                        var swapperID = trackNum + ":" + sector + ":" + block;
+                        var swapperID = track + ":" + sector + ":" + block;
                         var datBlock = JSON.parse(sessionStorage.getItem(swapperID));
                         if (datBlock.availableBit == "0") {
                             blocks.push(swapperID);
@@ -471,7 +471,7 @@ var TSOS;
                 return null;
             }
         };
-        DeviceDriverFS.prototype.krnDiskWriteSwap = function (filename, opcodes) {
+        DeviceDriverFS.prototype.krnDiskWriteSwap = function (filename, OP) {
             var hexArr = this.convertStringASCII(filename);
             for (var sector = 0; sector < _Disk.sectors; sector++) {
                 for (var block = 0; block < _Disk.blocks; block++) {
@@ -480,22 +480,22 @@ var TSOS;
                     }
                     var swapperID = "0" + ":" + sector + ":" + block;
                     var blockLoc = JSON.parse(sessionStorage.getItem(swapperID));
-                    var matchingFileName = true;
+                    var matchName = true;
                     if (blockLoc.availableBit == "1") {
                         for (var k = 4, j = 0; j < hexArr.length; k++, j++) {
                             if (hexArr[j] != blockLoc.data[k]) {
-                                matchingFileName = false;
+                                matchName = false;
                             }
                         }
-                        if (matchingFileName) {
+                        if (matchName) {
                             var datBlock = JSON.parse(sessionStorage.getItem(blockLoc.pointer));
                             datBlock.availableBit = "0";
                             sessionStorage.setItem(blockLoc.pointer, JSON.stringify(datBlock));
-                            var enoughFreeSpace = this.allocateDiskSpace(opcodes, blockLoc.pointer);
+                            var enoughFreeSpace = this.allocateDiskSpace(OP, blockLoc.pointer);
                             if (!enoughFreeSpace) {
                                 return DISK_FULL;
                             }
-                            this.writeDiskData(blockLoc.pointer, opcodes);
+                            this.writeDiskData(blockLoc.pointer, OP);
                             return FILE_CREATED;
                         }
                     }

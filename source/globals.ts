@@ -33,6 +33,7 @@ var EXIT: number = 2;
 var WRITECONSOLE: number = 4;
 var OPINV: number = 6;
 var _CPU: TSOS.CPU;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
+
 var _Disk: TSOS.Disk;
 
 var DISK_SPACE: number = 999;
@@ -85,7 +86,7 @@ var _krnDiskDriveFile;
 
 var _hardwareClockID: number = null;
 
-var FILE_NAME_LENGTH: number = 25;
+var FILE_NAME_LENGTH: number = 6;
 var FILE_NAME_EXISTS: number = 2;
 var FILE_NAME_AVAILABLE: number = 3;
 var FILE_CREATED: number = 0;

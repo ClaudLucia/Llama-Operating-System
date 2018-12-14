@@ -33,39 +33,39 @@ module TSOS {
             // More?
         }
 
-        public krnFileActions(params: Array<String>) {
-            var OP = params[0];
+        //public krnFileActions(params: Array<String>) {
+        //    var OP = params[0];
             
-            if (OP == "format") {
-                _Disk.init();
-            }
-            else {
-                if (_Disk.formatted) {
-                    switch (OP) {
-                        case "create":
-                            this.krnDiskCreate;
-                            break;
-                        case "write":
-                            this.krnDiskWrite;
-                            break;
-                        case "delete":
-                            this.krnDiskDelete;
-                            break;
-                        case "read":
-                            this.krnDiskRead;
-                            break;
-                        case "ls":
-                            this.krnLs();
-                            break;
-                    }
-                }
-                else {
-                    _StdOut.putText("Please format the disk using the format command");
-                    _StdOut.advanceLine();
-                    _OsShell.putPrompt();
-                }
-            }
-        }
+        //    if (OP == "format") {
+        //        _Disk.init();
+        //    }
+        //    else {
+        //        if (_Disk.formatted) {
+        //            switch (OP) {
+        //                case "create":
+        //                    this.krnDiskCreate;
+        //                    break;
+        //                case "write":
+        //                    this.krnDiskWrite;
+        //                    break;
+        //                case "delete":
+        //                    this.krnDiskDelete;
+        //                    break;
+        //                case "read":
+        //                    this.krnDiskRead;
+        //                    break;
+        //                case "ls":
+        //                    this.krnLs();
+        //                    break;
+        //            }
+        //        }
+        //        else {
+        //            _StdOut.putText("Please format the disk using the format command");
+        //            _StdOut.advanceLine();
+        //            _OsShell.putPrompt();
+        //        }
+        //    }
+        //}
 
 
         private clear(block) {
@@ -156,14 +156,14 @@ module TSOS {
                     }
                     var swapperID = "0" + ":" + sector + ":" + block;
                     let blockLoc = JSON.parse(sessionStorage.getItem(swapperID));
-                    let matchingFileName = true;
+                    let matchName = true;
                     if (blockLoc.bit == "1") {
                         for (var k = 4, j = 0; j < hexArr.length; k++ , j++) {
                             if (hexArr[j] != blockLoc.data[k]) {
-                                matchingFileName = false
+                                matchName = false
                             }
                         }
-                        if (matchingFileName) {
+                        if (matchName) {
                             let textHexArr = this.convertStringASCII(text.slice(1, -1));
                             let enoughFreeSpace: boolean = this.allocateDiskSpace(textHexArr, blockLoc.pointer);
                             if (!enoughFreeSpace) {
@@ -188,14 +188,14 @@ module TSOS {
                     }
                     var swapperID = "0" + ":" + sector + ":" + block;
                     let blockLoc = JSON.parse(sessionStorage.getItem(swapperID));
-                    let matchingFileName = true;
+                    let matchName = true;
                     if (blockLoc.bit == "1") {
                         for (var k = 4, j = 0; j < hexArr.length; k++ , j++) {
                             if (hexArr[j] != blockLoc.data[k]) {
-                                matchingFileName = false
+                                matchName = false
                             }
                         }
-                        if (matchingFileName) {
+                        if (matchName) {
                             let tsb = blockLoc.pointer;
                             let data = this.krnDiskReadData(tsb);
                             let dataPtr = 0;
@@ -227,14 +227,14 @@ module TSOS {
                     }
                     var swapperID = "0" + ":" + sector + ":" + block;
                     let blockLoc = JSON.parse(sessionStorage.getItem(swapperID));
-                    let matchingFileName = true;
+                    let matchName = true;
                     if (blockLoc.bit == "1") {
                         for (var k = 4, j = 0; j < hexArr.length; k++ , j++) {
                             if (hexArr[j] != blockLoc.data[k]) {
-                                matchingFileName = false
+                                matchName = false
                             }
                         }
-                        if (matchingFileName) {
+                        if (matchName) {
                             this.krnDiskDeleteData(blockLoc.pointer);
                             blockLoc.bit = "0"
                             sessionStorage.setItem(swapperID, JSON.stringify(blockLoc));
@@ -252,21 +252,19 @@ module TSOS {
             for (var sector = 0; sector < _Disk.sectors; sector++) {
                 for (var block = 0; block < _Disk.blocks; block++) {
                     if (sector == 0 && block == 0) {
-
                         continue;
                     }
                     var swapperID = "0" + ":" + sector + ":" + block;
                     let blockLoc = JSON.parse(sessionStorage.getItem(swapperID));
-                    let matchingFileName = true;
+                    let matchName = true;
 
                     if (blockLoc.bit == "1") {
                         for (var k = 4, j = 0; j < hexArr.length; k++ , j++) {
                             if (hexArr[j] != blockLoc.data[k]) {
-                                matchingFileName = false
+                                matchName = false
                             }
                         }
-
-                        if (matchingFileName) {
+                        if (matchName) {
                             return true;
                         }
                     }
@@ -289,7 +287,7 @@ module TSOS {
                 else {
                     datBlock.bit = "1";
                     let numBlocks = Math.ceil(stringLength / _Disk.data);
-                     let freeBlocks = this.findFreeDataBlocks(numBlocks); 
+                    let freeBlocks = this.findFreeDataBlocks(numBlocks); 
                     if (freeBlocks != null) {
                         for (var block of freeBlocks) {
                             datBlock.pointer = block;
@@ -457,10 +455,10 @@ module TSOS {
         }
 
         public findFreeDataBlock() {
-             for (var trackNum = 1; trackNum < _Disk.tracks; trackNum++) {
+             for (var track = 1; track < _Disk.tracks; track++) {
                 for (var sector = 0; sector < _Disk.sectors; sector++) {
                     for (var block = 0; block < _Disk.blocks; block++) {
-                        var swapperID = trackNum + ":" + sector + ":" + block;
+                        var swapperID = track + ":" + sector + ":" + block;
                         let datBlock = JSON.parse(sessionStorage.getItem(swapperID));
                         if (datBlock.availableBit == "0") {
                             return swapperID;
@@ -473,10 +471,10 @@ module TSOS {
 
         private findFreeDataBlocks(numBlocks: number) {
             let blocks = [];
-            for (var trackNum = 1; trackNum < _Disk.tracks; trackNum++) {
+            for (var track = 1; track < _Disk.tracks; track++) {
                 for (var sector = 0; sector < _Disk.sectors; sector++) {
                     for (var block = 0; block < _Disk.blocks; block++) {
-                        var swapperID = trackNum + ":" + sector + ":" + block;
+                        var swapperID = track + ":" + sector + ":" + block;
                         let datBlock = JSON.parse(sessionStorage.getItem(swapperID));
                         if (datBlock.availableBit == "0") {
                             blocks.push(swapperID);
@@ -493,7 +491,7 @@ module TSOS {
             }
         }
 
-        public krnDiskWriteSwap(filename: String, opcodes: Array<String>) {
+        public krnDiskWriteSwap(filename: String, OP: Array<String>) {
             let hexArr = this.convertStringASCII(filename);
             for (var sector = 0; sector < _Disk.sectors; sector++) {
                 for (var block = 0; block < _Disk.blocks; block++) {
@@ -502,22 +500,22 @@ module TSOS {
                     }
                     var swapperID = "0" + ":" + sector + ":" + block;
                     let blockLoc = JSON.parse(sessionStorage.getItem(swapperID));
-                    let matchingFileName = true;
+                    let matchName = true;
                     if (blockLoc.availableBit == "1") {
                         for (var k = 4, j = 0; j < hexArr.length; k++ , j++) {
                             if (hexArr[j] != blockLoc.data[k]) {
-                                matchingFileName = false
+                                matchName = false
                             }
                         }
-                        if (matchingFileName) {
+                        if (matchName) {
                            let datBlock = JSON.parse(sessionStorage.getItem(blockLoc.pointer));
                             datBlock.availableBit = "0";
                             sessionStorage.setItem(blockLoc.pointer, JSON.stringify(datBlock));
-                            let enoughFreeSpace: boolean = this.allocateDiskSpace(opcodes, blockLoc.pointer);
+                            let enoughFreeSpace: boolean = this.allocateDiskSpace(OP, blockLoc.pointer);
                             if (!enoughFreeSpace) {
                                 return DISK_FULL;
                             }
-                           this.writeDiskData(blockLoc.pointer, opcodes);
+                           this.writeDiskData(blockLoc.pointer, OP);
                             return FILE_CREATED;
                         }
                     }
