@@ -101,13 +101,14 @@ var TSOS;
         //Lists all the processes
         ProcessManager.prototype.listAllP = function () {
             if (this.running != null) {
-                var processes = [];
+                var res = [];
+                res.push(new String(this.running.PID));
                 for (var i = 0; i < this.readyQueue.getSize(); i++) {
                     var pcb = this.readyQueue.dequeue();
-                    processes.push(new String(pcb.PID));
+                    res.push(new String(pcb.PID));
                     this.readyQueue.enqueue(pcb);
                 }
-                return processes;
+                return res;
             }
             else {
                 return [];

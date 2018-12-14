@@ -87,7 +87,7 @@ var _krnDiskDriveFile;
 
 var _hardwareClockID: number = null;
 
-var FILE_NAME_LENGTH: number = 6;
+var FILE_NAME_LENGTH: number = 8;
 var FILE_NAME_EXISTS: number = 2;
 var FILE_NAME_AVAILABLE: number = 3;
 var FILE_CREATED: number = 0;

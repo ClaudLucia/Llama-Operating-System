@@ -28,7 +28,7 @@ var TSOS;
         MemoryAccessor.prototype.writeMem = function (addr, val) {
             if (this.withinBounds(addr)) {
                 if (parseInt(val, 16) < 16) {
-                    val += "0";
+                    val = val + "0";
                 }
                 var partition = _ProcessManager.running.Partition;
                 _Memory.memArr[_MMU.partitions[partition].base + addr] = val;

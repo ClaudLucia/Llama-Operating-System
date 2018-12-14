@@ -162,29 +162,6 @@ var TSOS;
                     thisMemory++;
                 }
             }
-            //if (_CPU.eXecute) {
-            //    var index = _CPU.PC + _MMU.partitions[_ProcessManager.running.Partition].base;
-            //    var instructionMem = {
-            //        "A9": 1,
-            //        "AD": 2,
-            //        "8D": 2,
-            //        "6D": 2,
-            //        "A2": 1,
-            //        "AE": 2,
-            //        "A0": 1,
-            //        "AC": 2,
-            //        "EA": 0,
-            //        "00": 0,
-            //        "EC": 2,
-            //        "D0": 1,
-            //        "EE": 2,
-            //        "FF": 0
-            //    }
-            //    var OP = _Memory.memoryArray[_CPU.PC].toString();
-            //    for (var i = 1; i <= instructionMem[opCode]; i++) {
-            //        this.colorMemory(table, index + i, "normal");
-            //    }
-            //}
         };
         Control.hostDisk = function () {
             var table = document.getElementById('OSdisk');

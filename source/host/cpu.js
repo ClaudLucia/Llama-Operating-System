@@ -180,9 +180,9 @@ var TSOS;
                         _KernelInputQueue.enqueue(new TSOS.Interrupt(OPINV, 0));
                 }
             }
-            if (_stepModeON === true) {
-                this.eXecute = false;
-            }
+            //if (_stepModeON === true) {
+            //    this.eXecute = false;
+            //}
         };
         return CPU;
     }());

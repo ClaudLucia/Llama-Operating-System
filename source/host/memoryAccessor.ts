@@ -20,7 +20,7 @@ module TSOS{
         }
 
         //reads Memory based on the memory address and returns a hex string
-        public readMem(addr): any {
+        public readMem(addr): string {
             if (this.withinBounds(addr)) {
                 var partition = _ProcessManager.running.Partition;
                 return _Memory.memArr[_MMU.partitions[partition].base + addr].toString();
@@ -32,10 +32,10 @@ module TSOS{
             }
         }
 
-        public writeMem(addr, val): any {
+        public writeMem(addr, val): void {
             if (this.withinBounds(addr)) {
                 if (parseInt(val, 16) < 16) {
-                    val += "0";
+                    val = val + "0";
                 }
                 var partition = _ProcessManager.running.Partition;
                 _Memory.memArr[_MMU.partitions[partition].base + addr] = val;
@@ -48,7 +48,7 @@ module TSOS{
             
         }
 
-        public withinBounds(addr): any {
+        public withinBounds(addr): boolean {
             var partition = _ProcessManager.running.Partition;
             if (addr + _MMU.partitions[partition].base <
                        _MMU.partitions[partition].base +

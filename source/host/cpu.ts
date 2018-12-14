@@ -52,8 +52,8 @@ module TSOS {
             // Do the real work here. Be sure to set this.eXecute appropriately.
 
             if (!_MemoryAccessor.withinBounds(this.PC)) {
-                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(ERR_BOUND, 0));
-                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(EXIT, false));
+                _KernelInterruptQueue.enqueue(new Interrupt(ERR_BOUND, 0));
+                _KernelInterruptQueue.enqueue(new Interrupt(EXIT, false));
             }
             //Use a switch case for the opCode
             else {
@@ -164,7 +164,7 @@ module TSOS {
                     /*SYS CALL*/
                     case "FF":
                         if (this.Xreg == 1) {
-                            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(WRITECONSOLE, "" + this.Yreg));
+                            _KernelInterruptQueue.enqueue(new Interrupt(WRITECONSOLE, "" + this.Yreg));
                         }
                         else if (this.Xreg == 2) {
                             var addr = this.Yreg;
@@ -176,7 +176,7 @@ module TSOS {
                                 str += chr;
                                 addr++;
                             }
-                            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(WRITECONSOLE, str));
+                            _KernelInterruptQueue.enqueue(new Interrupt(WRITECONSOLE, str));
                         }
                         this.PC++;
                         break;
@@ -193,19 +193,19 @@ module TSOS {
 
                     /*BRK*/
                     case "00":
-                        _KernelInterruptQueue.enqueue(new TSOS.Interrupt(EXIT, true));
+                        _KernelInterruptQueue.enqueue(new Interrupt(EXIT, true));
                         break;
 
 
                     default:
-                        _KernelInputQueue.enqueue(new TSOS.Interrupt(EXIT, false));
-                        _KernelInputQueue.enqueue(new TSOS.Interrupt(OPINV, 0));
+                        _KernelInputQueue.enqueue(new Interrupt(EXIT, false));
+                        _KernelInputQueue.enqueue(new Interrupt(OPINV, 0));
                 }
             }
 
-            if (_stepModeON === true) {
-                this.eXecute = false;
-            }
+            //if (_stepModeON === true) {
+            //    this.eXecute = false;
+            //}
             
         }
     }

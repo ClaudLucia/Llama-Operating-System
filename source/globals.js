@@ -63,7 +63,7 @@ var _SarcasticMode = false;
 var _krnKeyboardDriver; //  = null;
 var _krnDiskDriveFile;
 var _hardwareClockID = null;
-var FILE_NAME_LENGTH = 6;
+var FILE_NAME_LENGTH = 8;
 var FILE_NAME_EXISTS = 2;
 var FILE_NAME_AVAILABLE = 3;
 var FILE_CREATED = 0;

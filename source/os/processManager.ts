@@ -120,15 +120,16 @@ module TSOS {
         }
 
         //Lists all the processes
-        public listAllP() {
+        public listAllP():Array<String> {
             if (this.running != null) {
-                var processes = [];
+                let res: Array<String> = [];
+                res.push(new String(this.running.PID));
                 for (var i = 0; i < this.readyQueue.getSize(); i++) {
                     var pcb = this.readyQueue.dequeue();
-                    processes.push(new String(pcb.PID));
+                    res.push(new String(pcb.PID));
                     this.readyQueue.enqueue(pcb);
                 }
-                return processes;
+                return res;
             }
             else {
                 return [];
@@ -207,7 +208,7 @@ module TSOS {
         }
         
         //Calculate the turnaround and wait processTimes
-        public processTimes() {
+        public processTimes(): void {
             this.running.turnaroundTime++;
             for (var i = 0; i < this.readyQueue.getSize(); i++) {
                 var pcb = this.readyQueue.dequeue();
