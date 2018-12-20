@@ -6,6 +6,11 @@
 
 module TSOS {
 
+    //interface String {
+    //    repeat: (string) => string;
+        
+    //}
+
     export class Utils {
 
         public static trim(str): string {

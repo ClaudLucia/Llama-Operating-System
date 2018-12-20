@@ -1,185 +1,288 @@
 ﻿<!DOCTYPE HTML>
 <html>
 <head>
-   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-   <meta name="author"             content="Alan G. Labouseur" />
-   <link rel="stylesheet" href="tsos.css" type="text/css" media="screen" />
-   
-   <!-- Splash screen CSS -->
-   <!--<link rel="stylesheet" href="splash.css" type="text/css" media="screen" />-->
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="author" content="Alan G. Labouseur" />
+    <link rel="stylesheet" href="tsos.css" type="text/css" media="screen" />
 
-   <title>
-      LlamaOS - a browser-based virtual Operating System in TypeScript featuring Llamas
-   </title>
 
-   <!-- Globals CONSTANTS and _Variables. Must included be first. -->
-   <script type="text/javascript" src="distrib/globals.js"></script>
+    <title>
+        LlamaOS
+    </title>
 
-   <!-- Host (Virtual Machine / Hardware Simulation) Routines -->
-   <script type="text/javascript" src="distrib/host/control.js"></script>
-   <script type="text/javascript" src="distrib/host/devices.js"></script>
-   <script type="text/javascript" src="distrib/host/cpu.js"></script>
+    <!-- Globals CONSTANTS and _Variables. Must included be first. -->
+    <script type="text/javascript" src="distrib/globals.js"></script>
 
-   <!-- Virtual OS Routines: Make sure Kernel code is last, since it needs those above it. -->
-   <script type="text/javascript" src="distrib/os/interrupt.js"></script>
-   <script type="text/javascript" src="distrib/os/canvastext.js"></script>
-   <script type="text/javascript" src="distrib/os/console.js"></script>
-   <script type="text/javascript" src="distrib/os/deviceDriver.js"></script>
-   <script type="text/javascript" src="distrib/os/deviceDriverKeyboard.js"></script>
-   <script type="text/javascript" src="distrib/os/queue.js"></script>
-   <script type="text/javascript" src="distrib/os/shell.js"></script>
-   <script type="text/javascript" src="distrib/os/shellCommand.js"></script>
-   <script type="text/javascript" src="distrib/os/userCommand.js"></script>
-   <script type="text/javascript" src="distrib/os/kernel.js"></script>
+    <!-- Host (Virtual Machine / Hardware Simulation) Routines -->
+    <script type="text/javascript" src="distrib/host/control.js"></script>
+    <script type="text/javascript" src="distrib/host/devices.js"></script>
+    <script type="text/javascript" src="distrib/host/cpu.js"></script>
+    <script type="text/javascript" src="distrib/host/memory.js"></script>
+    <script type="text/javascript" src="distrib/host/memoryAccessor.js"></script>
+    <script type="text/javascript" src="distrib/host/disk.js"></script>
 
-   <!-- Other Routines -->
-   <script type="text/javascript" src="distrib/utils.js"></script>
-   <!-- Uncomment the line below to enable GLaDOS testing. -->
-    <script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip0.js"></script>
-    
-   <!-- Script for the clock -->
-   <!-- <script type="text/javascript" src="distrib/os/clock.js"></script> -->
-   
-   <!-- <script type="text/javascript" src="fade.js"></script> -->
+
+    <!-- Virtual OS Routines: Make sure Kernel code is last, since it needs those above it. -->
+    <script type="text/javascript" src="distrib/os/interrupt.js"></script>
+    <script type="text/javascript" src="distrib/os/canvastext.js"></script>
+    <script type="text/javascript" src="distrib/os/console.js"></script>
+    <script type="text/javascript" src="distrib/os/deviceDriver.js"></script>
+    <script type="text/javascript" src="distrib/os/deviceDriverKeyboard.js"></script>
+    <script type="text/javascript" src="distrib/os/deviceDriverFS.js"></script>
+    <script type="text/javascript" src="distrib/os/queue.js"></script>
+    <script type="text/javascript" src="distrib/os/shell.js"></script>
+    <script type="text/javascript" src="distrib/os/shellCommand.js"></script>
+    <script type="text/javascript" src="distrib/os/userCommand.js"></script>
+    <script type="text/javascript" src="distrib/os/PCB.js"></script>
+    <script type="text/javascript" src="distrib/os/mmu.js"></script>
+    <script type="text/javascript" src="distrib/os/processManager.js"></script>
+    <script type="text/javascript" src="distrib/os/scheduler.js"></script>
+    <script type="text/javascript" src="distrib/os/swapper.js"></script>
+
+    <script type="text/javascript" src="distrib/os/kernel.js"></script>
+
+
+    <!-- Other Routines -->
+    <script type="text/javascript" src="distrib/utils.js"></script>
+    <!-- Uncomment the line below to enable GLaDOS testing. -->
+    <script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip4.js"></script>
+
+
+
 
 </head>
 
-<body onload="onDocumentLoad()">
-<!-- <script>document.body.className += ' fade-out';</script>
- -->
 
-  
-<!-- Splash screen-->  
-  <!-- <div class = "preload">
-      <div class="logo">
-          <img id = "splashLlama" src="distrib/images/llama-logo.png">
-          <span style=" color:white;"></span>
-      <h1 id="wel">Welcome</h1>
-      <h2 id="enter">Enter</h2>
-      </div>
-  </div> -->
-
-
-
-
-<!-- Home screen -->
-  <div id="welcomeScreen">
-    <div id="title">
-          <h1 class="page-header">
-            <img id = "llamaLogo" src="distrib/images/llamalogo.png">
-            OS
-          </h1>
-    </div>
-
-
-    <div id="divMain" style="width:100%;">
-
-        <div id="taskBar" class="row">
-
-            <table width="100%">
-                <thead>
-                    <tr>
-                        <th>
-                            <div id="statusBar" class="col-sm-4">
-                                <p id="statusMsg">
-                                    Status
-                                </p>
-                            </div>
-                        </th>
-                        <th>
-                            <!-- Trying to find a way in order not to hardcode the clock here -->
-                            <div id="dateTime" class="col-sm-8">
-                                <script type="text/javascript">
-                                    function startTime() {
-                                        var dt = new Date();
-                                        document.getElementById('dateTime').innerHTML = dt;
-                                        var t = setTimeout(startTime, 500);
-                                    }
-                                    startTime();
-                                </script>
-                            </div>
-                        </th>
-                    </tr>
-                </thead>
-            </table>
-
+<body onload = "onDocumentLoad()">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header" class="center-align">
+                    <div style="display:inline-block;">
+                        <h1 class="text-center"> <!--class="speech-bubble"-->LlamaOS</h1>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- Task bar for the user -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="bar" style="width:100%;">
+                            <div id="taskBar" class="row">
+                                <table width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <div id="statusBar" class="col-sm-4">
+                                                    <p id="statusMsg">
+                                                        Status
+                                                    </p>
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <!-- Trying to find a way in order not to hardcode the clock here -->
+                                                <div id="dateTime" class="col-sm-8">
+                                                    <script type="text/javascript">
+                                                        function startTime() {
+                                                            var dt = new Date();
+                                                            document.getElementById('dateTime').innerHTML = dt;
+                                                            var t = setTimeout(startTime, 500);
+                                                        }
+                                                        startTime();
+                                                    </script>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="divButtonBar" role="group">
+                    <button id="btnStartOS"
+                            name="brnStartOS"
+                            class="btn btn-primary btn-lg"
+                            value="Start"
+                            onclick="TSOS.Control.hostBtnStartOS_click(this);">
+                        Start
+                    </button>
 
-        <div id="divButtonBar">
+                    <button id="btnHaltOS"
+                            name="brnHaltOS"
+                            class="btn btn-sucess btn-lg"
+                            disabled="disabled"
+                            value="Halt"
+                            onclick="TSOS.Control.hostBtnHaltOS_click(this);">
+                        Halt
+                    </button>
 
-            <button id="btnStartOS"
-                    name="brnStartOS"
-                    class="btn btn-primary btn-lg"
-                    value="Start"
-                    onclick="TSOS.Control.hostBtnStartOS_click(this);">
-                Start
-            </button>
+                    <button type="button"
+                            id="btnSingleStep"
+                            name="btnSingleStep"
+                            class="btn-small topbarbutton waves-effect waves-light"
+                            disabled="disabled"
+                            value="Single Step Mode"
+                            tabindex="2"
+                            onclick="TSOS.Control.hostBtnSingleStep_click(this);">
+                        Single Step Mode
+                    </button>
 
-            <button id="btnHaltOS"
-                    name="brnHaltOS"
-                    class="btn btn-sucess btn-lg"
-                    disabled="disabled"
-                    value="Halt"
-                    onclick="TSOS.Control.hostBtnHaltOS_click(this);">
-                Halt
-            </button>
+                    <button id="btnReset"
+                            name="brnReset"
+                            class="btn btn-warning btn-lg"
+                            disabled="disabled"
+                            value="Reset"
+                            onclick="TSOS.Control.hostBtnReset_click(this);">
+                        Reset
+                    </button>
 
-            <button id="btnReset"
-                    name="brnReset"
-                    class="btn btn-warning btn-lg"
-                    disabled="disabled"
-                    value="Reset"
-                    onclick="TSOS.Control.hostBtnReset_click(this);">
-                Reset
-            </button>
+                </div>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="ConsoleRow">
+                            <div id="divConsole">
+                                <label class="center-align">
+                                    <div id="canvas" class="outline">
+                                        <canvas id="display"
+                                                width="500px"
+                                                height="500px"
+                                                tabindex="3"></canvas>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4" id="HP">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="divLog">
+                            <h2>Host Log</h2>
+                            
+                            <textarea name="taHostLog"
+                                        id="taHostLog"
+                                        rows="26"
+                                        cols="48">
+                    </textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 id="divDisk">
+                            <h2>Disk</h2>
+                            <table name="OSdisk"
+                                    id="OSdisk"
+                                    style="color: black;
+                                   height: 150px;
+                                   width: 260px;
+                                   overflow-y: scroll;
+                                   display: block;">
+                            </table>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="col-md-4" id="DP">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="divPCB">
+                            <h2>Process Control Block</h2>
+
+                            <table name="displayPCB"
+                                   id="displayPCB"
+                                   class="table">
+                                <thead>
+                                    <tr>
+                                        <td>PID</td>
+                                        <td style="text-align: center; width: 70px">State</td>
+                                        <td style="text-align: center; width: 40px">PC</td>
+                                        <td style="text-align: center; width: 40px">IR</td>
+                                        <td style="text-align: center; width: 40px">Acc</td>
+                                        <td style="text-align: center; width: 40px">X</td>
+                                        <td style="text-align: center; width: 40px">Y</td>
+                                        <td style="text-align: center; width: 40px">Z</td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="divCPU">
+                            <h2>CPU</h2>
+
+                            <div id="displayCPU">
+                                <table name="showCPU" id="showCPU">
+                                    <thead>
+                                        <tr>
+                                            <td>PC</td>
+                                            <td>IR</td>
+                                            <td>Acc</td>
+                                            <td>X</td>
+                                            <td>Y</td>
+                                            <td>Z</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="divMemory">
+                            <h2> Memory</h2>
+
+                            <table name="Memory" id="Memory"
+                                   style="color: black;
+                                   height: 150px;
+                                   width: 260px;
+                                   overflow-y: scroll;
+                                   display: block;"
+                                   ></table>
+                            <tbody align="center"></tbody>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="divUserProgramInput">
+                            <h2>User Program Input</h2>
+
+                            <textarea name="taProgramInput"
+                                      id="taProgramInput"
+                                      rows="8"
+                                      cols="48">A9 03 8D 41 00 A9 01 8D 40 00 AC 40 00 A2 01 FF EE 40 00 AE 40 00 EC 41 00 D0 EF A9 44 8D 42 00 A9 4F 8D 43 00 A9 4E 8D 44 00 A9 45 8D 45 00 A9 00 8D 46 00 A2 02 A0 42 FF 00
+                        </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
         </div>
     </div>
-     
-
-     <div id="divConsole">
-         <div id = "canvas" class="outline">
-             <canvas id="display"
-                     width="500px"
-                     height="500px"
-                     tabindex="3"></canvas>
-         </div>
-     </div>
-     <div id="divLog">
-        <label>
-            <h2>Host Log</h2>
-           <br>
-           <textarea name="taHostLog"
-                     id  ="taHostLog"
-                     rows="26"
-                     cols="48"
-           ></textarea>
-        </label>
-     </div>
-
-     <div id="divUserProgramInput">
-        <label>
-            <h2>User Program Input</h2>
-           <br>
-           <textarea name="taProgramInput"
-                     id  ="taProgramInput"
-                     rows="8"
-                     cols="48"
-           ></textarea>
-        </label>
-     </div>
-
-
-  <p class="footerText" style="clear:both;">
-     <br>
-     Copyright &copy; 2008 - 2016 No Rights Reserved.
-     <br>
-     Reproduction is inhibited without the express written consent of
-     Ted Codd, Stevie Ray Vaughan, and Ian Fleming.
-  </p>
-
-</div>
-
 </body>
 </html>

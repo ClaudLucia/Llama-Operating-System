@@ -5,6 +5,9 @@
    -------- */
 var TSOS;
 (function (TSOS) {
+    //interface String {
+    //    repeat: (string) => string;
+    //}
     var Utils = /** @class */ (function () {
         function Utils() {
         }
