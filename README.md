@@ -1,7 +1,4 @@
 
-Hey-Ho Look at Project 4
-============================================
-
 Browser-based Operating System in TypeScript
 ============================================
 
