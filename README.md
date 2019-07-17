@@ -80,6 +80,7 @@ About the OS
 ============
 
 This operating system was created as a part of a class project.  While constructing this operating system I was ablso able to learn how operating system works and how they function.  The more I understood operating systems the better I got at building the operating system. This project was interesting because not only did I learn about operating systems and their features but I wasla lso able to learn how to code in TypeScript.  
+  
 It was challenging at first but I gradually gre more and more interested in the programming language.  This experience has taught me how operating systems work and how to construct one myself. I plan on building more onto this project in the future.  
 
 Updates
