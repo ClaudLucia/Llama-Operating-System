@@ -113,7 +113,7 @@ module TSOS {
 
             // cls
             sc = new ShellCommand(this.shellCls,
-                                  "cls",
+                                  "cls, clr, clear",
                                   "- Clears the screen and resets the cursor position.");
             this.commandList[this.commandList.length] = sc;
 
@@ -435,6 +435,8 @@ module TSOS {
                         _StdOut.putText("shuts down LlamaOS but leaves the host running");
                         break;
                     case "cls":
+                    case "clr":
+                    case "clear":
                         _StdOut.putText("Clears the text on the screen and resets the cursor");
                         break;
                     case "trace":
@@ -587,7 +589,7 @@ module TSOS {
 
         //Why not?
         public shellWhyLlamas(args){
-            _StdOut.putText("They are very social animals and live with other llamas as a herd.");
+            _StdOut.putText("They are very social animals and live with other llamas as a herd. <br>");
             _StdOut.advanceLine();
             _StdOut.putText("The wool produced by a llama is very soft and lanolin-free.");
             _StdOut.advanceLine();

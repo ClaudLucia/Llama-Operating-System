@@ -70,7 +70,7 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellShutdown, "shutdown", "- Shuts down LlamaOS but leaves the underlying host / hardware simulation running.");
             this.commandList[this.commandList.length] = sc;
             // cls
-            sc = new TSOS.ShellCommand(this.shellCls, "cls", "- Clears the screen and resets the cursor position.");
+            sc = new TSOS.ShellCommand(this.shellCls, "cls, clr, clear", "- Clears the screen and resets the cursor position.");
             this.commandList[this.commandList.length] = sc;
             // man <topic>
             sc = new TSOS.ShellCommand(this.shellMan, "man", "<topic> - Displays the MANual page for <topic>.");
@@ -319,6 +319,8 @@ var TSOS;
                         _StdOut.putText("shuts down LlamaOS but leaves the host running");
                         break;
                     case "cls":
+                    case "clr":
+                    case "clear":
                         _StdOut.putText("Clears the text on the screen and resets the cursor");
                         break;
                     case "trace":
@@ -787,4 +789,3 @@ var TSOS;
     }());
     TSOS.Shell = Shell;
 })(TSOS || (TSOS = {}));
-//# sourceMappingURL=shell.js.map

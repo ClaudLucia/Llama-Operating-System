@@ -12,6 +12,9 @@
 
     <!-- Globals CONSTANTS and _Variables. Must included be first. -->
     <script type="text/javascript" src="distrib/globals.js"></script>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Host (Virtual Machine / Hardware Simulation) Routines -->
     <script type="text/javascript" src="distrib/host/control.js"></script>
@@ -44,11 +47,13 @@
 
     <!-- Other Routines -->
     <script type="text/javascript" src="distrib/utils.js"></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
     <!-- Uncomment the line below to enable GLaDOS testing. -->
     <script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip4.js"></script>
-
-
-
 
 </head>
 
@@ -66,134 +71,137 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="bar" style="width:100%;">
-                            <div id="taskBar" class="row">
-                                <table width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                <div id="statusBar" class="col-sm-4">
-                                                    <p id="statusMsg">
-                                                        Status
-                                                    </p>
-                                                </div>
-                                            </th>
-                                            <th>
-                                                <!-- Trying to find a way in order not to hardcode the clock here -->
-                                                <div id="dateTime" class="col-sm-8">
-                                                    <script type="text/javascript">
-                                                        function startTime() {
-                                                            var dt = new Date();
-                                                            document.getElementById('dateTime').innerHTML = dt;
-                                                            var t = setTimeout(startTime, 500);
-                                                        }
-                                                        startTime();
-                                                    </script>
-                                                </div>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                </table>
+                    <div id="row">
+                        <div class="col-md-12">
+                            <div id="bar" style="width:100%;">
+                                <div id="taskBar" class="row">
+                                    <table width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <div id="statusBar" class="col-sm-4">
+                                                        <p id="statusMsg">
+                                                            Status
+                                                        </p>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <!-- Trying to find a way in order not to hardcode the clock here -->
+                                                    <div id="dateTime" class="col-sm-8">
+                                                        <script type="text/javascript">
+                                                            function startTime() {
+                                                                var dt = new Date();
+                                                                document.getElementById('dateTime').innerHTML = dt;
+                                                                var t = setTimeout(startTime, 500);
+                                                            }
+                                                            startTime();
+                                                        </script>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div id="divButtonBar" role="group">
-                    <button id="btnStartOS"
-                            name="brnStartOS"
-                            class="btn btn-primary btn-lg"
-                            value="Start"
-                            onclick="TSOS.Control.hostBtnStartOS_click(this);">
-                        Start
-                    </button>
-
-                    <button id="btnHaltOS"
-                            name="brnHaltOS"
-                            class="btn btn-sucess btn-lg"
-                            disabled="disabled"
-                            value="Halt"
-                            onclick="TSOS.Control.hostBtnHaltOS_click(this);">
-                        Halt
-                    </button>
-
-                    <button type="button"
-                            id="btnSingleStep"
-                            name="btnSingleStep"
-                            class="btn-small topbarbutton waves-effect waves-light"
-                            disabled="disabled"
-                            value="Single Step Mode"
-                            tabindex="2"
-                            onclick="TSOS.Control.hostBtnSingleStep_click(this);">
-                        Single Step Mode
-                    </button>
-
-                    <button id="btnReset"
-                            name="brnReset"
-                            class="btn btn-warning btn-lg"
-                            disabled="disabled"
-                            value="Reset"
-                            onclick="TSOS.Control.hostBtnReset_click(this);">
-                        Reset
-                    </button>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="ConsoleRow">
-                            <div id="divConsole">
-                                <label class="center-align">
-                                    <div id="canvas" class="outline">
-                                        <canvas id="display"
-                                                width="500px"
-                                                height="500px"
-                                                tabindex="3"></canvas>
-                                    </div>
-                                </label>
+                    <div class="row">
+                            <div id="divButtonBar" role="group">
+                                    <button id="btnStartOS"
+                                            name="brnStartOS"
+                                            class="btn btn-primary btn-lg"
+                                            value="Start"
+                                            onclick="TSOS.Control.hostBtnStartOS_click(this);">
+                                        Start
+                                    </button>
+            
+                                    <button id="btnHaltOS"
+                                            name="brnHaltOS"
+                                            class="btn btn-sucess btn-lg"
+                                            disabled="disabled"
+                                            value="Halt"
+                                            onclick="TSOS.Control.hostBtnHaltOS_click(this);">
+                                        Halt
+                                    </button>
+            
+                                    <button type="button"
+                                            id="btnSingleStep"
+                                            name="btnSingleStep"
+                                            class="btn-small topbarbutton waves-effect waves-light"
+                                            disabled="disabled"
+                                            value="Single Step Mode"
+                                            tabindex="2"
+                                            onclick="TSOS.Control.hostBtnSingleStep_click(this);">
+                                        Single Step Mode
+                                    </button>
+            
+                                    <button id="btnReset"
+                                            name="brnReset"
+                                            class="btn btn-warning btn-lg"
+                                            disabled="disabled"
+                                            value="Reset"
+                                            onclick="TSOS.Control.hostBtnReset_click(this);">
+                                        Reset
+                                    </button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4" id="HP">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="divLog">
-                            <h2>Host Log</h2>
-                            
-                            <textarea name="taHostLog"
-                                        id="taHostLog"
-                                        rows="26"
-                                        cols="48">
-                    </textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h2 id="divDisk">
-                            <h2>Disk</h2>
-                            <table name="OSdisk"
-                                    id="OSdisk"
-                                    style="color: black;
-                                   height: 150px;
-                                   width: 260px;
-                                   overflow-y: scroll;
-                                   display: block;">
-                            </table>
                     </div>
                 </div>
                 
             </div>
+        </div>
 
-            <div class="col-md-4" id="DP">
+
+<!--Last Row contains all the tables for the os-->
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12" id="divConsole">
+                <div>
+                    <label class="center-align">
+                        <div id="canvas" class="outline">
+                            <canvas id="display"
+                                    width="500px"
+                                    height="500px"
+                                    tabindex="3"></canvas>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="clearfix visible-lg"></div>
+
+            <!--Column for the host log-->
+
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="col">
+                    <div id="divLog">
+                        <h2>Host Log</h2>
+                        <textarea name="taHostLog"
+                                    id="taHostLog"
+                                    rows="26"
+                                    cols="48">
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="clearfix visible-lg"></div> -->
+
+            <!--Column for the disk-->
+
+            <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
+                <h2>Disk</h2>
+                <table name="OSdisk"
+                        id="OSdisk"
+                        style="color: black;
+                    height: 150px;
+                    width: 260px;
+                    overflow-y: scroll;
+                    display: block;">
+                </table>
+            </div>
+
+            <!-- <div class="clearfix visible-lg"></div> -->
+
+            <!--Column for the pcb, cpu, memory, and user program input-->
+
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12" id="DP">
                 <div class="row">
                     <div class="col-md-12">
                         <div id="divPCB">
@@ -204,7 +212,7 @@
                                    class="table">
                                 <thead>
                                     <tr>
-                                        <td>PID</td>
+                                        <td style="text-align: center; width: 70px">PID</td>
                                         <td style="text-align: center; width: 70px">State</td>
                                         <td style="text-align: center; width: 40px">PC</td>
                                         <td style="text-align: center; width: 40px">IR</td>

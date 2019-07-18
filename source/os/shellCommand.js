@@ -12,4 +12,3 @@ var TSOS;
     }());
     TSOS.ShellCommand = ShellCommand;
 })(TSOS || (TSOS = {}));
-//# sourceMappingURL=shellCommand.js.map

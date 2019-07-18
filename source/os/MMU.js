@@ -94,11 +94,10 @@ var TSOS;
             while (_ProcessManager.residentQueue.getSize() > 0) {
                 _ProcessManager.residentQueue.dequeue();
             }
-            TSOS.Control.hostMemory();
+            Control.hostMemory();
             return true;
         };
         return MMU;
     }());
     TSOS.MMU = MMU;
 })(TSOS || (TSOS = {}));
-//# sourceMappingURL=mmu.js.map
