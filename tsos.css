@@ -28,6 +28,7 @@ body.fade-out {
 }
 
 h1 {
+  margin-left: 90px;
   color: black;
   font-size: 24pt;
   font-weight: normal;
@@ -71,6 +72,10 @@ h3 {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
+#statusMsg{
+    margin: 15px;
+}
+
 #divConsole {
     /* margin: 15px; */
     padding: 30px;
@@ -89,6 +94,10 @@ h3 {
     color: black;
     background-size: 20px;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+#divButtonBar{
+    margin-left: 15px;
 }
 
 #showCPU {
